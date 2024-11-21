@@ -30,20 +30,43 @@ module i2s_clk_wiz_44100 (
 
   // 100,000,000 / 44,100 / 24 / 2 / 2 (Xilinx clock / sample rate / bits per sample / channels / edges);
   // = 23.62
+  localparam i2s_bclk_ncycles = 5'd24;
+  localparam i2s_ws_nbits = 5'd24;
 
 
-  logic [4:0] counter1 = 0;        // 9-bit counter for 100 MHz / 371.25 kHz = 269
+  logic [4:0] counter_bit = 0;
+  logic [4:0] counter_ws = 0;
 
-  always @(posedge clk_ref or posedge reset) begin
+  always @(posedge clk_ref) begin
     if (reset) begin
-      counter1 <= 0;
+      counter_bit <= 0;
       clk_bit <= 0;
-    end else if (counter == 23) begin
-      counter1 <= 0;
-      clk_bit <= ~clk_bit;        // Toggle clk_ws every 269 cycles
-    end else begin
-      counter1 <= counter1 + 1;
+      counter_ws <= 0;
+    end else 
+    
+    if (counter_bit == i2s_bclk_ncycles) begin
+      counter_bit <= 0;
+      clk_bit <= ~clk_bit;        // Toggle clk_bit every 24 cycles of 100MHz clock
+
+      // falling edge of bclk
+      if (clk_bit == 1'b1) begin
+
+        if (counter_ws == i2s_ws_nbits) begin
+          counter_ws <= 0;
+          clk_ws <= ~clk_ws;      // Toggle clk_ws every 24 cycles (for 24 bits of data) of clk_bit
+
+        end else begin
+          counter_ws <= counter_ws + 1;
+        end
+
+      end
+    end 
+    
+    else begin
+      counter_bit <= counter_bit + 1;
     end
+
+	
   end
   
 
