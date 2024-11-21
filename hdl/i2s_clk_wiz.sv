@@ -29,7 +29,22 @@ module i2s_clk_wiz_44100 (
  );
 
   // 100,000,000 / 44,100 / 24 / 2 / 2 (Xilinx clock / sample rate / bits per sample / channels / edges);
+  // = 23.62
 
+
+  logic [4:0] counter1 = 0;        // 9-bit counter for 100 MHz / 371.25 kHz = 269
+
+  always @(posedge clk_ref or posedge reset) begin
+    if (reset) begin
+      counter1 <= 0;
+      clk_bit <= 0;
+    end else if (counter == 23) begin
+      counter1 <= 0;
+      clk_bit <= ~clk_bit;        // Toggle clk_ws every 269 cycles
+    end else begin
+      counter1 <= counter1 + 1;
+    end
+  end
   
 
 endmodule
