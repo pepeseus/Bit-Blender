@@ -28,6 +28,10 @@ module top_level
 
   localparam AUDIO_WIDTH = 24;
 
+  //have btnd control system reset
+  logic sys_rst;
+  assign sys_rst = btn[0];
+
   // shut up those RGBs
   assign rgb0 = 0;
   assign rgb1 = 0;
@@ -45,7 +49,23 @@ module top_level
     uart_rx_buf1 <= uart_rx_buf0;
   end
 
+  /**
+    MIDI Reader
+  */
+  logic [3:0] status;
+  logic [7:0] data_byte1;
+  logic [7:0] data_byte2;
+  logic valid_out_reader;
 
+  midi_reader reader_main(
+    .clk_in(clk_100mhz),
+    .rst_in(sys_rst),
+    .rx_wire_in(uart_rx_buf1),
+    .status(status),
+    .data_byte1(data_byte1),
+    .data_byte2(data_byte2),
+    .valid_out(valid_out_reader)
+  )
 
   /**
     MIDI Processor
@@ -53,9 +73,16 @@ module top_level
   logic is_note_on;
   logic [23:0] playback_rate;
 
-
-
-
+  midi_processor processor_main(
+    .clk_in(clk_100mhz),
+    .rst_in(sys_rst),
+    .status(status),
+    .data_byte1(data_byte1),
+    .data_byte2(data_byte2),
+    .valid_out(valid_out_reader),
+    .isNoteOn(is_note_on),
+    .cycles_between_samples(playback_rate)
+  )
 
   /**
     Oscillator
