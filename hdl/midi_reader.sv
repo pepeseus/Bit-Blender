@@ -2,9 +2,9 @@ module midi_reader(
     input wire clk_in, //system clock
     input wire rst_in, //system reset
     input wire rx_wire_in,
+    output logic [3:0] status,
     output logic [7:0] data_byte1,
     output logic [7:0] data_byte2,
-    output logic [3:0] status
     output logic valid_out
 );
 
@@ -84,14 +84,5 @@ module midi_reader(
         end
 
     end
-
-
-    always_comb begin
-
-
-    end
-
-
-
 
 endmodule // midi_reader
