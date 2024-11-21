@@ -31,6 +31,9 @@ module top_level
   assign rgb1 = 0;
 
 
+  /**
+    UART RX
+  */
   // pass your uart_rx data through a couple buffers,
   // save yourself the pain of metastability!
   logic uart_rx_buf0, uart_rx_buf1;
@@ -39,6 +42,30 @@ module top_level
     uart_rx_buf0 <= uart_rxd;
     uart_rx_buf1 <= uart_rx_buf0;
   end
+
+
+
+  /**
+    MIDI Processor
+  */
+
+
+
+
+
+  /**
+    Oscillator
+  */
+
+
+
+
+  /**
+    I2S TX
+  */
+
+  // generate the I2S clock (use wizard in future)
+  
 
 
 endmodule // top_level
