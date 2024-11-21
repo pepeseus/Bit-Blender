@@ -26,6 +26,8 @@ module top_level
    output logic        hdmi_clk_p, hdmi_clk_n //differential hdmi clock
    );
 
+  localparam AUDIO_WIDTH = 24;
+
   // shut up those RGBs
   assign rgb0 = 0;
   assign rgb1 = 0;
@@ -48,6 +50,8 @@ module top_level
   /**
     MIDI Processor
   */
+  logic is_note_on;
+  logic [23:0] playback_rate;
 
 
 
@@ -56,15 +60,45 @@ module top_level
   /**
     Oscillator
   */
+  logic [23:0] sample_data;
 
+  oscillator osc_inst (
+    .clk_in(clk_100mhz),
+    .rst_in(rst_in),
+    .is_on_in(is_note_on),
+    .playback_rate_in(playback_rate),
+    .sample_data_out(sample_data)
+  );
 
 
 
   /**
     I2S TX
   */
+  logic i2s_sd, i2s_bclk, i2s_ws;
 
-  // generate the I2S clock (use wizard in future)
+  // generate the I2S clock (TODO use proper wizard in future)
+  i2s_clk_wiz_44100 i2s_clk_wiz (
+    .reset(rst_in),
+    .clk_ref(clk_in),
+    .clk_bit(i2s_bclk),
+    .clk_ws(i2s_ws)
+  );
+
+  // instantiate the I2S TX module
+  i2s_tx #(
+    .WIDTH(AUDIO_WIDTH)
+  ) i2s_tx_inst (
+    .clk(clk_100mhz),
+    .rst(rst_in),
+    .input_l_tdata(sample_data),  // same data for both channels
+    .input_r_tdata(sample_data),
+    .input_tvalid(1'b1),          // TODO is this ok?
+    .input_tready(),              // TODO do we care?
+    .sck(i2s_bclk),
+    .ws(i2s_ws),
+    .sd(i2s_sd)
+  );
   
 
 

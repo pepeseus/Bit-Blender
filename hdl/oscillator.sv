@@ -1,4 +1,4 @@
-module Oscillator (
+module oscillator (
 	input wire clk_in,    // system clock
   input wire rst_in,    // system reset
 	input wire is_on_in,                 // 
