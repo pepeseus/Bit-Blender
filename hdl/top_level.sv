@@ -24,6 +24,11 @@ module top_level
    output logic [2:0]  hdmi_tx_p, //hdmi output signals (positives) (blue, green, red)
    output logic [2:0]  hdmi_tx_n, //hdmi output signals (negatives) (blue, green, red)
    output logic        hdmi_clk_p, hdmi_clk_n //differential hdmi clock
+
+   // i2s
+   output logic        i2s_bclk,  // bit clock
+   output logic        i2s_ws,    // word select
+   output logic        i2s_sd     // serial data
    );
 
   localparam AUDIO_WIDTH = 24;
@@ -102,7 +107,6 @@ module top_level
   /**
     I2S TX
   */
-  logic i2s_sd, i2s_bclk, i2s_ws;
 
   // generate the I2S clock (TODO use proper wizard in future)
   i2s_clk_wiz_44100 i2s_clk_wiz (
