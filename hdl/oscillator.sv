@@ -24,7 +24,8 @@ module oscillator (
 
   NOTE: The sample index naturally wraps around to 0 after 512 samples.
 */
-logic [8:0] sample_index = 0;       // index of the sample in the waveform
+logic [8:0] sample_index;       // index of the sample in the waveform
+logic [23:0] playback_counter;
 
 always_ff @(posedge clk_in) begin
   if (rst_in) begin
@@ -99,7 +100,7 @@ end
 xilinx_true_dual_port_read_first_1_clock_ram #(
   .RAM_WIDTH(24),
   .RAM_DEPTH(512),
-  .RAM_PERFORMANCE("HIGH_PERFORMANCE")
+  .RAM_PERFORMANCE("HIGH_PERFORMANCE"),
   .INIT_FILE(`FPATH(funky_sine.mem))
   ) 
 waveform_ram (
