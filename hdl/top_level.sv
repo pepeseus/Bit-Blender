@@ -5,27 +5,28 @@ module top_level
   (
    input wire          clk_100mhz,
    output logic [15:0] led,
-   // UART vals
-	 input wire 				 uart_rxd, // UART computer-FPGA
-	 output logic 			 uart_txd // UART FPGA-computer
-
-   inout wire          i2c_scl, // i2c inout clock
-   inout wire          i2c_sda, // i2c inout data
+   // UART
+   input wire          uart_rxd,   // UART computer-FPGA
+   output logic        uart_txd,   // UART FPGA-computer
+   // I2C
+   inout wire          i2c_scl,    // I2C inout clock
+   inout wire          i2c_sda,    // I2C inout data
    input wire [15:0]   sw,
    input wire [3:0]    btn,
+   // RGB LEDs
    output logic [2:0]  rgb0,
    output logic [2:0]  rgb1,
-   // seven segment
-   output logic [3:0]  ss0_an,//anode control for upper four digits of seven-seg display
-   output logic [3:0]  ss1_an,//anode control for lower four digits of seven-seg display
-   output logic [6:0]  ss0_c, //cathode controls for the segments of upper four digits
-   output logic [6:0]  ss1_c, //cathod controls for the segments of lower four digits
-   // hdmi port
-   output logic [2:0]  hdmi_tx_p, //hdmi output signals (positives) (blue, green, red)
-   output logic [2:0]  hdmi_tx_n, //hdmi output signals (negatives) (blue, green, red)
-   output logic        hdmi_clk_p, hdmi_clk_n //differential hdmi clock
-
-   // i2s
+   // Seven-segment display
+   output logic [3:0]  ss0_an,     // Anode control for upper digits
+   output logic [3:0]  ss1_an,     // Anode control for lower digits
+   output logic [6:0]  ss0_c,      // Cathode controls for upper digits
+   output logic [6:0]  ss1_c,      // Cathode controls for lower digits
+   // HDMI
+   output logic [2:0]  hdmi_tx_p,  // HDMI output signals (positive)
+   output logic [2:0]  hdmi_tx_n,  // HDMI output signals (negative)
+   output logic        hdmi_clk_p, 
+   output logic        hdmi_clk_n  // Differential HDMI clock
+   // I2S
    output logic        i2s_bclk,  // bit clock
    output logic        i2s_ws,    // word select
    output logic        i2s_sd     // serial data
@@ -33,33 +34,24 @@ module top_level
 
   localparam AUDIO_WIDTH = 24;
 
-  //have btnd control system reset
+  // Reset signal
   logic sys_rst;
   assign sys_rst = btn[0];
 
-  // shut up those RGBs
+  // Turn off RGB LEDs
   assign rgb0 = 0;
   assign rgb1 = 0;
 
-
-  /**
-    UART RX
-  */
-  // pass your uart_rx data through a couple buffers,
-  // save yourself the pain of metastability!
+  // UART RX signal buffering
   logic uart_rx_buf0, uart_rx_buf1;
-
   always_ff @(posedge clk_100mhz) begin
     uart_rx_buf0 <= uart_rxd;
     uart_rx_buf1 <= uart_rx_buf0;
   end
 
-  /**
-    MIDI Reader
-  */
+  // MIDI Reader
   logic [3:0] status;
-  logic [7:0] data_byte1;
-  logic [7:0] data_byte2;
+  logic [7:0] data_byte1, data_byte2;
   logic valid_out_reader;
 
   midi_reader reader_main(
@@ -70,13 +62,12 @@ module top_level
     .data_byte1(data_byte1),
     .data_byte2(data_byte2),
     .valid_out(valid_out_reader)
-  )
+  );
 
-  /**
-    MIDI Processor
-  */
+  // MIDI Processor
   logic is_note_on;
   logic [23:0] playback_rate;
+  logic valid_out_processor;
 
   midi_processor processor_main(
     .clk_in(clk_100mhz),
@@ -84,57 +75,56 @@ module top_level
     .status(status),
     .data_byte1(data_byte1),
     .data_byte2(data_byte2),
-    .valid_out(valid_out_reader),
+    .valid_in(valid_out_reader),
     .isNoteOn(is_note_on),
-    .cycles_between_samples(playback_rate)
-  )
+    .cycles_between_samples(playback_rate),
+    .valid_out(valid_out_processor)
+  );
 
-  /**
-    Oscillator
-  */
+  // Oscillator
   logic [23:0] sample_data;
 
-  oscillator osc_inst (
+  oscillator osc_inst(
     .clk_in(clk_100mhz),
-    .rst_in(rst_in),
+    .rst_in(sys_rst),
     .is_on_in(is_note_on),
     .playback_rate_in(playback_rate),
     .sample_data_out(sample_data)
   );
 
+<<<<<<< HEAD
 
 
   /**
     I2S TX
   */
+=======
+  // I2S Clock Generation
+  logic i2s_sd, i2s_bclk, i2s_ws;
+>>>>>>> 44dc151c2218e3a6d7dea0dcb6073bf0352ff668
 
-  // generate the I2S clock (TODO use proper wizard in future)
   i2s_clk_wiz_44100 i2s_clk_wiz (
-    .reset(rst_in),
-    .clk_ref(clk_in),
+    .reset(sys_rst),
+    .clk_ref(clk_100mhz),
     .clk_bit(i2s_bclk),
     .clk_ws(i2s_ws)
   );
 
-  // instantiate the I2S TX module
+  // I2S Transmitter
   i2s_tx #(
     .WIDTH(AUDIO_WIDTH)
   ) i2s_tx_inst (
     .clk(clk_100mhz),
-    .rst(rst_in),
-    .input_l_tdata(sample_data),  // same data for both channels
+    .rst(sys_rst),
+    .input_l_tdata(sample_data),
     .input_r_tdata(sample_data),
-    .input_tvalid(1'b1),          // TODO is this ok?
-    .input_tready(),              // TODO do we care?
+    .input_tvalid(1'b1),  // Valid signal always asserted
+    .input_tready(),      // Unused
     .sck(i2s_bclk),
     .ws(i2s_ws),
     .sd(i2s_sd)
   );
-  
 
-
-endmodule // top_level
-
+endmodule
 
 `default_nettype wire
-
