@@ -1,3 +1,12 @@
+`timescale 1ns / 1ps
+`default_nettype none
+
+`ifdef SYNTHESIS
+`define FPATH(X) `"X`"
+`else /* ! SYNTHESIS */
+`define FPATH(X) `"../../data/X`"
+`endif  /* ! SYNTHESIS */
+
 module oscillator (
 	input wire clk_in,    // system clock
   input wire rst_in,    // system reset
@@ -90,7 +99,9 @@ end
 xilinx_true_dual_port_read_first_1_clock_ram #(
   .RAM_WIDTH(24),
   .RAM_DEPTH(512),
-  .RAM_PERFORMANCE("HIGH_PERFORMANCE")) 
+  .RAM_PERFORMANCE("HIGH_PERFORMANCE")
+  .INIT_FILE(`FPATH(funky_sine.mem))
+  ) 
 waveform_ram (
   .clka(clk_in),     // Clock
 
