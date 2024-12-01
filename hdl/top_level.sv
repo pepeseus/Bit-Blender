@@ -92,16 +92,11 @@ module top_level
     .sample_data_out(sample_data)
   );
 
-<<<<<<< HEAD
 
 
   /**
     I2S TX
   */
-=======
-  // I2S Clock Generation
-  logic i2s_sd, i2s_bclk, i2s_ws;
->>>>>>> 44dc151c2218e3a6d7dea0dcb6073bf0352ff668
 
   i2s_clk_wiz_44100 i2s_clk_wiz (
     .reset(sys_rst),
