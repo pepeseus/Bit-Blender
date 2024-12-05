@@ -7,7 +7,7 @@
 `define FPATH(X) `"../../data/X`"
 `endif  /* ! SYNTHESIS */
 
-module wave_loader #(parameter NUMOSC = 4)  // number of oscillators
+module wave_loader #(parameter NUM_OSCILLATORS = 4)  // number of oscillators
 (
 	input wire    clk_in,    // system clock
   input wire    rst_in,    // system reset
@@ -17,9 +17,9 @@ module wave_loader #(parameter NUMOSC = 4)  // number of oscillators
   input wire    ui_update_trig_in,                  // trigger detected UI update
 
   // Audio
-	input wire    [NUMOSC-1:0] osc_is_on_in,          // TODO do I need to return 0 if is_on_in is low?
-	input wire    [15:0] osc_index_in [NUMOSC-1:0],   // playback sample index for each oscillator
-	output logic  [15:0] osc_data_out [NUMOSC-1:0],   // output sample data for each oscillator
+	input wire    [NUM_OSCILLATORS-1:0] osc_is_on_in,          // TODO do I need to return 0 if is_on_in is low?
+	input wire    [15:0] osc_index_in [NUM_OSCILLATORS-1:0],   // playback sample index for each oscillator
+	output logic  [15:0] osc_data_out [NUM_OSCILLATORS-1:0],   // output sample data for each oscillator
 
   // Visual
 	input wire    [15:0] viz_index_in,                // hdmi pixel index
@@ -39,7 +39,7 @@ logic writing;                 // enable writing to the main memory
 always_ff @(posedge clk_in) begin
   if (rst_in) begin
     // reset all oscillators data
-    for (int i = 0; i < NUMOSC; i++) begin
+    for (int i = 0; i < NUM_OSCILLATORS; i++) begin
       osc_data_out[i] <= 16'b0;
     end
     // reset visual data
@@ -107,7 +107,7 @@ main_ram (
 
 generate
   genvar i;
-  for (i = 0; i < NUMOSC; i++) begin : osc_gen
+  for (i = 0; i < NUM_OSCILLATORS; i++) begin : osc_gen
     xilinx_true_dual_port_read_first_1_clock_ram #(
       .RAM_WIDTH(16),
       .RAM_DEPTH(512),
@@ -205,3 +205,5 @@ debug_ram (
 
 
 endmodule
+
+`default_nettype wire
