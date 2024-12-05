@@ -46,25 +46,27 @@ module midi_reader(
             case (state)
                 IDLE: begin
                     if (leading_bit == 1'b1) begin // Incoming status byte
-                        status <= data_out[6:4];
+                        status <= data_out[7:4];
                         state <= STATUS_RECEIVED;
-                        valid_out <= 1'b0;
                     end
+                    valid_out <= 1'b0;
                 end
 
                 STATUS_RECEIVED: begin
                     if (leading_bit == 1'b1) begin // Another status byte
-                        status <= data_out[6:4]; // Overwrite old status
+                        status <= data_out[7:4]; // Overwrite old status
                     end else begin // First data byte received
                         data_byte1 <= data_out;
                         state <= BYTE1_RECEIVED;
                     end
+                    valid_out <= 1'b0;
                 end
 
                 BYTE1_RECEIVED: begin
                     if (leading_bit == 1'b1) begin // Another status byte
-                        status <= data_out[6:4];
+                        status <= data_out[7:4];
                         state <= STATUS_RECEIVED;
+                        valid_out <= 1'b0;
                     end else begin // Second data byte received
                         data_byte2 <= data_out;
                         state <= IDLE;
@@ -73,6 +75,9 @@ module midi_reader(
                 end
 
             endcase
+        end
+        else begin
+            valid_out <= 1'b0;
         end
     end
 

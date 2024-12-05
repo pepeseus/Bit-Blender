@@ -7,10 +7,11 @@ module top_level
    output logic [15:0] led,
    // UART
    input wire          uart_rxd,   // UART computer-FPGA
-   output logic        uart_txd,   // UART FPGA-computer
-   // I2C
-   inout wire          i2c_scl,    // I2C inout clock
-   inout wire          i2c_sda,    // I2C inout data
+  //  output logic        uart_txd,   // UART FPGA-computer
+   // I2S
+   output wire          i2s_bclk,    // clock
+   output wire          i2s_sd,    // data
+   output wire          i2s_ws,    // channel select
    input wire [15:0]   sw,
    input wire [3:0]    btn,
    // RGB LEDs
@@ -20,16 +21,12 @@ module top_level
    output logic [3:0]  ss0_an,     // Anode control for upper digits
    output logic [3:0]  ss1_an,     // Anode control for lower digits
    output logic [6:0]  ss0_c,      // Cathode controls for upper digits
-   output logic [6:0]  ss1_c,      // Cathode controls for lower digits
+   output logic [6:0]  ss1_c      // Cathode controls for lower digits
    // HDMI
-   output logic [2:0]  hdmi_tx_p,  // HDMI output signals (positive)
-   output logic [2:0]  hdmi_tx_n,  // HDMI output signals (negative)
-   output logic        hdmi_clk_p, 
-   output logic        hdmi_clk_n  // Differential HDMI clock
-   // I2S
-   output logic        i2s_bclk,  // bit clock
-   output logic        i2s_ws,    // word select
-   output logic        i2s_sd     // serial data
+  //  output logic [2:0]  hdmi_tx_p,  // HDMI output signals (positive)
+  //  output logic [2:0]  hdmi_tx_n,  // HDMI output signals (negative)
+  //  output logic        hdmi_clk_p, 
+  //  output logic        hdmi_clk_n  // Differential HDMI clock
    );
 
   localparam AUDIO_WIDTH = 24;
@@ -67,7 +64,6 @@ module top_level
   // MIDI Processor
   logic is_note_on;
   logic [23:0] playback_rate;
-  logic valid_out_processor;
 
   midi_processor processor_main(
     .clk_in(clk_100mhz),
@@ -77,8 +73,7 @@ module top_level
     .data_byte2(data_byte2),
     .valid_in(valid_out_reader),
     .isNoteOn(is_note_on),
-    .cycles_between_samples(playback_rate),
-    .valid_out(valid_out_processor)
+    .cycles_between_samples(playback_rate)
   );
 
   // Oscillator
@@ -87,7 +82,7 @@ module top_level
   oscillator osc_inst(
     .clk_in(clk_100mhz),
     .rst_in(sys_rst),
-    .is_on_in(is_note_on),
+    .is_on_in(is_note_on), // is_note_on
     .playback_rate_in(playback_rate),
     .sample_data_out(sample_data)
   );
@@ -104,7 +99,7 @@ module top_level
     .clk_bit(i2s_bclk),
     .clk_ws(i2s_ws)
   );
-
+  
   // I2S Transmitter
   i2s_tx #(
     .WIDTH(AUDIO_WIDTH)
