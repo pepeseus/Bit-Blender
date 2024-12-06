@@ -29,7 +29,7 @@ module top_level
   //  output logic        hdmi_clk_n  // Differential HDMI clock
    );
 
-  localparam AUDIO_WIDTH = 24;
+  localparam SAMPLE_WIDTH = 24;
 
   // Reset signal
   logic sys_rst;
@@ -94,7 +94,7 @@ module top_level
   */
 
   i2s_clk_wiz_44100 i2s_clk_wiz (
-    .reset(sys_rst),
+    .rst(sys_rst),
     .clk_ref(clk_100mhz),
     .clk_bit(i2s_bclk),
     .clk_ws(i2s_ws)
@@ -102,7 +102,7 @@ module top_level
   
   // I2S Transmitter
   i2s_tx #(
-    .WIDTH(AUDIO_WIDTH)
+    .WIDTH(SAMPLE_WIDTH)
   ) i2s_tx_inst (
     .clk(clk_100mhz),
     .rst(sys_rst),

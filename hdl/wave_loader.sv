@@ -26,7 +26,7 @@ module wave_loader #(parameter NUM_OSCILLATORS = 4)  // number of oscillators
 	output logic  [15:0] viz_data_out                 // output hdmi pixel data
 
   // Debug
-  output logic  [15:0] debug_index_in,              // debug sample index     
+  input logic  [15:0] debug_index_in,               // debug sample index     
   output logic  [15:0] debug_data_out               // debug sample data
 );
 
@@ -82,22 +82,22 @@ main_ram (
   .clka(clk_in),     // Clock
 
   //writing port:
-  .addra(),     // Port A address bus,
-  .dina(),      // Port A RAM input data
-  .douta(),     // Port A RAM output data, width determined from RAM_WIDTH
-  .wea(1'b0),   // Port A write enable
-  .ena(1'b0),   // Port A RAM Enable (DISABLED)
-  .rsta(1'b0),      // Port A output reset
-  .regcea(1'b1),    // Port A output register enable
+  .addra(),               // Port A address bus,
+  .dina(),                // Port A RAM input data
+  .douta(),               // Port A RAM output data, width determined from RAM_WIDTH
+  .wea(1'b0),             // Port A write enable
+  .ena(1'b0),             // Port A RAM Enable (DISABLED)
+  .rsta(1'b0),            // Port A output reset
+  .regcea(1'b1),          // Port A output register enable
 
   //reading port:
-  .addrb(sample_index),       // Port B address bus,
-  .doutb(sample_data),        // Port B RAM output data,
-  .dinb(1'b0),                // Port B RAM input data, width determined from RAM_WIDTH
-  .web(writing),             // Port B write enable
-  .enb(writing),             // Port B RAM Enable,
-  .rstb(1'b0),      // Port B output reset
-  .regceb(1'b1)     // Port B output register enable
+  .addrb(sample_index),   // Port B address bus,
+  .doutb(sample_data),    // Port B RAM output data,
+  .dinb(1'b0),            // Port B RAM input data, width determined from RAM_WIDTH
+  .web(writing),          // Port B write enable
+  .enb(writing),          // Port B RAM Enable,
+  .rstb(1'b0),            // Port B output reset
+  .regceb(1'b1)           // Port B output register enable
 );
 
 
