@@ -32,8 +32,18 @@ module wave_loader #(
 
   // Debug
   input wire    [WW_WIDTH-1:0]        debug_index_in,     // debug sample index     
-  output logic  [SAMPLE_WIDTH-1:0]    debug_data_out      // debug sample data
+  output logic  [SAMPLE_WIDTH-1:0]    debug_data_out,      // debug sample data
+
+
+  output logic [7:0] pmodb
 );
+
+assign pmodb[0] = ui_update_trig_in;    // 
+assign pmodb[1] = writing;              // 
+assign pmodb[2] = sample_index[0];      // 
+assign pmodb[3] = sample_data[0];       // 
+assign pmodb[4] = osc_data_out[0][0];   // 
+assign pmodb[5] = osc_index_in[0][0];   // 
 
 
 logic [WW_WIDTH-1:0] sample_index;            // index of the sample in the main memory // TODO replace with SD size
@@ -62,7 +72,7 @@ always_ff @(posedge clk_in) begin
     end
 
     // continue writing until the wave width is reached
-    if (sample_index+1 < wave_width_in) begin
+    if (writing & (sample_index+1 < wave_width_in)) begin
       sample_index <= sample_index + 1;
     end else begin
       sample_index <= 18'b0;

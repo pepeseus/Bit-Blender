@@ -23,8 +23,11 @@ NOTES:
 
 
 Qs:
+- SD inputs?
 - GET HDMI OUTS!!!!
-- XDC wtf?
+- ADC + pots
+- XDC file
+- XDC 3.3v vs 1.8v?
 
 
 # PMOD breakout:
@@ -37,3 +40,4 @@ H14 - I2S WS
 
 # Urbana Board Documentation
 https://www.realdigital.org/doc/496fed57c6b275735fe24c85de5718c2
+

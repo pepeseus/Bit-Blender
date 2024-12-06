@@ -16,7 +16,7 @@ module top_level
    input wire [3:0]    btn,
    // RGB LEDs
    output logic [2:0]  rgb0,
-   output logic [2:0]  rgb1
+   output logic [2:0]  rgb1,
    // Seven-segment display
   //  output logic [3:0]  ss0_an,     // Anode control for upper digits
   //  output logic [3:0]  ss1_an,     // Anode control for lower digits
@@ -27,10 +27,13 @@ module top_level
   //  output logic [2:0]  hdmi_tx_n,  // HDMI output signals (negative)
   //  output logic        hdmi_clk_p, 
   //  output logic        hdmi_clk_n  // Differential HDMI clock
+
+   // Debugging
+   output logic [7:0] pmodb
    );
 
   localparam SAMPLE_WIDTH = 16;
-  localparam NUM_OSCILLATORS = 4;
+  localparam NUM_OSCILLATORS = 1;
   localparam BRAM_DEPTH = 262141;               // temp memory depth     ~ $clog2(262141) = 18
   localparam WW_WIDTH = $clog2(BRAM_DEPTH);     // width of the wave width lol = 18 bits
   localparam MMEM_MAX_DEPTH = 1_000_000_000;    // main memory max depth ~ $clog2(1_000_000_000) = 30
@@ -133,7 +136,7 @@ module top_level
   // temp:
   assign is_on[0] = 1'b1;
   assign playback_rates[0] = 11'b11111010000;
-  assign stream = osc_samples[0];
+  assign stream = osc_samples[0];                   // TODO OFF
   
 
 
@@ -146,7 +149,7 @@ module top_level
   */
 
   logic [WW_WIDTH-1:0]      osc_indices [NUM_OSCILLATORS-1:0];   // playback sample index for each oscillator
-  logic [SAMPLE_WIDTH-1:0]  osc_samples [NUM_OSCILLATORS-1:0];   // output sample data for each oscillator
+  logic [SAMPLE_WIDTH-1:0]  osc_samples [NUM_OSCILLATORS-1:0];   // output sample data for each oscillator    // TODO OFF
 
   logic [WW_WIDTH-1:0]      viz_index;                           // hdmi pixel index
   logic [SAMPLE_WIDTH-1:0]  viz_sample;                          // output hdmi pixel data
@@ -171,7 +174,8 @@ module top_level
     .viz_index_in(viz_index),
     .viz_data_out(viz_sample),
     .debug_index_in(debug_index),
-    .debug_data_out(debug_sample)
+    .debug_data_out(debug_sample),
+    .pmodb(pmodb)
   );
 
 
@@ -217,7 +221,7 @@ module top_level
     .input_tready(),      // Unused
     .sck(i2s_bclk),
     .ws(i2s_ws),
-    .sd(i2s_sd)
+    .sd(i2s_sd)             // TODO OFF
   );
 
 
@@ -264,6 +268,31 @@ module top_level
   /**
     Graph View
   */
+
+
+  // debugging
+  // assign pmodb[0] = stream[0];              // OFF
+  // assign pmodb[1] = i2s_sd;                 // OFF
+  // assign pmodb[2] = osc_samples[0][0];      // OFF
+  // assign pmodb[3] = is_on[0];               // GOOD
+  // assign pmodb[4] = playback_rates[0][0];   // ?? should be fine
+  // assign pmodb[5] = osc_indices[0][0];      // GOOD
+  // assign pmodb[0] = ui_update_trig;         // 
+  // assign pmodb[1] = i2s_sd;                 // 
+  // assign pmodb[2] = osc_samples[0][0];      // 
+  // assign pmodb[3] = is_on[0];               // 
+  // assign pmodb[4] = playback_rates[0][0];   // 
+  // assign pmodb[5] = osc_indices[0][0];      // 
+
+
+
+  // assign pmodb[0] = ui_update_trig;         // 
+  // assign pmodb[1] = i2s_sd;                 // 
+  // assign pmodb[2] = osc_samples[0][0];      // 
+  // assign pmodb[3] = is_on[0];               // 
+  // assign pmodb[4] = playback_rates[0][0];   // 
+  // assign pmodb[5] = osc_indices[0][0];      // 
+
 
 
 endmodule
