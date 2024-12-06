@@ -17,6 +17,10 @@ FPGA Synth
 - Real-time graph view (?)
 
 
+NOTES:
+- I commented out voltage configs in xdc because there's some conflict between uart_txd 1.8v vs midi_rx 3.3(?) !!! MIDI might not work
+
+
 
 Qs:
 - GET HDMI OUTS!!!!
