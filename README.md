@@ -24,6 +24,7 @@ NOTES:
 
 Qs:
 - GET HDMI OUTS!!!!
+- XDC wtf?
 
 
 # PMOD breakout:
