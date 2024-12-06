@@ -16,12 +16,12 @@ module top_level
    input wire [3:0]    btn,
    // RGB LEDs
    output logic [2:0]  rgb0,
-   output logic [2:0]  rgb1,
+   output logic [2:0]  rgb1
    // Seven-segment display
-   output logic [3:0]  ss0_an,     // Anode control for upper digits
-   output logic [3:0]  ss1_an,     // Anode control for lower digits
-   output logic [6:0]  ss0_c,      // Cathode controls for upper digits
-   output logic [6:0]  ss1_c      // Cathode controls for lower digits
+  //  output logic [3:0]  ss0_an,     // Anode control for upper digits
+  //  output logic [3:0]  ss1_an,     // Anode control for lower digits
+  //  output logic [6:0]  ss0_c,      // Cathode controls for upper digits
+  //  output logic [6:0]  ss1_c      // Cathode controls for lower digits
    // HDMI
   //  output logic [2:0]  hdmi_tx_p,  // HDMI output signals (positive)
   //  output logic [2:0]  hdmi_tx_n,  // HDMI output signals (negative)
@@ -118,17 +118,23 @@ module top_level
   logic [23:0] playback_rates [NUM_OSCILLATORS-1:0];            // corresponding notes for each oscillator
   logic [SAMPLE_WIDTH-1:0] stream;                              // output playback mixed sample
 
-  midi_coordinator coordinator_main(
-    .clk_in(clk_100mhz),
-    .rst_in(sys_rst),
-    .isNoteOn(is_note_on),
-    .cycles_between_samples(playback_rate),
-    .valid_in(valid_out_reader),
-    .is_on(is_on),
-    .playback_rate(playback_rates),
-    .out_samples(osc_samples),
-    .stream_out(stream)
-  );
+  // midi_coordinator coordinator_main(
+  //   .clk_in(clk_100mhz),
+  //   .rst_in(sys_rst),
+  //   .isNoteOn(is_note_on),
+  //   .cycles_between_samples(playback_rate),
+  //   .valid_in(valid_out_reader),
+  //   .is_on(is_on),
+  //   .playback_rate(playback_rates),
+  //   .out_samples(osc_samples),
+  //   .stream_out(stream)
+  // );
+
+  // temp:
+  assign is_on[0] = 1'b1;
+  assign playback_rates[0] = 11'b11111010000;
+  assign stream = osc_samples[0];
+  
 
 
 
@@ -151,7 +157,7 @@ module top_level
   wave_loader #(
     .NUM_OSCILLATORS(NUM_OSCILLATORS),    // number of oscillators
     .SAMPLE_WIDTH(SAMPLE_WIDTH),          // width of the sample data
-    .BRAM_DEPTH(BRAM_DEPTH)               // depth of the DRAM
+    .BRAM_DEPTH(BRAM_DEPTH),              // depth of the DRAM
     .WW_WIDTH(WW_WIDTH),                  // width of the wave width
     .MMEM_MAX_DEPTH(MMEM_MAX_DEPTH)       // depth of the main memory
   )
@@ -186,7 +192,7 @@ module top_level
         .rst_in(sys_rst),
         .wave_width_in(wave_width),
         .is_on_in(is_on[i]),
-        .playback_rate_in(playback_rate[i]),
+        .playback_rate_in(playback_rates[i]),
         .sample_index_out(osc_indices[i])
       );
     end

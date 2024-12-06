@@ -1,108 +1,101 @@
-module midi_coordinator #(
-    parameter NUM_OSCILLATORS,
-    parameter SAMPLE_WIDTH
-)(
-    input wire clk_in, //system clock
-    input wire rst_in, //system reset
-    input wire isNoteOn,
-    input wire [23:0] cycles_between_samples,
-    input wire valid_in,
-    output logic [SAMPLE_WIDTH-1:0] stream_out
-);
+// `timescale 1ns / 1ps
+// `default_nettype none
 
-  logic [NUM_OSCILLATORS-1:0] is_on;                 // track each oscillator
-  logic [23:0] playback_rates [NUM_OSCILLATORS-1:0];  // corresponding notes for each oscillator
-  logic [23:0] out_samples [NUM_OSCILLATORS-1:0];     // output from each oscillator
 
-  generate
-    genvar i;
-    for (i = 0; i < NUM_OSCILLATORS; i++) begin
-      oscillator osc_inst (
-        .clk_in(clk_in),
-        .rst_in(rst_in),
-        .is_on_in(is_on[i]),
-        .playback_rate_in(playback_rates[i]),
-        .sample_data_out(out_samples[i])
-      );
-    end
-  endgenerate
+// module midi_coordinator #(
+//   parameter NUM_OSCILLATORS,
+//   parameter SAMPLE_WIDTH
+// )(
+//   input wire clk_in,
+//   input wire rst_in,
+//   input wire isNoteOn,
+//   input wire [23:0] cycles_between_samples,
+//   input wire valid_in,
+//   input wire [NUM_OSCILLATORS-1:0] is_on,
+//   input wire [SAMPLE_WIDTH-1:0] out_samples [NUM_OSCILLATORS-1:0],
+//   output logic [SAMPLE_WIDTH-1:0] stream_out
+// );
 
-  logic [31:0] age [NUM_OSCILLATORS-1:0]; // LRU approach; keep track of how old each oscillator is
 
-  always_ff @(posedge clk_in) begin
+//   logic [31:0] age [NUM_OSCILLATORS-1:0]; // LRU approach; keep track of how old each oscillator is
 
-    if (rst_in) begin
+//   always_ff @(posedge clk_in) begin
 
-      for (int i = 0; i < NUM_OSCILLATORS; i++) begin
+//     if (rst_in) begin
 
-        is_on[i] <= 0;
-        playback_rates[i] <= 0;
-        age[i] <= 0;
+//       for (int i = 0; i < NUM_OSCILLATORS; i++) begin
 
-      end
+//         is_on[i] <= 0;
+//         playback_rates[i] <= 0;
+//         age[i] <= 0;
 
-    end else if (valid_in) begin
+//       end
 
-      if (isNoteOn) begin // find available oscillator to replace
+//     end else if (valid_in) begin
 
-        integer available_idx = -1;
-        integer oldest_idx = 0;
-        integer max_age = -1;
+//       if (isNoteOn) begin // find available oscillator to replace
 
-        for (int i = 0; i < NUM_OSCILLATORS; i++) begin
+//         integer available_idx = -1;
+//         integer oldest_idx = 0;
+//         integer max_age = -1;
 
-          if (!is_on[i]) begin
-            available_idx = i;
-          end
+//         for (int i = 0; i < NUM_OSCILLATORS; i++) begin
 
-          if (age[i] > max_age) begin
-            max_age = age[i];
-            oldest_idx = i;
-          end
+//           if (!is_on[i]) begin
+//             available_idx = i;
+//           end
 
-        end
+//           if (age[i] > max_age) begin
+//             max_age = age[i];
+//             oldest_idx = i;
+//           end
 
-        // oscillator found! assign values
-        if (available_idx != -1) begin
-          i = available_idx;
-        end else begin
-          i = oldest_idx;
-        end
+//         end
 
-        is_on[i] <= 1;
-        playback_rates[i] <= cycles_between_samples;
-        age[i] <= 0;
+//         // oscillator found! assign values
+//         if (available_idx != -1) begin
+//           i = available_idx;
+//         end else begin
+//           i = oldest_idx;
+//         end
 
-      end else begin // else Note Off so turn off corresponding oscillator
+//         is_on[i] <= 1;
+//         playback_rates[i] <= cycles_between_samples;
+//         age[i] <= 0;
 
-        for (int i = 0; i < NUM_OSCILLATORS; i++) begin
+//       end else begin // else Note Off so turn off corresponding oscillator
 
-          if (is_on[i] && playback_rates[i] == cycles_between_samples) begin
-            is_on[i] <= 0;
-            playback_rates[i] <= 0;
-          end
-        end
+//         for (int i = 0; i < NUM_OSCILLATORS; i++) begin
 
-      end
+//           if (is_on[i] && playback_rates[i] == cycles_between_samples) begin
+//             is_on[i] <= 0;
+//             playback_rates[i] <= 0;
+//           end
+//         end
 
-      // update age for all active oscillators
-      for (int i = 0; i < NUM_OSCILLATORS; i++) begin
-        if (is_on[i]) begin
-            age[i] <= age[i] + 1;
-        end
-      end
-    end
-  end
+//       end
 
-  // mix output
-  // TODO: how many oscillators until we don't meet timing?
-  always_comb begin
-    stream_out = 0;
-    for (int i = 0; i < NUM_OSCILLATORS; i++) begin
-      if (is_on[i]) begin
-        stream_out += out_samples[i];
-      end
-    end
-  end
+//       // update age for all active oscillators
+//       for (int i = 0; i < NUM_OSCILLATORS; i++) begin
+//         if (is_on[i]) begin
+//             age[i] <= age[i] + 1;
+//         end
+//       end
+//     end
+//   end
 
-endmodule
+//   // mix output
+//   // TODO: how many oscillators until we don't meet timing?
+//   always_comb begin
+//     stream_out = 0;
+//     for (int i = 0; i < NUM_OSCILLATORS; i++) begin
+//       if (is_on[i]) begin
+//         stream_out += out_samples[i];
+//       end
+//     end
+//   end
+
+// endmodule
+
+
+// `default_nettype wire

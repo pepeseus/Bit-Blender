@@ -1,8 +1,7 @@
 `timescale 1ns / 1ps
 `default_nettype none
 
-module oscillator #(parameter WW_WIDTH)
-(
+module oscillator #(parameter WW_WIDTH) (
 	input wire clk_in,    // system clock
   input wire rst_in,    // system reset
   input wire [WW_WIDTH-1:0] wave_width_in,
@@ -10,8 +9,6 @@ module oscillator #(parameter WW_WIDTH)
 	input wire [23:0] playback_rate_in,   // playback interval in clk cycles per sample
 	output logic [WW_WIDTH-1:0] sample_index_out
 );
-
-
 
 // playback
 /**

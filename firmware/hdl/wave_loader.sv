@@ -12,7 +12,7 @@ module wave_loader #(
   parameter SAMPLE_WIDTH,           // width of the sample data
   parameter BRAM_DEPTH,             // depth of the BRAM
   parameter WW_WIDTH,               // width of the wave width
-  parameter MMEM_MAX_DEPTH,         // max depth of the main memory
+  parameter MMEM_MAX_DEPTH          // max depth of the main memory
   )(
 	input wire    clk_in,    // system clock
   input wire    rst_in,    // system reset
@@ -22,17 +22,17 @@ module wave_loader #(
   input wire    ui_update_trig_in,                          // trigger detected UI update
 
   // Audio
-	input wire    [NUM_OSCILLATORS-1:0] osc_is_on_in,                       // TODO do I need to return 0 if is_on_in is low?
-	input wire    [WW_WIDTH-1:0] osc_index_in [NUM_OSCILLATORS-1:0],        // playback sample index for each oscillator
-	output logic  [SAMPLE_WIDTH-1:0] osc_data_out [NUM_OSCILLATORS-1:0],    // output sample data for each oscillator
+	input wire    [NUM_OSCILLATORS-1:0] osc_is_on_in,                         // TODO do I need to return 0 if is_on_in is low?
+	input wire    [WW_WIDTH-1:0]        osc_index_in [NUM_OSCILLATORS-1:0],   // playback sample index for each oscillator
+	output logic  [SAMPLE_WIDTH-1:0]    osc_data_out [NUM_OSCILLATORS-1:0],   // output sample data for each oscillator
 
   // Visual
-	input wire    [WW_WIDTH-1:0] viz_index_in,            // hdmi pixel index
-	output logic  [SAMPLE_WIDTH-1:0] viz_data_out,        // output hdmi pixel data
+	input wire    [WW_WIDTH-1:0]        viz_index_in,       // hdmi pixel index
+	output logic  [SAMPLE_WIDTH-1:0]    viz_data_out,       // output hdmi pixel data
 
   // Debug
-  input wire    [WW_WIDTH-1:0] debug_index_in,          // debug sample index     
-  output logic  [SAMPLE_WIDTH-1:0] debug_data_out       // debug sample data
+  input wire    [WW_WIDTH-1:0]        debug_index_in,     // debug sample index     
+  output logic  [SAMPLE_WIDTH-1:0]    debug_data_out      // debug sample data
 );
 
 
