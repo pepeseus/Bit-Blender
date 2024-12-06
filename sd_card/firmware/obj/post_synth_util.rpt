@@ -1,8 +1,8 @@
 Copyright 1986-2022 Xilinx, Inc. All Rights Reserved. Copyright 2022-2024 Advanced Micro Devices, Inc. All Rights Reserved.
 ---------------------------------------------------------------------------------------------------------------------------------------------
 | Tool Version : Vivado v.2024.1 (lin64) Build 5076996 Wed May 22 18:36:09 MDT 2024
-| Date         : Fri Dec  6 13:25:14 2024
-| Host         : eecs-digital-15 running 64-bit Ubuntu 24.04.1 LTS
+| Date         : Fri Dec  6 16:46:00 2024
+| Host         : eecs-digital-42 running 64-bit Ubuntu 24.04.1 LTS
 | Command      : report_utilization -file obj/post_synth_util.rpt -hierarchical -hierarchical_depth 4
 | Design       : top_level
 | Device       : xc7s50csga324-1
@@ -19,12 +19,14 @@ Table of Contents
 1. Utilization by Hierarchy
 ---------------------------
 
-+---------------+-------------------+------------+------------+---------+------+-----+--------+--------+------------+
-|    Instance   |       Module      | Total LUTs | Logic LUTs | LUTRAMs | SRLs | FFs | RAMB36 | RAMB18 | DSP Blocks |
-+---------------+-------------------+------------+------------+---------+------+-----+--------+--------+------------+
-| top_level     |             (top) |         12 |         12 |       0 |    0 |  12 |      0 |      0 |          0 |
-|   (top_level) |             (top) |          0 |          0 |       0 |    0 |   0 |      0 |      0 |          0 |
-|   i2s_clk_wiz | i2s_clk_wiz_44100 |         12 |         12 |       0 |    0 |  12 |      0 |      0 |          0 |
-+---------------+-------------------+------------+------------+---------+------+-----+--------+--------+------------+
++------------------+---------------+------------+------------+---------+------+-----+--------+--------+------------+
+|     Instance     |     Module    | Total LUTs | Logic LUTs | LUTRAMs | SRLs | FFs | RAMB36 | RAMB18 | DSP Blocks |
++------------------+---------------+------------+------------+---------+------+-----+--------+--------+------------+
+| top_level        |         (top) |        165 |        165 |       0 |    0 | 151 |      0 |      0 |          0 |
+|   (top_level)    |         (top) |          0 |          0 |       0 |    0 |   0 |      0 |      0 |          0 |
+|   nolabel_line22 | clk_wiz_25mhz |          2 |          2 |       0 |    0 |   3 |      0 |      0 |          0 |
+|   pwm            |     audio_PWM |         10 |         10 |       0 |    0 |   9 |      0 |      0 |          0 |
+|   sd             | sd_controller |        153 |        153 |       0 |    0 | 139 |      0 |      0 |          0 |
++------------------+---------------+------------+------------+---------+------+-----+--------+--------+------------+
 
 

@@ -1,34 +1,33 @@
 `timescale 1ns / 1ps
 
-module top_level(input clk_100mhz, 
-                    input sd_cd,
-                    input btnr, // replace w/ your system reset
+module top_level(
+        input wire clk_100mhz, 
 
-                    output logic spkl, spkr,      // left and right channels of line out port
-                             
-                    inout [3:0] sd_dat,
-                       
-                    output logic [15:0] led,
-                    output logic sd_reset, 
-                    output logic sd_sck, 
-                    output logic sd_cmd
+        output logic spkl, spkr,      // left and right channels of line out port
+        output logic [15:0] led,
+                    
+        inout wire [3:0] sd_dat,
+        input wire sd_cd,
+        output logic sd_sck, 
+        output logic sd_cmd
     );
     
     logic reset;            // assign to your system reset
-    assign reset = btnr;    // if yours isn't btnr
+    assign reset = 0;
     
     assign sd_dat[2:1] = 2'b11;
-    assign sd_reset = 0;
     
     // generate 25 mhz clock for sd_controller 
     logic clk_25mhz;
-    clk_wiz_0 clocks(.clk_in1(clk_100mhz), .clk_out1(clk_25mhz));
+    clk_wiz_25mhz (.rst(reset), .clk_100mhz(clk_100mhz), .clk_25mhz(clk_25mhz));
    
     // sd_controller inputs
     logic rd;                   // read enable
     logic wr;                   // write enable
     logic [7:0] din;            // data to sd card
     logic [31:0] addr;          // starting address for read/write operation
+
+    assign addr = 0;
     
     // sd_controller outputs
     logic ready;                // high when ready for new read/write operation

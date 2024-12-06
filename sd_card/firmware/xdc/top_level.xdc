@@ -141,6 +141,17 @@ set_property PACKAGE_PIN B13 [ get_ports "spkl"]
 set_property PACKAGE_PIN B14 [ get_ports "spkr"]
 set_property IOSTANDARD LVCMOS33 [ get_ports "spk*"]
 
+
+# SD socket signals
+set_property -dict {PACKAGE_PIN M16 IOSTANDARD LVCMOS33} [get_ports "sd_dat[0]"]
+set_property -dict {PACKAGE_PIN M17 IOSTANDARD LVCMOS33} [get_ports "sd_dat[1]"]
+set_property -dict {PACKAGE_PIN M18 IOSTANDARD LVCMOS33} [get_ports "sd_dat[2]"]
+set_property -dict {PACKAGE_PIN N18 IOSTANDARD LVCMOS33} [get_ports "sd_dat[3]"]
+set_property -dict {PACKAGE_PIN P17 IOSTANDARD LVCMOS33} [get_ports "sd_cmd"]
+set_property -dict {PACKAGE_PIN P18 IOSTANDARD LVCMOS33} [get_ports "sd_sck"]
+set_property -dict {PACKAGE_PIN R18 IOSTANDARD LVCMOS33} [get_ports "sd_cd"]
+
+
 # PWM Microphone signals
 #set_property -dict {PACKAGE_PIN E12 IOSTANDARD LVCMOS33} [get_ports {mic_clk}]
 #set_property -dict {PACKAGE_PIN D12 IOSTANDARD LVCMOS33} [get_ports {mic_data}]

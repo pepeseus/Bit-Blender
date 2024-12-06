@@ -1,17 +1,17 @@
 `timescale 1ns / 1ps
 `default_nettype none
 
-module debug_clk_wiz_25mhz (
+module clk_wiz_25mhz (
   // Status and control signals
   input  wire rst,
-  input  wire clk_ref,
+  input  wire clk_100mhz,    
   // Clock out ports
   output logic clk_25mhz
 );
 
   logic [1:0] counter;
 
-  always @(posedge clk_ref) begin
+  always @(posedge clk_100mhz) begin
     if (rst) begin
       counter <= 0;
       clk_25mhz <= 0;
