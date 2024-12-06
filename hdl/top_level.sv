@@ -6,8 +6,8 @@ module top_level
    input wire          clk_100mhz,
    output logic [15:0] led,
    // UART
-   input wire          uart_rxd,   // UART computer-FPGA
-  //  output logic        uart_txd,   // UART FPGA-computer
+   input wire          midi_rx,    // UART MIDI-FPGA
+   output logic        uart_txd,   // UART FPGA-computer
    // I2S
    output wire          i2s_bclk,    // clock
    output wire          i2s_sd,    // data
@@ -29,7 +29,8 @@ module top_level
   //  output logic        hdmi_clk_n  // Differential HDMI clock
    );
 
-  localparam SAMPLE_WIDTH = 24;
+  localparam SAMPLE_WIDTH = 16;
+  localparam NUM_OSCILLATORS = 4;
 
   // Reset signal
   logic sys_rst;
@@ -39,11 +40,33 @@ module top_level
   assign rgb0 = 0;
   assign rgb1 = 0;
 
-  // UART RX signal buffering
-  logic uart_rx_buf0, uart_rx_buf1;
+
+
+
+  /**
+    UI Handling
+  */
+  logic ui_update_trig;
+  ui_handler ui_handle (
+    .clk_in(clk_100mhz),
+    .rst_in(sys_rst),
+    .sw_in(sw),
+    .update_trig_out(ui_update_trig)
+  )
+
+
+
+
+
+  /**
+    MIDI Processing
+  */
+
+  // MIDI UART RX signal buffering
+  logic midi_rx_buf0, midi_rx_buf1;
   always_ff @(posedge clk_100mhz) begin
-    uart_rx_buf0 <= uart_rxd;
-    uart_rx_buf1 <= uart_rx_buf0;
+    midi_rx_buf0 <= midi_rx;
+    midi_rx_buf1 <= midi_rx_buf0;
   end
 
   // MIDI Reader
@@ -54,12 +77,13 @@ module top_level
   midi_reader reader_main(
     .clk_in(clk_100mhz),
     .rst_in(sys_rst),
-    .rx_wire_in(uart_rx_buf1),
+    .rx_wire_in(midi_rx_buf1),
     .status(status),
     .data_byte1(data_byte1),
     .data_byte2(data_byte2),
     .valid_out(valid_out_reader)
   );
+
 
   // MIDI Processor
   logic is_note_on;
@@ -76,44 +100,145 @@ module top_level
     .cycles_between_samples(playback_rate)
   );
 
-  // Oscillator
-  logic [23:0] sample_data;
 
-  oscillator osc_inst(
+  // Polyphonic MIDI Coordinator
+  logic [NUM_OSCILLATORS-1:0] is_on;                            // track each oscillator
+  logic [23:0] playback_rates [NUM_OSCILLATORS-1:0];            // corresponding notes for each oscillator
+  logic [SAMPLE_WIDTH-1:0] stream;                              // output playback mixed sample
+
+  midi_coordinator coordinator_main(
     .clk_in(clk_100mhz),
     .rst_in(sys_rst),
-    .is_on_in(is_note_on), // is_note_on
-    .playback_rate_in(playback_rate),
-    .sample_data_out(sample_data)
+    .isNoteOn(is_note_on),
+    .cycles_between_samples(playback_rate),
+    .valid_in(valid_out_reader),
+    .is_on(is_on),
+    .playback_rate(playback_rates),
+    .out_samples(osc_samples),
+    .stream_out(stream)
   );
 
 
 
+
+
+
   /**
-    I2S TX
+    Memory Management
   */
 
-  i2s_clk_wiz_44100 i2s_clk_wiz (
+  logic [SAMPLE_WIDTH-1:0] osc_indices [NUM_OSCILLATORS-1:0];   // playback sample index for each oscillator
+  logic [SAMPLE_WIDTH-1:0] osc_samples [NUM_OSCILLATORS-1:0];   // output sample data for each oscillator
+
+  logic [SAMPLE_WIDTH-1:0] viz_index;                           // hdmi pixel index
+  logic [SAMPLE_WIDTH-1:0] viz_sample;                          // output hdmi pixel data
+
+  logic [SAMPLE_WIDTH-1:0] debug_index;                         // debug sample index
+  logic [SAMPLE_WIDTH-1:0] debug_sample;                        // debug sample data
+
+  wave_loader memio (
+    .clk_in(clk_100mhz),
+    .rst_in(sys_rst),
+    .wave_width_in(sw),
+    .ui_update_trig_in(ui_update_trig),
+    .osc_index_in(osc_indices),
+    .osc_data_out(osc_samples),
+    .viz_index_in(viz_index),
+    .viz_data_out(viz_sample),
+    .debug_index_in(debug_index),
+    .debug_data_out(debug_sample)
+  );
+
+
+
+
+
+
+  /**
+    Audio Playback
+  */
+  // Oscillators
+  generate
+    genvar i;
+    for (i = 0; i < NUM_OSCILLATORS; i++) begin
+      oscillator osc_inst (
+        .clk_in(clk_in),
+        .rst_in(rst_in),
+        .wave_width_in(sw),
+        .is_on_in(is_on[i]),
+        .playback_rate_in(playback_rate[i]),
+        .sample_index_out(osc_indices[i])
+      );
+    end
+  endgenerate
+  
+
+  // I2S TX
+  i2s_clk_wiz_44100 i2s_clk_wiz (     // I2S clock generator
     .rst(sys_rst),
     .clk_ref(clk_100mhz),
     .clk_bit(i2s_bclk),
     .clk_ws(i2s_ws)
   );
-  
-  // I2S Transmitter
-  i2s_tx #(
+  i2s_tx #(                           // I2S transmitter        
     .WIDTH(SAMPLE_WIDTH)
   ) i2s_tx_inst (
     .clk(clk_100mhz),
     .rst(sys_rst),
-    .input_l_tdata(sample_data),
-    .input_r_tdata(sample_data),
+    .input_l_tdata(stream),
+    .input_r_tdata(stream),
     .input_tvalid(1'b1),  // Valid signal always asserted
     .input_tready(),      // Unused
     .sck(i2s_bclk),
     .ws(i2s_ws),
     .sd(i2s_sd)
   );
+
+
+
+
+
+
+
+
+  /**
+    Visual View
+  */
+
+
+
+
+  /**
+    Debugger
+  */
+  logic clk_25mhz;
+  debug_clk_wiz_25mhz debug_clk_wiz (
+    .rst(sys_rst),
+    .clk_ref(clk_100mhz),
+    .clk_25mhz(clk_25mhz)
+  );
+
+  uart_debugger debugger (
+    .clk_25mhz(clk_25mhz),
+    .rst_in(sys_rst),
+    .wave_width_in(sw),
+    .debug_data_in(debug_sample),
+    .debug_index_out(debug_index),
+    .uart_tx(uart_txd)
+  );
+
+
+
+  /**
+    FFT View
+  */
+
+
+
+  /**
+    Graph View
+  */
+
 
 endmodule
 

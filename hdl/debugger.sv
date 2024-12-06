@@ -5,8 +5,8 @@ module uart_debugger (
 	input wire clk_25mhz,                 // 25mhz clock
   input wire rst_in,                    // system reset
 	input wire [15:0] wave_width_in,      // UI switches
-	input wire [15:0] debug_data_in,       // debug sample data
-  output logic [15:0] debug_index_out,   // debug sample index requested
+	input wire [15:0] debug_data_in,      // debug sample data
+  output logic [15:0] debug_index_out,  // debug sample index requested
   output logic uart_tx;                 // UART TX wire
 );
 

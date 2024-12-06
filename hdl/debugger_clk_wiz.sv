@@ -25,3 +25,5 @@ module debug_clk_wiz_25mhz (
   end
 
 endmodule
+
+`default_nettype wire

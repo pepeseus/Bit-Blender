@@ -2,6 +2,26 @@
 FPGA Synth
 
 
+# TODO
+
+- Modify funky_sine J
+- Top level + switch to 16 bit A
+- MIDI processor J
+- Polyphony J
+- Wave loader A
+- SD card A
+- UI handler + potentiometer
+- Visual View J
+- Debugger View A
+- FFT View (?)
+- Real-time graph view (?)
+
+
+
+Qs:
+- GET HDMI OUTS!!!!
+
+
 # PMOD breakout:
 F14 - MIDI RX in
 F15 - I2S BCLK

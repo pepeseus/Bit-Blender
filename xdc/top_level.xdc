@@ -12,7 +12,7 @@ set_property CONFIG_VOLTAGE 3.3 [current_design]
 
 
 # pmoda[0]
-set_property -dict {PACKAGE_PIN F14 IOSTANDARD LVCMOS33}  [ get_ports "uart_rxd" ]
+set_property -dict {PACKAGE_PIN F14 IOSTANDARD LVCMOS33}  [ get_ports "midi_rx" ]
 # pmoda[1]
 set_property -dict {PACKAGE_PIN F15 IOSTANDARD LVCMOS33}  [ get_ports "i2s_bclk" ]
 # pmoda[2]
