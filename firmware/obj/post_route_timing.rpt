@@ -1,0 +1,76 @@
+Copyright 1986-2022 Xilinx, Inc. All Rights Reserved. Copyright 2022-2024 Advanced Micro Devices, Inc. All Rights Reserved.
+---------------------------------------------------------------------------------------------------------------------------------------------
+| Tool Version : Vivado v.2024.1 (lin64) Build 5076996 Wed May 22 18:36:09 MDT 2024
+| Date         : Sat Dec  7 18:15:08 2024
+| Host         : eecs-digital-09 running 64-bit Ubuntu 24.04.1 LTS
+| Command      : report_timing -file obj/post_route_timing.rpt
+| Design       : top_level
+| Device       : 7s50-csga324
+| Speed File   : -1  PRODUCTION 1.23 2018-06-13
+| Design State : Routed
+---------------------------------------------------------------------------------------------------------------------------------------------
+
+Timing Report
+
+Slack (MET) :             4.785ns  (required time - arrival time)
+  Source:                 memio/main_ram/BRAM_reg_0_0/CLKARDCLK
+                            (rising edge-triggered cell RAMB36E1 clocked by gclk  {rise@0.000ns fall@4.000ns period=10.000ns})
+  Destination:            memio/main_ram/output_register.doutb_reg_reg[0]/D
+                            (rising edge-triggered cell FDRE clocked by gclk  {rise@0.000ns fall@4.000ns period=10.000ns})
+  Path Group:             gclk
+  Path Type:              Setup (Max at Slow Process Corner)
+  Requirement:            10.000ns  (gclk rise@10.000ns - gclk rise@0.000ns)
+  Data Path Delay:        5.211ns  (logic 3.421ns (65.653%)  route 1.790ns (34.347%))
+  Logic Levels:           2  (LUT6=1 RAMB36E1=1)
+  Clock Path Skew:        -0.049ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    4.769ns = ( 14.769 - 10.000 ) 
+    Source Clock Delay      (SCD):    5.089ns
+    Clock Pessimism Removal (CPR):    0.271ns
+  Clock Uncertainty:      0.035ns  ((TSJ^2 + TIJ^2)^1/2 + DJ) / 2 + PE
+    Total System Jitter     (TSJ):    0.071ns
+    Total Input Jitter      (TIJ):    0.000ns
+    Discrete Jitter          (DJ):    0.000ns
+    Phase Error              (PE):    0.000ns
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                         (clock gclk rise edge)       0.000     0.000 r  
+    N15                                               0.000     0.000 r  clk_100mhz (IN)
+                         net (fo=0)                   0.000     0.000    clk_100mhz
+    N15                  IBUF (Prop_ibuf_I_O)         1.440     1.440 r  clk_100mhz_IBUF_inst/O
+                         net (fo=1, routed)           1.972     3.412    clk_100mhz_IBUF
+    BUFGCTRL_X0Y0        BUFG (Prop_bufg_I_O)         0.096     3.508 r  clk_100mhz_IBUF_BUFG_inst/O
+                         net (fo=108, routed)         1.581     5.089    memio/main_ram/clk_100mhz_IBUF_BUFG
+    RAMB36_X0Y14         RAMB36E1                                     r  memio/main_ram/BRAM_reg_0_0/CLKARDCLK
+  -------------------------------------------------------------------    -------------------
+    RAMB36_X0Y14         RAMB36E1 (Prop_ramb36e1_CLKARDCLK_CASCADEOUTA)
+                                                      2.872     7.961 r  memio/main_ram/BRAM_reg_0_0/CASCADEOUTA
+                         net (fo=1, routed)           0.065     8.027    memio/main_ram/BRAM_reg_0_0_n_0
+    RAMB36_X0Y15         RAMB36E1 (Prop_ramb36e1_CASCADEINA_DOADO[0])
+                                                      0.425     8.452 r  memio/main_ram/BRAM_reg_1_0/DOADO[0]
+                         net (fo=1, routed)           1.724    10.176    memio/main_ram/BRAM_reg_1_0_n_35
+    SLICE_X8Y54          LUT6 (Prop_lut6_I5_O)        0.124    10.300 r  memio/main_ram/output_register.doutb_reg[0]_i_1/O
+                         net (fo=1, routed)           0.000    10.300    memio/main_ram/ram_data_b[0]
+    SLICE_X8Y54          FDRE                                         r  memio/main_ram/output_register.doutb_reg_reg[0]/D
+  -------------------------------------------------------------------    -------------------
+
+                         (clock gclk rise edge)      10.000    10.000 r  
+    N15                                               0.000    10.000 r  clk_100mhz (IN)
+                         net (fo=0)                   0.000    10.000    clk_100mhz
+    N15                  IBUF (Prop_ibuf_I_O)         1.370    11.370 r  clk_100mhz_IBUF_inst/O
+                         net (fo=1, routed)           1.868    13.238    clk_100mhz_IBUF
+    BUFGCTRL_X0Y0        BUFG (Prop_bufg_I_O)         0.091    13.329 r  clk_100mhz_IBUF_BUFG_inst/O
+                         net (fo=108, routed)         1.440    14.769    memio/main_ram/clk_100mhz_IBUF_BUFG
+    SLICE_X8Y54          FDRE                                         r  memio/main_ram/output_register.doutb_reg_reg[0]/C
+                         clock pessimism              0.271    15.040    
+                         clock uncertainty           -0.035    15.004    
+    SLICE_X8Y54          FDRE (Setup_fdre_C_D)        0.081    15.085    memio/main_ram/output_register.doutb_reg_reg[0]
+  -------------------------------------------------------------------
+                         required time                         15.085    
+                         arrival time                         -10.300    
+  -------------------------------------------------------------------
+                         slack                                  4.785    
+
+
+
+

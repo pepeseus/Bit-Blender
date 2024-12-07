@@ -35,13 +35,15 @@ module midi_reader(
         .data_byte_out(data_out)
     );
 
+    // assign valid_out = leading_bit;
+
     always_ff @(posedge clk_in or posedge rst_in) begin
         if (rst_in) begin
             data_byte1 <= 8'd0;
             data_byte2 <= 8'd0;
             status <= 4'd0;
             state <= IDLE;
-            valid_out <= 1'b0;
+            valid_out <= 1'b0; // TODO
         end else if (receiver_data_out) begin // New data received
             case (state)
                 IDLE: begin
@@ -49,7 +51,7 @@ module midi_reader(
                         status <= data_out[7:4];
                         state <= STATUS_RECEIVED;
                     end
-                    valid_out <= 1'b0;
+                    valid_out <= 1'b0; // TODO
                 end
 
                 STATUS_RECEIVED: begin
@@ -59,25 +61,26 @@ module midi_reader(
                         data_byte1 <= data_out;
                         state <= BYTE1_RECEIVED;
                     end
-                    valid_out <= 1'b0;
+                    valid_out <= 1'b0; // TODO
                 end
 
                 BYTE1_RECEIVED: begin
                     if (leading_bit == 1'b1) begin // Another status byte
                         status <= data_out[7:4];
                         state <= STATUS_RECEIVED;
-                        valid_out <= 1'b0;
+                        valid_out <= 1'b0; // TODO
                     end else begin // Second data byte received
                         data_byte2 <= data_out;
                         state <= IDLE;
-                        valid_out <= 1'b1; // Indicate valid output
+                        valid_out <= 1'b1; // Indicate valid output // TODO
                     end
                 end
 
             endcase
         end
+
         else begin
-            valid_out <= 1'b0;
+            valid_out <= 1'b0; // TODO
         end
     end
 

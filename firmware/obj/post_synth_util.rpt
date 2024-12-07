@@ -1,8 +1,13 @@
 Copyright 1986-2022 Xilinx, Inc. All Rights Reserved. Copyright 2022-2024 Advanced Micro Devices, Inc. All Rights Reserved.
 ---------------------------------------------------------------------------------------------------------------------------------------------
 | Tool Version : Vivado v.2024.1 (lin64) Build 5076996 Wed May 22 18:36:09 MDT 2024
+<<<<<<< HEAD
 | Date         : Sat Dec  7 18:07:06 2024
 | Host         : eecs-digital-45 running 64-bit Ubuntu 24.04.1 LTS
+=======
+| Date         : Sat Dec  7 18:14:58 2024
+| Host         : eecs-digital-09 running 64-bit Ubuntu 24.04.1 LTS
+>>>>>>> 8277b6f (fixed coorindator maybe)
 | Command      : report_utilization -file obj/post_synth_util.rpt -hierarchical -hierarchical_depth 4
 | Design       : top_level
 | Device       : xc7s50csga324-1
@@ -19,6 +24,7 @@ Table of Contents
 1. Utilization by Hierarchy
 ---------------------------
 
+<<<<<<< HEAD
 +-------------------------------+--------------------------------------------------------------+------------+------------+---------+------+-----+--------+--------+------------+
 |            Instance           |                            Module                            | Total LUTs | Logic LUTs | LUTRAMs | SRLs | FFs | RAMB36 | RAMB18 | DSP Blocks |
 +-------------------------------+--------------------------------------------------------------+------------+------------+---------+------+-----+--------+--------+------------+
@@ -36,5 +42,19 @@ Table of Contents
 |     osc_gen[0].oscillator_ram |               xilinx_true_dual_port_read_first_1_clock_ram_0 |          0 |          0 |       0 |    0 |   0 |     32 |      0 |          0 |
 |   ui_handle                   |                                                   ui_handler |         35 |         35 |       0 |    0 |  32 |      0 |      0 |          0 |
 +-------------------------------+--------------------------------------------------------------+------------+------------+---------+------+-----+--------+--------+------------+
+=======
++---------------+--------------------------------------------------------------+------------+------------+---------+------+-----+--------+--------+------------+
+|    Instance   |                            Module                            | Total LUTs | Logic LUTs | LUTRAMs | SRLs | FFs | RAMB36 | RAMB18 | DSP Blocks |
++---------------+--------------------------------------------------------------+------------+------------+---------+------+-----+--------+--------+------------+
+| top_level     |                                                        (top) |         76 |         76 |       0 |    0 |  95 |      8 |      0 |          0 |
+|   (top_level) |                                                        (top) |          0 |          0 |       0 |    0 |   0 |      0 |      0 |          0 |
+|   i2s_clk_wiz |                                            i2s_clk_wiz_44100 |         12 |         12 |       0 |    0 |  12 |      0 |      0 |          0 |
+|   i2s_tx_inst |                                                       i2s_tx |         27 |         27 |       0 |    0 |  27 |      0 |      0 |          0 |
+|   memio       |                                                  wave_loader |         29 |         29 |       0 |    0 |  22 |      8 |      0 |          0 |
+|     (memio)   |                                                  wave_loader |         19 |         19 |       0 |    0 |  19 |      0 |      0 |          0 |
+|     main_ram  | xilinx_true_dual_port_read_first_1_clock_ram__parameterized1 |         10 |         10 |       0 |    0 |   3 |      8 |      0 |          0 |
+|   ui_handle   |                                                   ui_handler |         23 |         23 |       0 |    0 |  34 |      0 |      0 |          0 |
++---------------+--------------------------------------------------------------+------------+------------+---------+------+-----+--------+--------+------------+
+>>>>>>> 8277b6f (fixed coorindator maybe)
 
 
