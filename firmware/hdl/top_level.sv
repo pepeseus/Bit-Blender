@@ -34,7 +34,7 @@ module top_level
 
   localparam SAMPLE_WIDTH = 16;
   localparam NUM_OSCILLATORS = 1;
-  localparam BRAM_DEPTH = 262141;               // temp memory depth     ~ $clog2(262141) = 18
+  localparam BRAM_DEPTH = 26214;               // temp memory depth     ~ $clog2(262141) = 18
   localparam WW_WIDTH = $clog2(BRAM_DEPTH);     // width of the wave width lol = 18 bits
   localparam MMEM_MAX_DEPTH = 1_000_000_000;    // main memory max depth ~ $clog2(1_000_000_000) = 30
   localparam WS_WIDTH = $clog2(MMEM_MAX_DEPTH); // width of the wave start address = 30 bits
@@ -121,30 +121,21 @@ module top_level
   logic [23:0] playback_rates [NUM_OSCILLATORS-1:0];            // corresponding notes for each oscillator
   logic [SAMPLE_WIDTH-1:0] stream;                              // output playback mixed sample
 
-  midi_coordinator #(.NUM_OSCILLATORS(NUM_OSCILLATORS),
-    .SAMPLE_WIDTH(SAMPLE_WIDTH)
-  ) coordinator_main (
-    .clk_in(clk_100mhz),
-    .rst_in(sys_rst),
-    .isNoteOn(is_note_on),
-    .cycles_between_samples(playback_rate),
-    .valid_in(valid_out_reader),
-    .is_on(is_on),
-    .playback_rate(playback_rates),
-    .out_samples(osc_samples),
-    .stream_out(stream)
-  );
+  // midi_coordinator #(.NUM_OSCILLATORS(NUM_OSCILLATORS),
+  //   .SAMPLE_WIDTH(SAMPLE_WIDTH)
+  // ) coordinator_main (
+  //   .clk_in(clk_100mhz),
+  //   .rst_in(sys_rst),
+  //   .isNoteOn(is_note_on),
+  //   .cycles_between_samples(playback_rate),
+  //   .valid_in(valid_out_reader),
+  //   .is_on(is_on),
+  //   .playback_rate(playback_rates),
+  //   .out_samples(osc_samples),
+  //   .stream_out(stream)
+  // );
 
-  // temp:
-  // assign is_on[0] = 1'b1;
-  // assign playback_rates[0] = 11'b11111010000;
-  // assign stream = osc_samples[0];                   // TODO OFF
   
-
-
-
-
-
 
   /**
     Memory Management
@@ -183,7 +174,10 @@ module top_level
 
 
 
-
+  // temp:
+  assign is_on[0] = is_note_on;
+  assign playback_rates[0] = playback_rate;
+  assign stream = osc_samples[0];                   // TODO OFF
 
   /**
     Audio Playback
@@ -193,14 +187,15 @@ module top_level
     genvar i;
     for (i = 0; i < NUM_OSCILLATORS; i++) begin
       oscillator
-      //#(.WW_WIDTH(WW_WIDTH)) 
+      #(.WW_WIDTH(WW_WIDTH)) 
       osc_inst (
         .clk_in(clk_100mhz),
         .rst_in(sys_rst),
-        // .wave_width_in(wave_width),
+        .wave_width_in(wave_width),
         .is_on_in(is_on[i]),
         .playback_rate_in(playback_rates[i]),
-        .sample_data_out(osc_samples[i])
+        .sample_index_out(osc_indices[i])
+        // .sample_data_out(osc_samples[i])
       );
     end
   endgenerate

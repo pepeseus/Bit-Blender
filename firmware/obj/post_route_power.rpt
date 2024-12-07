@@ -1,8 +1,8 @@
 Copyright 1986-2022 Xilinx, Inc. All Rights Reserved. Copyright 2022-2024 Advanced Micro Devices, Inc. All Rights Reserved.
 -------------------------------------------------------------------------------------------------------------------------------------------------
 | Tool Version     : Vivado v.2024.1 (lin64) Build 5076996 Wed May 22 18:36:09 MDT 2024
-| Date             : Sat Dec  7 18:15:08 2024
-| Host             : eecs-digital-09 running 64-bit Ubuntu 24.04.1 LTS
+| Date             : Sat Dec  7 18:40:04 2024
+| Host             : eecs-digital-14 running 64-bit Ubuntu 24.04.1 LTS
 | Command          : report_power -file obj/post_route_power.rpt
 | Design           : top_level
 | Device           : xc7s50csga324-1
@@ -30,14 +30,14 @@ Table of Contents
 ----------
 
 +--------------------------+--------------+
-| Total On-Chip Power (W)  | 0.079        |
+| Total On-Chip Power (W)  | 0.225        |
 | Design Power Budget (W)  | Unspecified* |
 | Power Budget Margin (W)  | NA           |
-| Dynamic (W)              | 0.007        |
-| Device Static (W)        | 0.072        |
+| Dynamic (W)              | 0.152        |
+| Device Static (W)        | 0.074        |
 | Effective TJA (C/W)      | 4.9          |
-| Max Ambient (C)          | 84.6         |
-| Junction Temperature (C) | 25.4         |
+| Max Ambient (C)          | 83.9         |
+| Junction Temperature (C) | 26.1         |
 | Confidence Level         | Low          |
 | Setting File             | ---          |
 | Simulation Activity File | ---          |
@@ -52,17 +52,17 @@ Table of Contents
 +----------------+-----------+----------+-----------+-----------------+
 | On-Chip        | Power (W) | Used     | Available | Utilization (%) |
 +----------------+-----------+----------+-----------+-----------------+
-| Clocks         |     0.001 |        3 |       --- |             --- |
-| Slice Logic    |    <0.001 |      230 |       --- |             --- |
-|   LUT as Logic |    <0.001 |       73 |     32600 |            0.22 |
-|   Register     |    <0.001 |      100 |     65200 |            0.15 |
-|   CARRY4       |    <0.001 |       12 |      8150 |            0.15 |
-|   Others       |     0.000 |       14 |       --- |             --- |
-| Signals        |    <0.001 |      162 |       --- |             --- |
-| Block RAM      |     0.004 |        8 |        75 |           10.67 |
-| I/O            |    <0.001 |       36 |       210 |           17.14 |
-| Static Power   |     0.072 |          |           |                 |
-| Total          |     0.079 |          |           |                 |
+| Clocks         |     0.004 |        3 |       --- |             --- |
+| Slice Logic    |    <0.001 |      699 |       --- |             --- |
+|   LUT as Logic |    <0.001 |      238 |     32600 |            0.73 |
+|   CARRY4       |    <0.001 |       42 |      8150 |            0.52 |
+|   Register     |    <0.001 |      308 |     65200 |            0.47 |
+|   Others       |     0.000 |       27 |       --- |             --- |
+| Signals        |     0.001 |      535 |       --- |             --- |
+| Block RAM      |     0.125 |       39 |        75 |           52.00 |
+| I/O            |     0.021 |       37 |       210 |           17.62 |
+| Static Power   |     0.074 |          |           |                 |
+| Total          |     0.225 |          |           |                 |
 +----------------+-----------+----------+-----------+-----------------+
 
 
@@ -72,16 +72,16 @@ Table of Contents
 +-----------+-------------+-----------+-------------+------------+-------------+-------------+------------+
 | Source    | Voltage (V) | Total (A) | Dynamic (A) | Static (A) | Powerup (A) | Budget (A)  | Margin (A) |
 +-----------+-------------+-----------+-------------+------------+-------------+-------------+------------+
-| Vccint    |       1.000 |     0.016 |       0.006 |      0.010 |       NA    | Unspecified | NA         |
-| Vccaux    |       1.800 |     0.013 |       0.000 |      0.013 |       NA    | Unspecified | NA         |
-| Vcco33    |       3.300 |     0.001 |       0.000 |      0.001 |       NA    | Unspecified | NA         |
+| Vccint    |       1.000 |     0.131 |       0.121 |      0.011 |       NA    | Unspecified | NA         |
+| Vccaux    |       1.800 |     0.013 |       0.001 |      0.013 |       NA    | Unspecified | NA         |
+| Vcco33    |       3.300 |     0.007 |       0.006 |      0.001 |       NA    | Unspecified | NA         |
 | Vcco25    |       2.500 |     0.000 |       0.000 |      0.000 |       NA    | Unspecified | NA         |
 | Vcco18    |       1.800 |     0.000 |       0.000 |      0.000 |       NA    | Unspecified | NA         |
 | Vcco15    |       1.500 |     0.000 |       0.000 |      0.000 |       NA    | Unspecified | NA         |
 | Vcco135   |       1.350 |     0.000 |       0.000 |      0.000 |       NA    | Unspecified | NA         |
 | Vcco12    |       1.200 |     0.000 |       0.000 |      0.000 |       NA    | Unspecified | NA         |
 | Vccaux_io |       1.800 |     0.000 |       0.000 |      0.000 |       NA    | Unspecified | NA         |
-| Vccbram   |       1.000 |     0.001 |       0.000 |      0.000 |       NA    | Unspecified | NA         |
+| Vccbram   |       1.000 |     0.011 |       0.010 |      0.001 |       NA    | Unspecified | NA         |
 | Vccadc    |       1.800 |     0.020 |       0.000 |      0.020 |       NA    | Unspecified | NA         |
 +-----------+-------------+-----------+-------------+------------+-------------+-------------+------------+
 
@@ -136,12 +136,14 @@ Table of Contents
 3.1 By Hierarchy
 ----------------
 
-+--------------+-----------+
-| Name         | Power (W) |
-+--------------+-----------+
-| top_level    |     0.007 |
-|   memio      |     0.005 |
-|     main_ram |     0.005 |
-+--------------+-----------+
++-------------------------------+-----------+
+| Name                          | Power (W) |
++-------------------------------+-----------+
+| top_level                     |     0.152 |
+|   memio                       |     0.127 |
+|     debug_ram                 |     0.029 |
+|     main_ram                  |     0.031 |
+|     osc_gen[0].oscillator_ram |     0.065 |
++-------------------------------+-----------+
 
 
