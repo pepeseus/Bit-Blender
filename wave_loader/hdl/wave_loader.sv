@@ -4,7 +4,7 @@
 `ifdef SYNTHESIS
 `define FPATH(X) `"X`"
 `else /* ! SYNTHESIS */
-`define FPATH(X) `"../data/X`"
+`define FPATH(X) `"../../data/X`"
 `endif  /* ! SYNTHESIS */
 
 module wave_loader #(
@@ -22,9 +22,9 @@ module wave_loader #(
   input wire    ui_update_trig_in,                          // trigger detected UI update
 
   // Audio
-	input wire    [NUM_OSCILLATORS-1:0]                   osc_is_on_in,   // TODO do I need to return 0 if is_on_in is low?
-	input wire    [NUM_OSCILLATORS-1:0][WW_WIDTH-1:0]     osc_index_in,   // playback sample index for each oscillator
-	output logic  [NUM_OSCILLATORS-1:0][SAMPLE_WIDTH-1:0] osc_data_out,   // output sample data for each oscillator
+	input wire    [NUM_OSCILLATORS-1:0] osc_is_on_in,                         // TODO do I need to return 0 if is_on_in is low?
+	input wire    [WW_WIDTH-1:0]        osc_index_in [NUM_OSCILLATORS-1:0],   // playback sample index for each oscillator
+	output logic  [SAMPLE_WIDTH-1:0]    osc_data_out [NUM_OSCILLATORS-1:0],   // output sample data for each oscillator
 
   // Visual
 	input wire    [WW_WIDTH-1:0]        viz_index_in,       // hdmi pixel index
@@ -35,63 +35,48 @@ module wave_loader #(
   output logic  [SAMPLE_WIDTH-1:0]    debug_data_out,      // debug sample data
 
 
-  output logic [7:0] analyzer
+  output logic [7:0] pmodb
 );
 
-// assign analyzer[0] = ui_update_trig_in;    // 
-// assign analyzer[1] = writing;              // 
-// assign analyzer[2] = incrementing;      //
-// assign analyzer[7:3] = sample_index[4:0];      // 
-assign analyzer[0] = writing;    // 
-assign analyzer[7:1] = debug_data_out[6:0];      //
-// assign analyzer[3] = sample_data[0];       // 
-// assign analyzer[4] = osc_data_out[0][0];   // 
-// assign analyzer[5] = osc_index_in[0][0];   // 
+// assign pmodb[0] = ui_update_trig_in;    // 
+// assign pmodb[1] = writing;              // 
+// assign pmodb[2] = sample_index[0];      // 
+// assign pmodb[3] = sample_data[0];       // 
+// assign pmodb[4] = osc_data_out[0][0];   // 
+// assign pmodb[5] = osc_index_in[0][0];   // 
 
 
 logic [WW_WIDTH-1:0] sample_index;            // index of the sample in the main memory // TODO replace with SD size
 logic [SAMPLE_WIDTH-1:0] sample_data;         // output sample data from the main memory
 logic writing;                                // enable writing to the BRAMs from the main memory
-logic zero;                                   // for some fantastic reason, vivado freezes the build 
-                                              // if zero isn't passed into main mem write port
-
-logic incrementing;
 
 
 always_ff @(posedge clk_in) begin
   if (rst_in) begin
     // reset all oscillators data
-    // for (int i = 0; i < NUM_OSCILLATORS; i++) begin
-    //   osc_data_out[i] <= 16'b0;
-    // end
+    for (int i = 0; i < NUM_OSCILLATORS; i++) begin
+      osc_data_out[i] <= 16'b0;
+    end
     // reset visual data
-    // viz_data_out <= 16'b0;
-    // reset debug data
-    // debug_data_out <= 16'b0;
+    viz_data_out <= 16'b0;
 
     // reset main memory data
     sample_index <= 18'b0;
     writing <= 1'b0;
-    zero <= 1'b0;
-
-    incrementing <= 1'b0;
   end else begin
 
     // start writing from the main memory
     if (ui_update_trig_in) begin
       sample_index <= 18'b0;
       writing <= 1'b1;
-      incrementing <= 1'b0;
     end
 
     // continue writing until the wave width is reached
     else if (writing & (sample_index+1 < wave_width_in)) begin
       sample_index <= sample_index + 1;
-      incrementing <= 1'b1;
     end else begin
       sample_index <= 18'b0;
       writing <= 1'b0;
-      incrementing <= 1'b0;
     end
     
   end
@@ -123,8 +108,8 @@ main_ram (
   //reading port:
   .addrb(sample_index),   // Port B address bus,
   .doutb(sample_data),    // Port B RAM output data,
-  .dinb(),                // Port B RAM input data, width determined from RAM_WIDTH
-  .web(zero),             // Port B write enable      // TODO mistery zero is needed to avoid vivado freeze
+  .dinb(1'b0),            // Port B RAM input data, width determined from RAM_WIDTH
+  .web(writing),             // Port B write enable
   .enb(writing),          // Port B RAM Enable,
   .rstb(1'b0),            // Port B output reset
   .regceb(1'b1)           // Port B output register enable
@@ -158,10 +143,9 @@ generate
       //reading port:
       .addrb(osc_index_in[i]),  // Port B address bus,
       .doutb(osc_data_out[i]),  // Port B RAM output data,
-      .dinb(16'b0),             // Port B RAM input data, width determined from RAM_WIDTH
+      .dinb(1'b0),              // Port B RAM input data, width determined from RAM_WIDTH
       .web(1'b0),               // Port B write enable
-      // .enb(osc_is_on_in[i]),    // Port B RAM Enable,        // TODO is this returning 0 when not on??
-      .enb(1'b1),    // Port B RAM Enable,        // TODO is this returning 0 when not on??
+      .enb(osc_is_on_in[i]),    // Port B RAM Enable,        // TODO is this returning 0 when not on??
       .rstb(1'b0),              // Port B output reset       // TODO is this returning 0 when not on??
       .regceb(1'b1)             // Port B output register enable
     );
@@ -193,7 +177,7 @@ visual_select_ram (
   //reading port:
   .addrb(viz_index_in),     // Port B address bus,
   .doutb(viz_data_out),     // Port B RAM output data,
-  .dinb(16'b0),             // Port B RAM input data, width determined from RAM_WIDTH
+  .dinb(1'b0),              // Port B RAM input data, width determined from RAM_WIDTH
   .web(1'b0),               // Port B write enable
   .enb(1'b1),               // Port B RAM Enable,         // TODO same, should I reset to 0 when not on?
   .rstb(1'b0),              // Port B output reset
@@ -226,7 +210,7 @@ debug_ram (
   //reading port:
   .addrb(debug_index_in),   // Port B address bus,
   .doutb(debug_data_out),   // Port B RAM output data,
-  .dinb(16'b0),             // Port B RAM input data, width determined from RAM_WIDTH
+  .dinb(1'b0),              // Port B RAM input data, width determined from RAM_WIDTH
   .web(1'b0),               // Port B write enable
   .enb(1'b1),               // Port B RAM Enable,
   .rstb(1'b0),              // Port B output reset

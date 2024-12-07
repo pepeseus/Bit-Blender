@@ -1,8 +1,8 @@
 Copyright 1986-2022 Xilinx, Inc. All Rights Reserved. Copyright 2022-2024 Advanced Micro Devices, Inc. All Rights Reserved.
 ---------------------------------------------------------------------------------------------------------------------------------------------
 | Tool Version : Vivado v.2024.1 (lin64) Build 5076996 Wed May 22 18:36:09 MDT 2024
-| Date         : Sat Dec  7 12:46:45 2024
-| Host         : eecs-digital-19 running 64-bit Ubuntu 24.04.1 LTS
+| Date         : Sat Dec  7 18:03:27 2024
+| Host         : eecs-digital-48 running 64-bit Ubuntu 24.04.1 LTS
 | Command      : report_utilization -file obj/post_synth_util.rpt -hierarchical -hierarchical_depth 4
 | Design       : top_level
 | Device       : xc7s50csga324-1
@@ -19,17 +19,21 @@ Table of Contents
 1. Utilization by Hierarchy
 ---------------------------
 
-+-----------------------+--------------------------------------------------------------+------------+------------+---------+------+-----+--------+--------+------------+
-|        Instance       |                            Module                            | Total LUTs | Logic LUTs | LUTRAMs | SRLs | FFs | RAMB36 | RAMB18 | DSP Blocks |
-+-----------------------+--------------------------------------------------------------+------------+------------+---------+------+-----+--------+--------+------------+
-| top_level             |                                                        (top) |         68 |         68 |       0 |    0 | 110 |      8 |      0 |          0 |
-|   (top_level)         |                                                        (top) |          0 |          0 |       0 |    0 |   0 |      0 |      0 |          0 |
-|   genblk1[0].osc_inst |                                                   oscillator |         20 |         20 |       0 |    0 |  42 |      0 |      0 |          0 |
-|   i2s_clk_wiz         |                                            i2s_clk_wiz_44100 |         11 |         11 |       0 |    0 |  12 |      0 |      0 |          0 |
-|   memio               |                                                  wave_loader |         29 |         29 |       0 |    0 |  22 |      8 |      0 |          0 |
-|     (memio)           |                                                  wave_loader |         19 |         19 |       0 |    0 |  19 |      0 |      0 |          0 |
-|     main_ram          | xilinx_true_dual_port_read_first_1_clock_ram__parameterized0 |         10 |         10 |       0 |    0 |   3 |      8 |      0 |          0 |
-|   ui_handle           |                                                   ui_handler |         23 |         23 |       0 |    0 |  34 |      0 |      0 |          0 |
-+-----------------------+--------------------------------------------------------------+------------+------------+---------+------+-----+--------+--------+------------+
++-------------------------------+--------------------------------------------------------------+------------+------------+---------+------+-----+--------+--------+------------+
+|            Instance           |                            Module                            | Total LUTs | Logic LUTs | LUTRAMs | SRLs | FFs | RAMB36 | RAMB18 | DSP Blocks |
++-------------------------------+--------------------------------------------------------------+------------+------------+---------+------+-----+--------+--------+------------+
+| top_level                     |                                                        (top) |        145 |        145 |       0 |    0 | 253 |     64 |      0 |          0 |
+|   (top_level)                 |                                                        (top) |          0 |          0 |       0 |    0 |   0 |      0 |      0 |          0 |
+|   debug_clk_wiz               |                                          debug_clk_wiz_25mhz |          2 |          2 |       0 |    0 |   3 |      0 |      0 |          0 |
+|   debugger                    |                                                uart_debugger |         16 |         16 |       0 |    0 |  16 |      0 |      0 |          0 |
+|   genblk1[0].osc_inst         |                                                   oscillator |         19 |         19 |       0 |    0 |  56 |      0 |      0 |          0 |
+|   i2s_clk_wiz                 |                                            i2s_clk_wiz_44100 |         12 |         12 |       0 |    0 |  12 |      0 |      0 |          0 |
+|   i2s_tx_inst                 |                                                       i2s_tx |         27 |         27 |       0 |    0 |  42 |      0 |      0 |          0 |
+|   memio                       |                                                  wave_loader |         60 |         60 |       0 |    0 |  92 |     64 |      0 |          0 |
+|     (memio)                   |                                                  wave_loader |         60 |         60 |       0 |    0 |  92 |      0 |      0 |          0 |
+|     main_ram                  | xilinx_true_dual_port_read_first_1_clock_ram__parameterized0 |          0 |          0 |       0 |    0 |   0 |     32 |      0 |          0 |
+|     osc_gen[0].oscillator_ram |                 xilinx_true_dual_port_read_first_1_clock_ram |          0 |          0 |       0 |    0 |   0 |     32 |      0 |          0 |
+|   ui_handle                   |                                                   ui_handler |         35 |         35 |       0 |    0 |  32 |      0 |      0 |          0 |
++-------------------------------+--------------------------------------------------------------+------------+------------+---------+------+-----+--------+--------+------------+
 
 

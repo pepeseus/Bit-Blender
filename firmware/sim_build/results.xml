@@ -1,0 +1,6 @@
+<testsuites name="results">
+  <testsuite name="all" package="all">
+    <property name="random_seed" value="1733611303" />
+    <testcase name="test_update_bram" classname="test_wave_loader" file="/Users/artemolaptiev/Documents/projects/6.205/Bit-Blender/firmware/sim/test_wave_loader.py" lineno="39" time="1.3554978370666504" sim_time_ns="100155.001" ratio_time="73887.98289544991" />
+  </testsuite>
+</testsuites>

@@ -26,12 +26,12 @@ create_clock -add -name gclk -period 10.000 -waveform {0 4} [get_ports {clk_100m
 # set_property -dict {PACKAGE_PIN G17  IOSTANDARD LVCMOS33} [ get_ports {led[15]} ]
 
 
-set_property -dict {PACKAGE_PIN C9 IOSTANDARD LVCMOS33} [get_ports {rgb0[0]}];
-set_property -dict {PACKAGE_PIN A9 IOSTANDARD LVCMOS33} [get_ports {rgb0[1]}];
-set_property -dict {PACKAGE_PIN A10 IOSTANDARD LVCMOS33} [get_ports {rgb0[2]}];
-set_property -dict {PACKAGE_PIN A11 IOSTANDARD LVCMOS33} [get_ports {rgb1[0]}];
-set_property -dict {PACKAGE_PIN C10 IOSTANDARD LVCMOS33} [get_ports {rgb1[1]}];
-set_property -dict {PACKAGE_PIN B11 IOSTANDARD LVCMOS33} [get_ports {rgb1[2]}];
+# set_property -dict {PACKAGE_PIN C9 IOSTANDARD LVCMOS33} [get_ports {rgb0[0]}];
+# set_property -dict {PACKAGE_PIN A9 IOSTANDARD LVCMOS33} [get_ports {rgb0[1]}];
+# set_property -dict {PACKAGE_PIN A10 IOSTANDARD LVCMOS33} [get_ports {rgb0[2]}];
+# set_property -dict {PACKAGE_PIN A11 IOSTANDARD LVCMOS33} [get_ports {rgb1[0]}];
+# set_property -dict {PACKAGE_PIN C10 IOSTANDARD LVCMOS33} [get_ports {rgb1[1]}];
+# set_property -dict {PACKAGE_PIN B11 IOSTANDARD LVCMOS33} [get_ports {rgb1[2]}];
 
 ## USER PUSH BUTTON
 set_property -dict {PACKAGE_PIN J2  IOSTANDARD LVCMOS33} [ get_ports "btn[0]" ]
@@ -106,14 +106,14 @@ set_property -dict {PACKAGE_PIN H14 IOSTANDARD LVCMOS33}  [ get_ports "i2s_ws" ]
 
 # PMOD B Signals
 ##fixed K14 and J15 which were a copy-paste and wrong.
-set_property -dict {PACKAGE_PIN H18 IOSTANDARD LVCMOS33}  [ get_ports "analyzer[1]" ]
-set_property -dict {PACKAGE_PIN G18 IOSTANDARD LVCMOS33}  [ get_ports "analyzer[3]" ]
-set_property -dict {PACKAGE_PIN K14 IOSTANDARD LVCMOS33}  [ get_ports "analyzer[5]" ]
-set_property -dict {PACKAGE_PIN J15 IOSTANDARD LVCMOS33}  [ get_ports "analyzer[7]" ]
-set_property -dict {PACKAGE_PIN H16 IOSTANDARD LVCMOS33}  [ get_ports "analyzer[0]" ]
-set_property -dict {PACKAGE_PIN H17 IOSTANDARD LVCMOS33}  [ get_ports "analyzer[2]" ]
-set_property -dict {PACKAGE_PIN K16 IOSTANDARD LVCMOS33}  [ get_ports "analyzer[4]" ]
-set_property -dict {PACKAGE_PIN J16 IOSTANDARD LVCMOS33}  [ get_ports "analyzer[6]" ]
+set_property -dict {PACKAGE_PIN H18 IOSTANDARD LVCMOS33}  [ get_ports "pmodb[0]" ]
+set_property -dict {PACKAGE_PIN G18 IOSTANDARD LVCMOS33}  [ get_ports "pmodb[1]" ]
+set_property -dict {PACKAGE_PIN K14 IOSTANDARD LVCMOS33}  [ get_ports "pmodb[2]" ]
+set_property -dict {PACKAGE_PIN J15 IOSTANDARD LVCMOS33}  [ get_ports "pmodb[3]" ]
+set_property -dict {PACKAGE_PIN H16 IOSTANDARD LVCMOS33}  [ get_ports "pmodb[4]" ]
+set_property -dict {PACKAGE_PIN H17 IOSTANDARD LVCMOS33}  [ get_ports "pmodb[5]" ]
+set_property -dict {PACKAGE_PIN K16 IOSTANDARD LVCMOS33}  [ get_ports "pmodb[6]" ]
+set_property -dict {PACKAGE_PIN J16 IOSTANDARD LVCMOS33}  [ get_ports "pmodb[7]" ]
 
 # PMOD AB Signals
 #set_property -dict {PACKAGE_PIN D11 IOSTANDARD LVCMOS33} [get_ports {jab[0]}]

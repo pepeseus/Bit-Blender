@@ -17,7 +17,11 @@ always_ff @(posedge clk_25mhz) begin
   if (rst_in) begin
     debug_index_out <= 1'b0;
   end else begin
-    
+    if (debug_index_out+1 < wave_width_in) begin
+      debug_index_out <= debug_index_out + 1;
+    end else begin
+      debug_index_out <= 18'b0;
+    end
   end
 end
 
