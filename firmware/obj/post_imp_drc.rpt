@@ -1,8 +1,8 @@
 Copyright 1986-2022 Xilinx, Inc. All Rights Reserved. Copyright 2022-2024 Advanced Micro Devices, Inc. All Rights Reserved.
 ---------------------------------------------------------------------------------------------------------------------------------------------
 | Tool Version : Vivado v.2024.1 (lin64) Build 5076996 Wed May 22 18:36:09 MDT 2024
-| Date         : Fri Dec  6 14:52:32 2024
-| Host         : eecs-digital-12 running 64-bit Ubuntu 24.04.1 LTS
+| Date         : Sat Dec  7 12:46:55 2024
+| Host         : eecs-digital-19 running 64-bit Ubuntu 24.04.1 LTS
 | Command      : report_drc -file obj/post_imp_drc.rpt
 | Design       : top_level
 | Device       : xc7s50csga324-1
@@ -24,13 +24,12 @@ Table of Contents
       Design limits: <entire design considered>
            Ruledeck: default
              Max violations: <unlimited>
-             Violations found: 3
-+----------+----------+--------------------------------------------------------------+------------+
-| Rule     | Severity | Description                                                  | Violations |
-+----------+----------+--------------------------------------------------------------+------------+
-| CFGBVS-1 | Warning  | Missing CFGBVS and CONFIG_VOLTAGE Design Properties          | 1          |
-| PDCN-137 | Warning  | enum_RAM_EXTENSION_A_not_NONE_connects_ADDRARDADDRL15_Tieoff | 2          |
-+----------+----------+--------------------------------------------------------------+------------+
+             Violations found: 1
++----------+----------+-----------------------------------------------------+------------+
+| Rule     | Severity | Description                                         | Violations |
++----------+----------+-----------------------------------------------------+------------+
+| CFGBVS-1 | Warning  | Missing CFGBVS and CONFIG_VOLTAGE Design Properties | 1          |
++----------+----------+-----------------------------------------------------+------------+
 
 2. REPORT DETAILS
 -----------------
@@ -45,16 +44,6 @@ Neither the CFGBVS nor CONFIG_VOLTAGE voltage property is set in the current_des
  #where value2 is the voltage provided to configuration bank 0
 
 Refer to the device configuration user guide for more information.
-Related violations: <none>
-
-PDCN-137#1 Warning
-enum_RAM_EXTENSION_A_not_NONE_connects_ADDRARDADDRL15_Tieoff  
-RAMB36E1 site RAMB36_X0Y10 has BlockRam (memio/main_ram/BRAM_reg_0_0) with RAM_EXTENSION_A attribute set to LOWER and ADDRARADDRL15 pin tied to LOGIC 0 (GND). In this case only the Lower BRAM will be used.
-Related violations: <none>
-
-PDCN-137#2 Warning
-enum_RAM_EXTENSION_A_not_NONE_connects_ADDRARDADDRL15_Tieoff  
-RAMB36E1 site RAMB36_X0Y11 has BlockRam (memio/main_ram/BRAM_reg_1_0) with RAM_EXTENSION_A attribute set to UPPER and ADDRARADDRL15 pin tied to LOGIC 0 (GND). In this case only the Lower BRAM will be used.
 Related violations: <none>
 
 

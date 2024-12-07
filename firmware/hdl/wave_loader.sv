@@ -72,7 +72,7 @@ always_ff @(posedge clk_in) begin
     end
 
     // continue writing until the wave width is reached
-    if (writing & (sample_index+1 < wave_width_in)) begin
+    else if (writing & (sample_index+1 < wave_width_in)) begin
       sample_index <= sample_index + 1;
     end else begin
       sample_index <= 18'b0;
@@ -109,7 +109,7 @@ main_ram (
   .addrb(sample_index),   // Port B address bus,
   .doutb(sample_data),    // Port B RAM output data,
   .dinb(1'b0),            // Port B RAM input data, width determined from RAM_WIDTH
-  .web(writing),          // Port B write enable
+  .web(1'b0),          // Port B write enable
   .enb(writing),          // Port B RAM Enable,
   .rstb(1'b0),            // Port B output reset
   .regceb(1'b1)           // Port B output register enable

@@ -1,8 +1,8 @@
 Copyright 1986-2022 Xilinx, Inc. All Rights Reserved. Copyright 2022-2024 Advanced Micro Devices, Inc. All Rights Reserved.
 ---------------------------------------------------------------------------------------------------------------------------------------------
 | Tool Version : Vivado v.2024.1 (lin64) Build 5076996 Wed May 22 18:36:09 MDT 2024
-| Date         : Fri Dec  6 14:52:24 2024
-| Host         : eecs-digital-12 running 64-bit Ubuntu 24.04.1 LTS
+| Date         : Sat Dec  7 12:46:45 2024
+| Host         : eecs-digital-19 running 64-bit Ubuntu 24.04.1 LTS
 | Command      : report_timing -file obj/post_synth_timing.rpt
 | Design       : top_level
 | Device       : 7s50-csga324
@@ -40,7 +40,7 @@ Slack (MET) :             3.626ns  (required time - arrival time)
     N15                  IBUF (Prop_ibuf_I_O)         1.440     1.440 r  clk_100mhz_IBUF_inst/O
                          net (fo=1, unplaced)         0.800     2.240    clk_100mhz_IBUF
                          BUFG (Prop_bufg_I_O)         0.096     2.336 r  clk_100mhz_IBUF_BUFG_inst/O
-                         net (fo=90, unplaced)        0.584     2.920    genblk1[0].osc_inst/clka
+                         net (fo=118, unplaced)       0.584     2.920    genblk1[0].osc_inst/clk_100mhz_IBUF_BUFG
                          FDRE                                         r  genblk1[0].osc_inst/sample_index_out_reg[4]/C
   -------------------------------------------------------------------    -------------------
                          FDRE (Prop_fdre_C_Q)         0.456     3.376 r  genblk1[0].osc_inst/sample_index_out_reg[4]/Q
@@ -73,7 +73,7 @@ Slack (MET) :             3.626ns  (required time - arrival time)
     N15                  IBUF (Prop_ibuf_I_O)         1.370    11.370 r  clk_100mhz_IBUF_inst/O
                          net (fo=1, unplaced)         0.760    12.130    clk_100mhz_IBUF
                          BUFG (Prop_bufg_I_O)         0.091    12.221 r  clk_100mhz_IBUF_BUFG_inst/O
-                         net (fo=90, unplaced)        0.439    12.660    genblk1[0].osc_inst/clka
+                         net (fo=118, unplaced)       0.439    12.660    genblk1[0].osc_inst/clk_100mhz_IBUF_BUFG
                          FDRE                                         r  genblk1[0].osc_inst/sample_index_out_reg[0]/C
                          clock pessimism              0.115    12.775    
                          clock uncertainty           -0.035    12.740    
