@@ -35,7 +35,7 @@ module top_level
   localparam SAMPLE_WIDTH = 16;
   localparam NUM_OSCILLATORS = 1;
   // localparam BRAM_DEPTH = 262141;               // temp memory depth     ~ $clog2(262141) = 18
-  localparam BRAM_DEPTH = 50214;               // temp memory depth     ~ $clog2(262141) = 18
+  localparam BRAM_DEPTH = 26214;               // temp memory depth     ~ $clog2(262141) = 18
   localparam WW_WIDTH = $clog2(BRAM_DEPTH);     // width of the wave width lol = 18 bits
   localparam MMEM_MAX_DEPTH = 1_000_000_000;    // main memory max depth ~ $clog2(1_000_000_000) = 30
   localparam WS_WIDTH = $clog2(MMEM_MAX_DEPTH); // width of the wave start address = 30 bits
