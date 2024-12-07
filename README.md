@@ -17,17 +17,6 @@ FPGA Synth
 - Real-time graph view (?)
 
 
-NOTES:
-- I commented out voltage configs in xdc because there's some conflict between uart_txd 1.8v vs midi_rx 3.3(?) !!! MIDI might not work
-
-
-
-Qs:
-- SD inputs?
-- GET HDMI OUTS!!!!
-- ADC + pots
-- XDC file
-- XDC 3.3v vs 1.8v?
 
 
 # PMOD breakout:
@@ -40,4 +29,12 @@ H14 - I2S WS
 
 # Urbana Board Documentation
 https://www.realdigital.org/doc/496fed57c6b275735fe24c85de5718c2
+
+
+
+# Building bitfile & uploading
+
+lab-bc run . ./obj
+
+openFPGALoader -b arty_s7_50 obj/final.bit
 

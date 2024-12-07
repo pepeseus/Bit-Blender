@@ -38,17 +38,17 @@ module wave_loader #(
   output logic [7:0] pmodb
 );
 
-assign pmodb[0] = ui_update_trig_in;    // 
-assign pmodb[1] = writing;              // 
-assign pmodb[2] = sample_index[0];      // 
-assign pmodb[3] = sample_data[0];       // 
-assign pmodb[4] = osc_data_out[0][0];   // 
-assign pmodb[5] = osc_index_in[0][0];   // 
+// assign pmodb[0] = ui_update_trig_in;    // 
+// assign pmodb[1] = writing;              // 
+// assign pmodb[2] = sample_index[0];      // 
+// assign pmodb[3] = sample_data[0];       // 
+// assign pmodb[4] = osc_data_out[0][0];   // 
+// assign pmodb[5] = osc_index_in[0][0];   // 
 
 
 logic [WW_WIDTH-1:0] sample_index;            // index of the sample in the main memory // TODO replace with SD size
 logic [SAMPLE_WIDTH-1:0] sample_data;         // output sample data from the main memory
-logic writing;                                // enable writing to the main memory
+logic writing;                                // enable writing to the BRAMs from the main memory
 
 
 always_ff @(posedge clk_in) begin
@@ -109,7 +109,7 @@ main_ram (
   .addrb(sample_index),   // Port B address bus,
   .doutb(sample_data),    // Port B RAM output data,
   .dinb(1'b0),            // Port B RAM input data, width determined from RAM_WIDTH
-  .web(1'b0),          // Port B write enable
+  .web(1'b0),             // Port B write enable
   .enb(writing),          // Port B RAM Enable,
   .rstb(1'b0),            // Port B output reset
   .regceb(1'b1)           // Port B output register enable
