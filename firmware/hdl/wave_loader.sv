@@ -27,35 +27,21 @@ module wave_loader #(
 	output logic  [NUM_OSCILLATORS-1:0][SAMPLE_WIDTH-1:0] osc_data_out,   // output sample data for each oscillator
 
   // Visual
-	input wire    [WW_WIDTH-1:0]        viz_index_in,       // hdmi pixel index
-	output logic  [SAMPLE_WIDTH-1:0]    viz_data_out,       // output hdmi pixel data
+	input wire    [WW_WIDTH-1:0]        viz_index_in,               // hdmi pixel index
+	output logic  [SAMPLE_WIDTH-1:0]    viz_data_out,               // output hdmi pixel data
 
   // Debug
-  input wire    [WW_WIDTH-1:0]        debug_index_in,     // debug sample index     
-  output logic  [SAMPLE_WIDTH-1:0]    debug_data_out,      // debug sample data
-
-
-  output logic [7:0] analyzer
+  input wire    [WW_WIDTH-1:0]        bytes_screen_index_in,      // debug sample index     
+  output logic  [SAMPLE_WIDTH-1:0]    bytes_screen_data_out       // debug sample data
 );
-
-// assign analyzer[0] = ui_update_trig_in;    // 
-// assign analyzer[1] = writing;              // 
-// assign analyzer[2] = incrementing;      //
-// assign analyzer[7:3] = sample_index[4:0];      // 
-assign analyzer[0] = writing;    // 
-assign analyzer[7:1] = debug_data_out[6:0];      //
-// assign analyzer[3] = sample_data[0];       // 
-// assign analyzer[4] = osc_data_out[0][0];   // 
-// assign analyzer[5] = osc_index_in[0][0];   // 
 
 
 logic [WW_WIDTH-1:0] sample_index;            // index of the sample in the main memory // TODO replace with SD size
 logic [SAMPLE_WIDTH-1:0] sample_data;         // output sample data from the main memory
 logic writing;                                // enable writing to the BRAMs from the main memory
+logic prev_writing;                           // to reset the output after writing!
 logic zero;                                   // for some fantastic reason, vivado freezes the build 
                                               // if zero isn't passed into main mem write port
-
-logic incrementing;
 
 
 always_ff @(posedge clk_in) begin
@@ -67,31 +53,29 @@ always_ff @(posedge clk_in) begin
     // reset visual data
     // viz_data_out <= 16'b0;
     // reset debug data
-    // debug_data_out <= 16'b0;
+    // bytes_screen_data_out <= 16'b0;
 
     // reset main memory data
     sample_index <= 18'b0;
     writing <= 1'b0;
+    prev_writing <= 1'b0;
     zero <= 1'b0;
-
-    incrementing <= 1'b0;
   end else begin
+
+    prev_writing <= writing;
 
     // start writing from the main memory
     if (ui_update_trig_in) begin
       sample_index <= 18'b0;
       writing <= 1'b1;
-      incrementing <= 1'b0;
     end
 
     // continue writing until the wave width is reached
     else if (writing & (sample_index+1 < wave_width_in)) begin
       sample_index <= sample_index + 1;
-      incrementing <= 1'b1;
     end else begin
       sample_index <= 18'b0;
       writing <= 1'b0;
-      incrementing <= 1'b0;
     end
     
   end
@@ -106,7 +90,7 @@ xilinx_true_dual_port_read_first_1_clock_ram #(
   .RAM_WIDTH(SAMPLE_WIDTH),
   .RAM_DEPTH(BRAM_DEPTH),
   .RAM_PERFORMANCE("HIGH_PERFORMANCE"),
-  .INIT_FILE(`FPATH(track.mem))
+  .INIT_FILE(`FPATH(sine.mem))
   ) 
 main_ram (
   .clka(clk_in),     // Clock
@@ -203,15 +187,16 @@ visual_select_ram (
 
 
 /**
-  * Debug BRAM
+  * Bytes Screen BRAM
   */
+
 
 xilinx_true_dual_port_read_first_1_clock_ram #(
   .RAM_WIDTH(SAMPLE_WIDTH),
   .RAM_DEPTH(BRAM_DEPTH),
   .RAM_PERFORMANCE("HIGH_PERFORMANCE")
   )
-debug_ram (
+bytes_screen_ram (
   .clka(clk_in),     // Clock
 
   //writing port:
@@ -224,13 +209,13 @@ debug_ram (
   .regcea(1'b1),            // Port A output register enable
 
   //reading port:
-  .addrb(debug_index_in),   // Port B address bus,
-  .doutb(debug_data_out),   // Port B RAM output data,
-  .dinb(16'b0),             // Port B RAM input data, width determined from RAM_WIDTH
-  .web(1'b0),               // Port B write enable
-  .enb(1'b1),               // Port B RAM Enable,
-  .rstb(1'b0),              // Port B output reset
-  .regceb(1'b1)             // Port B output register enable
+  .addrb(bytes_screen_index_in),    // Port B address bus,    // HACK to reset the output after writing
+  .doutb(bytes_screen_data_out),    // Port B RAM output data,
+  .dinb(16'b0),                     // Port B RAM input data, width determined from RAM_WIDTH
+  .web(1'b0),                       // Port B write enable
+  .enb(1'b1),                       // Port B RAM Enable,
+  .rstb(1'b0),                      // Port B output reset
+  .regceb(1'b1)                     // Port B output register enable
 );
 
 

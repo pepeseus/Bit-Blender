@@ -1,10 +1,10 @@
 `timescale 1ns / 1ps
 `default_nettype none
 
-module debug_clk_wiz_25mhz (
+module clk_wiz_25mhz (
   // Status and control signals
   input  wire rst,
-  input  wire clk_ref,
+  input  wire clk_ref,            // Reference 100Mhz clock
   // Clock out ports
   output logic clk_25mhz
 );
