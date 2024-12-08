@@ -17,6 +17,11 @@ module top_level
    // RGB LEDs
    output logic [2:0]  rgb0,
    output logic [2:0]  rgb1,
+   // PMODS
+   output logic pmoda4,
+   output logic pmoda5,
+   output logic pmoda6,
+   output logic pmoda7,
    // Seven-segment display
   //  output logic [3:0]  ss0_an,     // Anode control for upper digits
   //  output logic [3:0]  ss1_an,     // Anode control for lower digits
@@ -33,8 +38,8 @@ module top_level
    );
 
   localparam SAMPLE_WIDTH = 16;
-  localparam NUM_OSCILLATORS = 1;
-  localparam BRAM_DEPTH = 26214;               // temp memory depth     ~ $clog2(262141) = 18
+  localparam NUM_OSCILLATORS = 4;
+  localparam BRAM_DEPTH = 16214;               // temp memory depth     ~ $clog2(262141) = 18
   localparam WW_WIDTH = $clog2(BRAM_DEPTH);     // width of the wave width lol = 18 bits
   localparam MMEM_MAX_DEPTH = 1_000_000_000;    // main memory max depth ~ $clog2(1_000_000_000) = 30
   localparam WS_WIDTH = $clog2(MMEM_MAX_DEPTH); // width of the wave start address = 30 bits
@@ -70,9 +75,6 @@ module top_level
   );
 
 
-
-
-
   /**
     MIDI Processing
   */
@@ -103,6 +105,7 @@ module top_level
   // MIDI Processor
   logic is_note_on;
   logic [23:0] playback_rate;
+  logic valid_out_processor;
 
   midi_processor processor_main(
     .clk_in(clk_100mhz),
@@ -112,7 +115,8 @@ module top_level
     .data_byte2(data_byte2),
     .valid_in(valid_out_reader),
     .isNoteOn(is_note_on),
-    .cycles_between_samples(playback_rate)
+    .cycles_between_samples(playback_rate),
+    .valid_out(valid_out_processor)
   );
 
 
@@ -121,19 +125,25 @@ module top_level
   logic [23:0] playback_rates [NUM_OSCILLATORS-1:0];            // corresponding notes for each oscillator
   logic [SAMPLE_WIDTH-1:0] stream;                              // output playback mixed sample
 
-  // midi_coordinator #(.NUM_OSCILLATORS(NUM_OSCILLATORS),
-  //   .SAMPLE_WIDTH(SAMPLE_WIDTH)
-  // ) coordinator_main (
-  //   .clk_in(clk_100mhz),
-  //   .rst_in(sys_rst),
-  //   .isNoteOn(is_note_on),
-  //   .cycles_between_samples(playback_rate),
-  //   .valid_in(valid_out_reader),
-  //   .is_on(is_on),
-  //   .playback_rate(playback_rates),
-  //   .out_samples(osc_samples),
-  //   .stream_out(stream)
-  // );
+  // assign pmoda4 = stream[0];
+  assign pmoda5 = is_note_on;
+  assign pmoda6 = valid_out_processor;
+  assign pmoda7 = playback_rates[3][0];
+
+  midi_coordinator #(.NUM_OSCILLATORS(NUM_OSCILLATORS),
+    .SAMPLE_WIDTH(SAMPLE_WIDTH)
+  ) coordinator_main (
+    .clk_in(clk_100mhz),
+    .rst_in(sys_rst),
+    .isNoteOn(is_note_on),
+    .cycles_between_samples(playback_rate),
+    .valid_in(valid_out_processor),
+    .is_on(is_on),
+    .playback_rate(playback_rates),
+    .out_samples(osc_samples),
+    .stream_out(stream),
+    .test(pmoda4)
+  );
 
   
 
@@ -175,9 +185,9 @@ module top_level
 
 
   // temp:
-  assign is_on[0] = is_note_on;
-  assign playback_rates[0] = playback_rate;
-  assign stream = osc_samples[0];                   // TODO OFF
+  // assign is_on[0] = is_note_on;
+  // assign playback_rates[0] = playback_rate;
+  // assign stream = osc_samples[0];                   // TODO OFF
 
   /**
     Audio Playback

@@ -6,7 +6,8 @@ module midi_processor(
     input wire [7:0] data_byte2, // release velocity; unused for now
     input wire valid_in,
     output logic isNoteOn,
-    output logic [23:0] cycles_between_samples
+    output logic [23:0] cycles_between_samples,
+    output logic valid_out
 );
 
 
@@ -14,7 +15,9 @@ module midi_processor(
         if (rst_in) begin
             isNoteOn <= 1'b0;
             cycles_between_samples <= 24'd747; // middle C
+            valid_out <= 0;
         end else if (valid_in) begin
+            valid_out <= 1;
             if (status == 4'b1001 && data_byte2 != 8'd0) begin // note on
                 isNoteOn <= 1'b1;
             end else begin
@@ -152,6 +155,8 @@ module midi_processor(
                 8'd127: cycles_between_samples <= 24'd15;
                 default: cycles_between_samples <= 24'd747; // middle C
             endcase
+        end else begin
+            valid_out <= 0;
         end
     end
 

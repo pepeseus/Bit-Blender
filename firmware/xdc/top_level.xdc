@@ -99,10 +99,10 @@ set_property -dict {PACKAGE_PIN F15 IOSTANDARD LVCMOS33}  [ get_ports "i2s_bclk"
 set_property -dict {PACKAGE_PIN H13 IOSTANDARD LVCMOS33}  [ get_ports "i2s_sd" ]
 # pmoda[3]
 set_property -dict {PACKAGE_PIN H14 IOSTANDARD LVCMOS33}  [ get_ports "i2s_ws" ]
-#set_property -dict {PACKAGE_PIN J13 IOSTANDARD LVCMOS33}  [ get_ports "pmoda[4]" ]
-#set_property -dict {PACKAGE_PIN J14 IOSTANDARD LVCMOS33}  [ get_ports "pmoda[5]" ]
-#set_property -dict {PACKAGE_PIN E14 IOSTANDARD LVCMOS33}  [ get_ports "pmoda[6]" ]
-#set_property -dict {PACKAGE_PIN E15 IOSTANDARD LVCMOS33}  [ get_ports "pmoda[7]" ]
+set_property -dict {PACKAGE_PIN J13 IOSTANDARD LVCMOS33}  [ get_ports "pmoda4" ]
+set_property -dict {PACKAGE_PIN J14 IOSTANDARD LVCMOS33}  [ get_ports "pmoda5" ]
+set_property -dict {PACKAGE_PIN E14 IOSTANDARD LVCMOS33}  [ get_ports "pmoda6" ]
+set_property -dict {PACKAGE_PIN E15 IOSTANDARD LVCMOS33}  [ get_ports "pmoda7" ]
 
 # PMOD B Signals
 ##fixed K14 and J15 which were a copy-paste and wrong.

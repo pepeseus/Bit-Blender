@@ -13,8 +13,9 @@ module midi_coordinator #(
   input wire [23:0] cycles_between_samples,
   output logic [23:0] playback_rate [NUM_OSCILLATORS-1:0],
   output logic [NUM_OSCILLATORS-1:0] is_on,
-  input wire [SAMPLE_WIDTH-1:0] out_samples [NUM_OSCILLATORS-1:0],
-  output logic [SAMPLE_WIDTH-1:0] stream_out
+  input wire [NUM_OSCILLATORS-1:0][SAMPLE_WIDTH-1:0] out_samples,
+  output logic [SAMPLE_WIDTH-1:0] stream_out,
+  output logic test
 );
 
 
@@ -44,10 +45,12 @@ module midi_coordinator #(
                 is_on[j] <= 0;
                 age[j] <= 0;
                 playback_rate[j] <= 0;
+                test <= 0;
             end
         end else if (valid_in) begin
             if (isNoteOn) begin
                 int i = calculate_index();
+                test <= 1;
                 is_on[i] <= 1;
                 age[i] <= 0;
                 playback_rate[i] <= cycles_between_samples;
@@ -72,8 +75,9 @@ module midi_coordinator #(
     always_comb begin
         stream_out = 0;
         for (int j = 0; j < NUM_OSCILLATORS; j++) begin
+            is_on[1] + 
             if (is_on[j]) begin
-                stream_out += out_samples[j];
+                stream_out += (out_samples[j] >> 4);
             end
         end
     end

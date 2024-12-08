@@ -106,7 +106,7 @@ xilinx_true_dual_port_read_first_1_clock_ram #(
   .RAM_WIDTH(SAMPLE_WIDTH),
   .RAM_DEPTH(BRAM_DEPTH),
   .RAM_PERFORMANCE("HIGH_PERFORMANCE"),
-  .INIT_FILE(`FPATH(track.mem))
+  .INIT_FILE(`FPATH(sine.mem))
   ) 
 main_ram (
   .clka(clk_in),     // Clock
