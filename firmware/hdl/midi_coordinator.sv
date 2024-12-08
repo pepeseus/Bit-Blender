@@ -75,9 +75,8 @@ module midi_coordinator #(
     always_comb begin
         stream_out = 0;
         for (int j = 0; j < NUM_OSCILLATORS; j++) begin
-            is_on[1] + 
             if (is_on[j]) begin
-                stream_out += (out_samples[j] >> 4);
+                stream_out += (out_samples[j] >> 2);
             end
         end
     end
