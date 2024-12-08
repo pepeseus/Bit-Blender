@@ -11,6 +11,7 @@ FPGA Synth
 
 - Polyphony J
 - SD card A
+- Increase max wave width
 - UI handler + potentiometer
 - Visual View J
 - Bytes View A

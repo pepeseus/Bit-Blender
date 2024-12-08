@@ -21,8 +21,12 @@ module bytes_screen #(
   localparam WW_WIDTH = 18;             // FIXED TO 18 FOR THIS PROTOCOL
   localparam SAMPLE_WIDTH = 16;         // FIXED TO 16 FOR THIS PROTOCOL
 
-  assign analyzer[6:0] = uart_tx_data[6:0];   // for analyzer
-  assign analyzer[7] = uart_txd;          // for analyzer
+  /**
+  * THIS MODULE HAS UNFIXED BUGS THAT WE MUSKED FOR THE LACK OF TIME FOR THE DEMO
+  * 
+  * For some reason, the wave samples are not being transmitted properly. The FPGA starts to send the first selected 
+  * sample 4 (or 8?) bytes after the "WAVDAT" command. It also doesn't send the last few samples properly.
+  */
 
 // TODO add potentiometer start index
 
@@ -38,19 +42,18 @@ module bytes_screen #(
   5. "WAVDAT" - 6 bytes
   6. bytes_screen_data_in - up to 16 bits ~ 2 bytes
 */
-typedef enum { TEST, IDLE, WAVWID, WAVWID_SEND, OSCIDX, OSCIDX_SEND, WAVDAT, WAVDAT_SEND, LAST_WAVDAT_SEND } state_t;
+typedef enum { TEST, IDLE, WAVWID, WAVWID_SEND, OSCIDX, OSCIDX_SEND, WAVDAT, WAVDAT_SEND, LAST_WAVDAT_SEND, BUFFER } state_t;
 state_t       state;
 
 logic [47:0]  send_bytes;    // in 3 bytes packets
 logic [3:0]   send_index;
 
+
 // State Machine
 always_ff @(posedge clk_in) begin
-  // uart_tx_trigger_prev <= uart_tx_trigger;
 
   if (rst_in) begin
     state <= IDLE;
-    // state <= TEST;
     send_bytes <= 48'b0;
     send_index <= 0;
     uart_tx_trigger <= 1'b0;
@@ -61,25 +64,15 @@ always_ff @(posedge clk_in) begin
 
     // only if UART is not busy
     if (~uart_tx_busy) begin
-      // if (state != IDLE & ~uart_tx_trigger_prev) begin
       if (state != IDLE) begin
         uart_tx_trigger <= 1'b1;
       end
 
       case(state)
-        // TEST: begin
-        //   state <= TEST;
-        //   send_bytes <= 8'h57; // "WAVWID" big endian
-        //   send_index <= 0;
-        // end
-
         IDLE: begin
           state <= WAVWID;
           send_bytes <= 48'h44_49_57_56_41_57; // "WAVWID" big endian
           send_index <= 0;
-          // state <= TEST;
-          // send_bytes <= 48'h57; // "WAVWID" big endian
-          // send_index <= 0;
         end
 
         WAVWID: begin
@@ -178,8 +171,11 @@ always_ff @(posedge clk_in) begin
 
           if (send_index == 1) begin      // 3 bytes sent
             state <= IDLE;
+            send_bytes <= 48'h0;          // reset
+            send_index <= 0;
           end
         end
+
       endcase
 
     end
@@ -194,7 +190,6 @@ end
 logic uart_tx_busy;
 logic [7:0] uart_tx_data;
 logic uart_tx_trigger;
-// logic uart_tx_trigger_prev;
 
 assign uart_tx_data = send_bytes[7:0];
 
@@ -210,15 +205,6 @@ uart_transmit #(
   .tx_wire_out(uart_txd)
 );
 
-
-// uart_tx uart_tx (
-//   .clk(clk_in),
-//   .resetn(rst_in),
-//   .uart_txd(uart_txd),
-//   .uart_tx_busy(uart_tx_busy),
-//   .uart_tx_en(uart_tx_trigger),
-//   .uart_tx_data(uart_tx_data)
-// );
 
 endmodule
 
