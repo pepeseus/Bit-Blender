@@ -1,8 +1,8 @@
 Copyright 1986-2022 Xilinx, Inc. All Rights Reserved. Copyright 2022-2024 Advanced Micro Devices, Inc. All Rights Reserved.
 ---------------------------------------------------------------------------------------------------------------------------------------------
 | Tool Version : Vivado v.2024.1 (lin64) Build 5076996 Wed May 22 18:36:09 MDT 2024
-| Date         : Sat Dec  7 20:49:48 2024
-| Host         : eecs-digital-35 running 64-bit Ubuntu 24.04.1 LTS
+| Date         : Sat Dec  7 22:26:20 2024
+| Host         : eecs-digital-15 running 64-bit Ubuntu 24.04.1 LTS
 | Command      : report_timing -file obj/post_place_timing.rpt
 | Design       : top_level
 | Device       : 7s50-csga324
@@ -12,19 +12,19 @@ Copyright 1986-2022 Xilinx, Inc. All Rights Reserved. Copyright 2022-2024 Advanc
 
 Timing Report
 
-Slack (MET) :             0.876ns  (required time - arrival time)
-  Source:                 ui_handle/wave_width_out_reg[5]/C
-                            (rising edge-triggered cell FDRE clocked by gclk  {rise@0.000ns fall@4.000ns period=10.000ns})
-  Destination:            memio/sample_index_reg[10]_rep__7/R
+Slack (MET) :             1.500ns  (required time - arrival time)
+  Source:                 memio/osc_gen[1].oscillator_ram/BRAM_reg_0/CLKBWRCLK
+                            (rising edge-triggered cell RAMB36E1 clocked by gclk  {rise@0.000ns fall@4.000ns period=10.000ns})
+  Destination:            divider_main/wave_divider/dividend_reg[29]/D
                             (rising edge-triggered cell FDRE clocked by gclk  {rise@0.000ns fall@4.000ns period=10.000ns})
   Path Group:             gclk
   Path Type:              Setup (Max at Slow Process Corner)
   Requirement:            10.000ns  (gclk rise@10.000ns - gclk rise@0.000ns)
-  Data Path Delay:        8.454ns  (logic 1.730ns (20.464%)  route 6.724ns (79.536%))
-  Logic Levels:           5  (CARRY4=3 LUT4=2)
-  Clock Path Skew:        -0.111ns (DCD - SCD + CPR)
-    Destination Clock Delay (DCD):    4.788ns = ( 14.788 - 10.000 ) 
-    Source Clock Delay      (SCD):    5.079ns
+  Data Path Delay:        8.421ns  (logic 3.936ns (46.740%)  route 4.485ns (53.260%))
+  Logic Levels:           13  (CARRY4=9 LUT3=1 LUT4=1 LUT5=1 LUT6=1)
+  Clock Path Skew:        -0.152ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    4.786ns = ( 14.786 - 10.000 ) 
+    Source Clock Delay      (SCD):    5.119ns
     Clock Pessimism Removal (CPR):    0.181ns
   Clock Uncertainty:      0.035ns  ((TSJ^2 + TIJ^2)^1/2 + DJ) / 2 + PE
     Total System Jitter     (TSJ):    0.071ns
@@ -40,25 +40,48 @@ Slack (MET) :             0.876ns  (required time - arrival time)
     N15                  IBUF (Prop_ibuf_I_O)         1.440     1.440 r  clk_100mhz_IBUF_inst/O
                          net (fo=1, estimated)        1.972     3.412    clk_100mhz_IBUF
     BUFGCTRL_X0Y0        BUFG (Prop_bufg_I_O)         0.096     3.508 r  clk_100mhz_IBUF_BUFG_inst/O
-                         net (fo=787, estimated)      1.571     5.079    ui_handle/clk_100mhz_IBUF_BUFG
-    SLICE_X49Y42         FDRE                                         r  ui_handle/wave_width_out_reg[5]/C
+                         net (fo=966, estimated)      1.610     5.119    memio/osc_gen[1].oscillator_ram/clk_100mhz_IBUF_BUFG
+    RAMB36_X0Y2          RAMB36E1                                     r  memio/osc_gen[1].oscillator_ram/BRAM_reg_0/CLKBWRCLK
   -------------------------------------------------------------------    -------------------
-    SLICE_X49Y42         FDRE (Prop_fdre_C_Q)         0.456     5.535 r  ui_handle/wave_width_out_reg[5]/Q
-                         net (fo=14, estimated)       2.244     7.779    ui_handle/Q[3]
-    SLICE_X49Y14         LUT4 (Prop_lut4_I0_O)        0.124     7.903 r  ui_handle/p_1_out_carry__0_i_7/O
-                         net (fo=1, routed)           0.000     7.903    memio/p_1_out_carry__1_0[1]
-    SLICE_X49Y14         CARRY4 (Prop_carry4_S[1]_CO[3])
-                                                      0.550     8.453 r  memio/p_1_out_carry__0/CO[3]
-                         net (fo=1, estimated)        0.000     8.453    memio/p_1_out_carry__0_n_0
-    SLICE_X49Y15         CARRY4 (Prop_carry4_CI_CO[3])
-                                                      0.114     8.567 r  memio/p_1_out_carry__1/CO[3]
-                         net (fo=1, estimated)        0.000     8.567    memio/p_1_out_carry__1_n_0
-    SLICE_X49Y16         CARRY4 (Prop_carry4_CI_CO[1])
-                                                      0.157     8.724 r  memio/p_1_out_carry__2/CO[1]
-                         net (fo=29, estimated)       1.793    10.517    memio/p_1_out_carry__2_n_2
-    SLICE_X41Y49         LUT4 (Prop_lut4_I3_O)        0.329    10.846 r  memio/sample_index[0]_i_1/O
-                         net (fo=276, estimated)      2.687    13.533    memio/sample_index[0]_i_1_n_0
-    SLICE_X8Y3           FDRE                                         r  memio/sample_index_reg[10]_rep__7/R
+    RAMB36_X0Y2          RAMB36E1 (Prop_ramb36e1_CLKBWRCLK_DOBDO[1])
+                                                      0.882     6.001 r  memio/osc_gen[1].oscillator_ram/BRAM_reg_0/DOBDO[1]
+                         net (fo=2, estimated)        2.227     8.228    memio/osc_gen[1].oscillator_ram/BRAM_reg_7_2[1]
+    SLICE_X34Y30         LUT6 (Prop_lut6_I0_O)        0.124     8.352 r  memio/osc_gen[1].oscillator_ram/stream_out0__2_carry_i_9/O
+                         net (fo=3, estimated)        1.350     9.702    memio/osc_gen[1].oscillator_ram/BRAM_reg_0_0
+    SLICE_X45Y39         LUT4 (Prop_lut4_I0_O)        0.152     9.854 r  memio/osc_gen[1].oscillator_ram/stream_out0__2_carry_i_1/O
+                         net (fo=2, estimated)        0.462    10.316    memio/osc_gen[1].oscillator_ram/DI[1]
+    SLICE_X46Y40         LUT5 (Prop_lut5_I0_O)        0.332    10.648 r  memio/osc_gen[1].oscillator_ram/stream_out0__2_carry_i_5/O
+                         net (fo=1, routed)           0.000    10.648    coordinator_main/S[2]
+    SLICE_X46Y40         CARRY4 (Prop_carry4_S[3]_CO[3])
+                                                      0.376    11.024 r  coordinator_main/stream_out0__2_carry/CO[3]
+                         net (fo=1, estimated)        0.000    11.024    coordinator_main/stream_out0__2_carry_n_0
+    SLICE_X46Y41         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.117    11.141 r  coordinator_main/stream_out0__2_carry__0/CO[3]
+                         net (fo=1, estimated)        0.000    11.141    coordinator_main/stream_out0__2_carry__0_n_0
+    SLICE_X46Y42         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.117    11.258 r  coordinator_main/stream_out0__2_carry__1/CO[3]
+                         net (fo=1, estimated)        0.000    11.258    coordinator_main/stream_out0__2_carry__1_n_0
+    SLICE_X46Y43         CARRY4 (Prop_carry4_CI_O[1])
+                                                      0.323    11.581 r  coordinator_main/stream_out0__2_carry__2/O[1]
+                         net (fo=1, estimated)        0.446    12.027    divider_main/wave_divider/pre_division_stream[13]
+    SLICE_X42Y43         LUT3 (Prop_lut3_I0_O)        0.306    12.333 r  divider_main/wave_divider/dividend[15]_i_4/O
+                         net (fo=1, routed)           0.000    12.333    divider_main/wave_divider/dividend[15]_i_4_n_0
+    SLICE_X42Y43         CARRY4 (Prop_carry4_S[1]_CO[3])
+                                                      0.533    12.866 r  divider_main/wave_divider/dividend_reg[15]_i_1/CO[3]
+                         net (fo=1, estimated)        0.000    12.866    divider_main/wave_divider/dividend_reg[15]_i_1_n_0
+    SLICE_X42Y44         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.117    12.983 r  divider_main/wave_divider/dividend_reg[19]_i_1/CO[3]
+                         net (fo=1, estimated)        0.000    12.983    divider_main/wave_divider/dividend_reg[19]_i_1_n_0
+    SLICE_X42Y45         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.117    13.100 r  divider_main/wave_divider/dividend_reg[23]_i_1/CO[3]
+                         net (fo=1, estimated)        0.000    13.100    divider_main/wave_divider/dividend_reg[23]_i_1_n_0
+    SLICE_X42Y46         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.117    13.217 r  divider_main/wave_divider/dividend_reg[27]_i_1/CO[3]
+                         net (fo=1, estimated)        0.000    13.217    divider_main/wave_divider/dividend_reg[27]_i_1_n_0
+    SLICE_X42Y47         CARRY4 (Prop_carry4_CI_O[1])
+                                                      0.323    13.540 r  divider_main/wave_divider/dividend_reg[31]_i_2/O[1]
+                         net (fo=1, routed)           0.000    13.540    divider_main/wave_divider/dividend_reg[31]_i_2_n_6
+    SLICE_X42Y47         FDRE                                         r  divider_main/wave_divider/dividend_reg[29]/D
   -------------------------------------------------------------------    -------------------
 
                          (clock gclk rise edge)      10.000    10.000 r  
@@ -67,16 +90,16 @@ Slack (MET) :             0.876ns  (required time - arrival time)
     N15                  IBUF (Prop_ibuf_I_O)         1.370    11.370 r  clk_100mhz_IBUF_inst/O
                          net (fo=1, estimated)        1.873    13.244    clk_100mhz_IBUF
     BUFGCTRL_X0Y0        BUFG (Prop_bufg_I_O)         0.091    13.335 r  clk_100mhz_IBUF_BUFG_inst/O
-                         net (fo=787, estimated)      1.453    14.788    memio/clk_100mhz_IBUF_BUFG
-    SLICE_X8Y3           FDRE                                         r  memio/sample_index_reg[10]_rep__7/C
-                         clock pessimism              0.181    14.968    
-                         clock uncertainty           -0.035    14.933    
-    SLICE_X8Y3           FDRE (Setup_fdre_C_R)       -0.524    14.409    memio/sample_index_reg[10]_rep__7
+                         net (fo=966, estimated)      1.451    14.786    divider_main/wave_divider/clk_100mhz_IBUF_BUFG
+    SLICE_X42Y47         FDRE                                         r  divider_main/wave_divider/dividend_reg[29]/C
+                         clock pessimism              0.181    14.966    
+                         clock uncertainty           -0.035    14.931    
+    SLICE_X42Y47         FDRE (Setup_fdre_C_D)        0.109    15.040    divider_main/wave_divider/dividend_reg[29]
   -------------------------------------------------------------------
-                         required time                         14.409    
-                         arrival time                         -13.533    
+                         required time                         15.040    
+                         arrival time                         -13.540    
   -------------------------------------------------------------------
-                         slack                                  0.876    
+                         slack                                  1.500    
 
 
 

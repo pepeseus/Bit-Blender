@@ -43,6 +43,7 @@ module top_level
   localparam WW_WIDTH = $clog2(BRAM_DEPTH);     // width of the wave width lol = 18 bits
   localparam MMEM_MAX_DEPTH = 1_000_000_000;    // main memory max depth ~ $clog2(1_000_000_000) = 30
   localparam WS_WIDTH = $clog2(MMEM_MAX_DEPTH); // width of the wave start address = 30 bits
+  localparam PRE_DIVISION_AUDIO_SIZE = 32;
 
 
   // Reset signal
@@ -123,15 +124,18 @@ module top_level
   // Polyphonic MIDI Coordinator
   logic [NUM_OSCILLATORS-1:0] is_on;                            // track each oscillator
   logic [23:0] playback_rates [NUM_OSCILLATORS-1:0];            // corresponding notes for each oscillator
-  logic [SAMPLE_WIDTH-1:0] stream;                              // output playback mixed sample
+  logic [PRE_DIVISION_AUDIO_SIZE-1:0] pre_division_stream;                              // pre division playback mixed sample
+  logic has_updated;
 
   // assign pmoda4 = stream[0];
   assign pmoda5 = is_note_on;
   assign pmoda6 = valid_out_processor;
   assign pmoda7 = playback_rates[3][0];
 
+
   midi_coordinator #(.NUM_OSCILLATORS(NUM_OSCILLATORS),
-    .SAMPLE_WIDTH(SAMPLE_WIDTH)
+    .SAMPLE_WIDTH(SAMPLE_WIDTH),
+    .PRE_DIVISION_AUDIO_SIZE(PRE_DIVISION_AUDIO_SIZE)
   ) coordinator_main (
     .clk_in(clk_100mhz),
     .rst_in(sys_rst),
@@ -141,10 +145,27 @@ module top_level
     .is_on(is_on),
     .playback_rate(playback_rates),
     .out_samples(osc_samples),
-    .stream_out(stream),
-    .test(pmoda4)
+    .stream_out(pre_division_stream),
+    .has_updated(has_updated)
   );
 
+  logic [SAMPLE_WIDTH-1:0] stream;                              // output playback mixed sample
+  // assign stream = pre_division_stream[SAMPLE_WIDTH-1:0];
+
+  /**
+    Output Divider
+  */
+  output_divider #(.NUM_OSCILLATORS(NUM_OSCILLATORS),
+    .SAMPLE_WIDTH(SAMPLE_WIDTH),
+    .PRE_DIVISION_AUDIO_SIZE(PRE_DIVISION_AUDIO_SIZE)
+  ) divider_main (
+    .clk_in(clk_100mhz),
+    .rst_in(sys_rst),
+    .stream_in(pre_division_stream),
+    .is_on(is_on),
+    .has_updated(has_updated),
+    .stream_out(stream)
+  );
   
 
   /**

@@ -4,7 +4,8 @@
 
 module midi_coordinator #(
   parameter NUM_OSCILLATORS,
-  parameter SAMPLE_WIDTH
+  parameter SAMPLE_WIDTH,
+  parameter PRE_DIVISION_AUDIO_SIZE
 )(
   input wire clk_in,
   input wire rst_in,
@@ -14,8 +15,8 @@ module midi_coordinator #(
   output logic [23:0] playback_rate [NUM_OSCILLATORS-1:0],
   output logic [NUM_OSCILLATORS-1:0] is_on,
   input wire [NUM_OSCILLATORS-1:0][SAMPLE_WIDTH-1:0] out_samples,
-  output logic [SAMPLE_WIDTH-1:0] stream_out,
-  output logic test
+  output logic [PRE_DIVISION_AUDIO_SIZE-1:0] stream_out,
+  output logic has_updated
 );
 
 
@@ -45,12 +46,12 @@ module midi_coordinator #(
                 is_on[j] <= 0;
                 age[j] <= 0;
                 playback_rate[j] <= 0;
-                test <= 0;
+                has_updated <= 0;
             end
         end else if (valid_in) begin
+            has_updated <= 1;
             if (isNoteOn) begin
                 int i = calculate_index();
-                test <= 1;
                 is_on[i] <= 1;
                 age[i] <= 0;
                 playback_rate[i] <= cycles_between_samples;
@@ -68,6 +69,8 @@ module midi_coordinator #(
                     end
                 end
             end
+        end else begin
+            has_updated <= 0;
         end
 
     end
@@ -76,7 +79,7 @@ module midi_coordinator #(
         stream_out = 0;
         for (int j = 0; j < NUM_OSCILLATORS; j++) begin
             if (is_on[j]) begin
-                stream_out += (out_samples[j] >> 2);
+                stream_out += out_samples[j];
             end
         end
     end

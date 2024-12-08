@@ -1,8 +1,8 @@
 Copyright 1986-2022 Xilinx, Inc. All Rights Reserved. Copyright 2022-2024 Advanced Micro Devices, Inc. All Rights Reserved.
 ---------------------------------------------------------------------------------------------------------------------------------------------
 | Tool Version : Vivado v.2024.1 (lin64) Build 5076996 Wed May 22 18:36:09 MDT 2024
-| Date         : Sat Dec  7 20:49:57 2024
-| Host         : eecs-digital-35 running 64-bit Ubuntu 24.04.1 LTS
+| Date         : Sat Dec  7 22:26:28 2024
+| Host         : eecs-digital-15 running 64-bit Ubuntu 24.04.1 LTS
 | Command      : report_drc -file obj/post_imp_drc.rpt
 | Design       : top_level
 | Device       : xc7s50csga324-1
@@ -129,12 +129,12 @@ Related violations: <none>
 
 REQP-1840#17 Warning
 RAMB18 async control check  
-The RAMB18E1 processor_main/cycles_between_samples_reg has an input control pin processor_main/cycles_between_samples_reg/ENARDEN (net: processor_main/cycles_between_samples_reg_ENARDEN_cooolgate_en_sig_3) which is driven by a register (reader_main/valid_out_reg) that has an active asychronous set or reset. This may cause corruption of the memory contents and/or read values when the set/reset is asserted and is not analyzed by the default static timing analysis. It is suggested to eliminate the use of a set/reset to registers driving this RAMB pin or else use a synchronous reset in which the assertion of the reset is timed by default.
+The RAMB18E1 processor_main/cycles_between_samples_reg has an input control pin processor_main/cycles_between_samples_reg/ENARDEN (net: processor_main/cycles_between_samples_reg_ENARDEN_cooolgate_en_sig_14) which is driven by a register (reader_main/valid_out_reg) that has an active asychronous set or reset. This may cause corruption of the memory contents and/or read values when the set/reset is asserted and is not analyzed by the default static timing analysis. It is suggested to eliminate the use of a set/reset to registers driving this RAMB pin or else use a synchronous reset in which the assertion of the reset is timed by default.
 Related violations: <none>
 
 REQP-1840#18 Warning
 RAMB18 async control check  
-The RAMB18E1 processor_main/cycles_between_samples_reg has an input control pin processor_main/cycles_between_samples_reg/ENBWREN (net: processor_main/cycles_between_samples_reg_ENBWREN_cooolgate_en_sig_4) which is driven by a register (reader_main/valid_out_reg) that has an active asychronous set or reset. This may cause corruption of the memory contents and/or read values when the set/reset is asserted and is not analyzed by the default static timing analysis. It is suggested to eliminate the use of a set/reset to registers driving this RAMB pin or else use a synchronous reset in which the assertion of the reset is timed by default.
+The RAMB18E1 processor_main/cycles_between_samples_reg has an input control pin processor_main/cycles_between_samples_reg/ENBWREN (net: processor_main/cycles_between_samples_reg_ENBWREN_cooolgate_en_sig_15) which is driven by a register (reader_main/valid_out_reg) that has an active asychronous set or reset. This may cause corruption of the memory contents and/or read values when the set/reset is asserted and is not analyzed by the default static timing analysis. It is suggested to eliminate the use of a set/reset to registers driving this RAMB pin or else use a synchronous reset in which the assertion of the reset is timed by default.
 Related violations: <none>
 
 
