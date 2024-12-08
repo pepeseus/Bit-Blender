@@ -21,6 +21,13 @@ FPGA Synth
 
 
 
+# Later TODOs
+- Bytes view indicies squares
+- Bytes view ASCII representation of the bytes
+
+
+
+
 # PMOD breakout:
 F14 - MIDI RX in
 F15 - I2S BCLK

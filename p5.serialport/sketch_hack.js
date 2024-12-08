@@ -271,6 +271,9 @@ function draw() {
     }
   }
 
+  // TODO indicies squares!
+  // TODO ASCII representation of the bytes
+
   text('waveWidth: ' + waveWidth, 30, 1060);
 
   if (waveWidth > MAX_SAMPLES) {
