@@ -251,16 +251,31 @@ function gotData() {
 
 let hu = 60
 let vu = 25
+let fontSize = 20
 
 // p5.js draw() runs after setup(), on a loop
 function draw() {
-  // background('black');
+
+  // if (waveWidth < 100) {
+  //   hu = 230
+  //   vu = 100
+  //   fontSize = 80
+  // } else if (waveWidth < 500) {
+  //   hu = 130
+  //   vu = 80
+  //   fontSize = 50
+  // } else {
+  //   hu = 60
+  //   vu = 25
+  //   fontSize = 20
+  // }
+  
   background('#3D403E');
   fill('palegreen');
   textFont('Courier New', 10);
   let i = 0
   
-	textSize(20);
+	textSize(fontSize);
   for (let y = 30; y <= height-vu; y += vu) {
     for (let x = 30; x <= width-hu; x += hu) {
       if (i < waveWidth-2 && i < MAX_SAMPLES) {   // HACK! not displaying the last 2 samples, they are wrong!
@@ -274,6 +289,7 @@ function draw() {
   // TODO indicies squares!
   // TODO ASCII representation of the bytes
 
+  textSize(20);
   text('waveWidth: ' + waveWidth, 30, 1060);
 
   if (waveWidth > MAX_SAMPLES) {
