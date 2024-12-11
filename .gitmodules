@@ -1,0 +1,3 @@
+[submodule "p5.serialserver"]
+	path = p5.serialserver
+	url = https://github.com/p5-serial/p5.serialserver.git

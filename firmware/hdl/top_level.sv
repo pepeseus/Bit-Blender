@@ -173,13 +173,13 @@ module top_level
   */
 
   logic [NUM_OSCILLATORS-1:0][WW_WIDTH-1:0]      osc_indices;   // playback sample index for each oscillator
-  logic [NUM_OSCILLATORS-1:0][SAMPLE_WIDTH-1:0]  osc_samples;   // output sample data for each oscillator    // TODO OFF
+  logic [NUM_OSCILLATORS-1:0][SAMPLE_WIDTH-1:0]  osc_samples;   // output sample data for each oscillator  
 
   logic [WW_WIDTH-1:0]      viz_index;                           // hdmi pixel index
   logic [SAMPLE_WIDTH-1:0]  viz_sample;                          // output hdmi pixel data
 
-  logic [WW_WIDTH-1:0]      debug_index;                         // debug sample index
-  logic [SAMPLE_WIDTH-1:0]  debug_sample;                        // debug sample data
+  logic [WW_WIDTH-1:0]      bytes_screen_index;                  // debug sample index
+  logic [SAMPLE_WIDTH-1:0]  bytes_screen_sample;                 // debug sample data
 
   wave_loader #(
     .NUM_OSCILLATORS(NUM_OSCILLATORS),    // number of oscillators
@@ -197,18 +197,23 @@ module top_level
     .osc_data_out(osc_samples),
     .viz_index_in(viz_index), // TODO this guy doesn't do anything; does it matter??
     .viz_data_out(viz_sample),
-    .debug_index_in(debug_index),
-    .debug_data_out(debug_sample),
-    .analyzer(analyzer)
+    .bytes_screen_index_in(bytes_screen_index),
+    .bytes_screen_data_out(bytes_screen_sample)
   );
 
 
 
 
   // temp:
+<<<<<<< HEAD
   // assign is_on[0] = is_note_on;
   // assign playback_rates[0] = playback_rate;
   // assign stream = osc_samples[0];                   // TODO OFF
+=======
+  assign is_on[0] = is_note_on;
+  assign playback_rates[0] = playback_rate;
+  assign stream = osc_samples[0];              
+>>>>>>> bytes_screen
 
   /**
     Audio Playback
@@ -251,7 +256,7 @@ module top_level
     .input_tready(),      // Unused
     .sck(i2s_bclk),
     .ws(i2s_ws),
-    .sd(i2s_sd)             // TODO OFF
+    .sd(i2s_sd)            
   );
 
   /**
@@ -370,19 +375,21 @@ module top_level
     Debugger
   */
   logic clk_25mhz;
-  debug_clk_wiz_25mhz debug_clk_wiz (
+  clk_wiz_25mhz clk_wiz_25mhz (
     .rst(sys_rst),
     .clk_ref(clk_100_passthrough),
     .clk_25mhz(clk_25mhz)
   );
 
-  uart_debugger debugger (
-    .clk_25mhz(clk_25mhz),
-    .rst_in(sys_rst),
+  bytes_screen bytes_screen (
+    .clk_in(clk_100mhz),
+    .rst_in(sys_rst | ui_update_trig),
     .wave_width_in(wave_width),
-    .debug_data_in(debug_sample),
-    .debug_index_out(debug_index),
-    .uart_tx(uart_txd)
+    .osc_indices(osc_indices),
+    .bytes_screen_data_in(bytes_screen_sample),
+    .bytes_screen_index_out(bytes_screen_index),
+    .uart_txd(uart_txd),
+    .analyzer(analyzer)
   );
 
 
@@ -397,29 +404,6 @@ module top_level
     Graph View
   */
 
-
-  // debugging
-  // assign pmodb[0] = stream[0];              // OFF
-  // assign pmodb[1] = i2s_sd;                 // OFF
-  // assign pmodb[2] = osc_samples[0][0];      // OFF
-  // assign pmodb[3] = is_on[0];               // GOOD
-  // assign pmodb[4] = playback_rates[0][0];   // ?? should be fine
-  // assign pmodb[5] = osc_indices[0][0];      // GOOD
-  // assign pmodb[0] = ui_update_trig;         // 
-  // assign pmodb[1] = i2s_sd;                 // 
-  // assign pmodb[2] = osc_samples[0][0];      // 
-  // assign pmodb[3] = is_on[0];               // 
-  // assign pmodb[4] = playback_rates[0][0];   // 
-  // assign pmodb[5] = osc_indices[0][0];      // 
-
-
-
-  // assign pmodb[0] = ui_update_trig;         // 
-  // assign pmodb[1] = i2s_sd;                 // 
-  // assign pmodb[2] = osc_samples[0][0];      // 
-  // assign pmodb[3] = is_on[0];               // 
-  // assign pmodb[4] = playback_rates[0][0];   // 
-  // assign pmodb[5] = osc_indices[0][0];      // 
 
 
 

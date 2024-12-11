@@ -1,3 +1,4 @@
 .DS_Store
 _history
+__pycache__
 p5.serialserver
