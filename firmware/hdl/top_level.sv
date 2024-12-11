@@ -205,15 +205,9 @@ module top_level
 
 
   // temp:
-<<<<<<< HEAD
   // assign is_on[0] = is_note_on;
   // assign playback_rates[0] = playback_rate;
   // assign stream = osc_samples[0];                   // TODO OFF
-=======
-  assign is_on[0] = is_note_on;
-  assign playback_rates[0] = playback_rate;
-  assign stream = osc_samples[0];              
->>>>>>> bytes_screen
 
   /**
     Audio Playback
