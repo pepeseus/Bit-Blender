@@ -198,32 +198,32 @@ clk_counter #(
  * Visual Select BRAM
  */
 
-xilinx_true_dual_port_read_first_1_clock_ram #(
-  .RAM_WIDTH(SAMPLE_WIDTH),
-  .RAM_DEPTH(BRAM_DEPTH),
-  .RAM_PERFORMANCE("HIGH_PERFORMANCE")
-  )
-visual_select_ram (
-  .clka(clk_in),     // Clock
+// xilinx_true_dual_port_read_first_1_clock_ram #(
+//   .RAM_WIDTH(SAMPLE_WIDTH),
+//   .RAM_DEPTH(BRAM_DEPTH),
+//   .RAM_PERFORMANCE("HIGH_PERFORMANCE")
+//   )
+// visual_select_ram (
+//   .clka(clk_in),     // Clock
 
-  //writing port:
-  .addra(sample_index),     // Port A address bus,
-  .dina(sample_data),       // Port A RAM input data
-  .douta(),                 // Port A RAM output data, width determined from RAM_WIDTH
-  .wea(writing),            // Port A write enable
-  .ena(writing),            // Port A RAM Enable
-  .rsta(1'b0),              // Port A output reset
-  .regcea(1'b1),            // Port A output register enable
+//   //writing port:
+//   .addra(sample_index),     // Port A address bus,
+//   .dina(sample_data),       // Port A RAM input data
+//   .douta(),                 // Port A RAM output data, width determined from RAM_WIDTH
+//   .wea(writing),            // Port A write enable
+//   .ena(writing),            // Port A RAM Enable
+//   .rsta(1'b0),              // Port A output reset
+//   .regcea(1'b1),            // Port A output register enable
 
-  //reading port:
-  .addrb(viz_index_in),     // Port B address bus,
-  .doutb(viz_data_out),     // Port B RAM output data,
-  .dinb(16'b0),             // Port B RAM input data, width determined from RAM_WIDTH
-  .web(1'b0),               // Port B write enable
-  .enb(1'b1),               // Port B RAM Enable,         // TODO same, should I reset to 0 when not on?
-  .rstb(1'b0),              // Port B output reset
-  .regceb(1'b1)             // Port B output register enable
-);
+//   //reading port:
+//   .addrb(curr_oscillator_index),     // Port B address bus, // TODO viz_index_in
+//   .doutb(viz_data_out),     // Port B RAM output data,
+//   .dinb(16'b0),             // Port B RAM input data, width determined from RAM_WIDTH
+//   .web(1'b0),               // Port B write enable
+//   .enb(1'b1),               // Port B RAM Enable,         // TODO same, should I reset to 0 when not on?
+//   .rstb(1'b0),              // Port B output reset
+//   .regceb(1'b1)             // Port B output register enable
+// );
 
 
 

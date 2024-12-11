@@ -1,0 +1,92 @@
+Copyright 1986-2022 Xilinx, Inc. All Rights Reserved. Copyright 2022-2024 Advanced Micro Devices, Inc. All Rights Reserved.
+---------------------------------------------------------------------------------------------------------------------------------------------
+| Tool Version : Vivado v.2024.1 (lin64) Build 5076996 Wed May 22 18:36:09 MDT 2024
+| Date         : Wed Dec 11 00:40:17 2024
+| Host         : eecs-digital-43 running 64-bit Ubuntu 24.04.1 LTS
+| Command      : report_timing -file obj/post_synth_timing.rpt
+| Design       : top_level
+| Device       : 7s50-csga324
+| Speed File   : -1  PRODUCTION 1.23 2018-06-13
+| Design State : Synthesized
+---------------------------------------------------------------------------------------------------------------------------------------------
+
+Timing Report
+
+Slack (VIOLATED) :        -7.878ns  (required time - arrival time)
+  Source:                 memio/oscillator_ram/BRAM_reg_0_0/CLKBWRCLK
+                            (rising edge-triggered cell RAMB36E1 clocked by clk_100_pass_clk_wiz_0  {rise@0.000ns fall@5.000ns period=10.000ns})
+  Destination:            tmds_red/tally_reg[4]/D
+                            (rising edge-triggered cell FDRE clocked by clk_pixel_clk_wiz_0  {rise@0.000ns fall@6.742ns period=13.483ns})
+  Path Group:             clk_pixel_clk_wiz_0
+  Path Type:              Setup (Max at Slow Process Corner)
+  Requirement:            0.112ns  (clk_pixel_clk_wiz_0 rise@310.112ns - clk_100_pass_clk_wiz_0 rise@310.000ns)
+  Data Path Delay:        7.852ns  (logic 1.750ns (22.288%)  route 6.102ns (77.712%))
+  Logic Levels:           7  (LUT5=3 LUT6=4)
+  Clock Path Skew:        0.026ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    -2.063ns = ( 308.049 - 310.112 ) 
+    Source Clock Delay      (SCD):    -1.604ns = ( 308.396 - 310.000 ) 
+    Clock Pessimism Removal (CPR):    0.485ns
+  Clock Uncertainty:      0.193ns  ((TSJ^2 + DJ^2)^1/2) / 2 + PE
+    Total System Jitter     (TSJ):    0.071ns
+    Discrete Jitter          (DJ):    0.128ns
+    Phase Error              (PE):    0.120ns
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                         (clock clk_100_pass_clk_wiz_0 rise edge)
+                                                    310.000   310.000 r  
+    N15                                               0.000   310.000 r  clk_100mhz (IN)
+                         net (fo=0)                   0.000   310.000    wizard_hdmi/clk_100mhz
+    N15                  IBUF (Prop_ibuf_I_O)         1.440   311.440 r  wizard_hdmi/clkin1_ibufg/O
+                         net (fo=1, unplaced)         0.584   312.024    wizard_hdmi/clk_in1_clk_wiz_0
+                         MMCME2_ADV (Prop_mmcme2_adv_CLKIN1_CLKOUT0)
+                                                     -5.108   306.917 r  wizard_hdmi/mmcm_adv_inst/CLKOUT0
+                         net (fo=1, unplaced)         0.800   307.716    wizard_hdmi/clk_100_pass_clk_wiz_0
+                         BUFG (Prop_bufg_I_O)         0.096   307.812 r  wizard_hdmi/clkout1_buf/O
+                         net (fo=630, unplaced)       0.584   308.396    memio/oscillator_ram/clk_100_pass
+                         RAMB36E1                                     r  memio/oscillator_ram/BRAM_reg_0_0/CLKBWRCLK
+  -------------------------------------------------------------------    -------------------
+                         RAMB36E1 (Prop_ramb36e1_CLKBWRCLK_DOBDO[0])
+                                                      0.882   309.278 f  memio/oscillator_ram/BRAM_reg_0_0/DOBDO[0]
+                         net (fo=27, unplaced)        0.800   310.078    memio/oscillator_ram/ram_data_b[0]
+                         LUT5 (Prop_lut5_I4_O)        0.124   310.202 f  memio/oscillator_ram/tally[1]_i_12/O
+                         net (fo=1, unplaced)         1.111   311.313    memio/oscillator_ram/tally[1]_i_12_n_0
+                         LUT6 (Prop_lut6_I0_O)        0.124   311.437 r  memio/oscillator_ram/tally[1]_i_5/O
+                         net (fo=22, unplaced)        0.511   311.948    memio/oscillator_ram/tally[1]_i_5_n_0
+                         LUT5 (Prop_lut5_I0_O)        0.124   312.072 r  memio/oscillator_ram/tally[1]_i_8/O
+                         net (fo=10, unplaced)        0.945   313.017    memio/oscillator_ram/tally[1]_i_8_n_0
+                         LUT6 (Prop_lut6_I3_O)        0.124   313.141 r  memio/oscillator_ram/tally[2]_i_9/O
+                         net (fo=2, unplaced)         0.913   314.054    memio/oscillator_ram/tally[2]_i_9_n_0
+                         LUT6 (Prop_lut6_I3_O)        0.124   314.178 r  memio/oscillator_ram/tally[2]_i_2/O
+                         net (fo=3, unplaced)         0.920   315.098    memio/oscillator_ram/tally[2]_i_2_n_0
+                         LUT5 (Prop_lut5_I2_O)        0.124   315.222 r  memio/oscillator_ram/tally[4]_i_5/O
+                         net (fo=1, unplaced)         0.902   316.124    memio/oscillator_ram/tally[4]_i_5_n_0
+                         LUT6 (Prop_lut6_I2_O)        0.124   316.248 r  memio/oscillator_ram/tally[4]_i_2/O
+                         net (fo=1, unplaced)         0.000   316.248    tmds_red/D[3]
+                         FDRE                                         r  tmds_red/tally_reg[4]/D
+  -------------------------------------------------------------------    -------------------
+
+                         (clock clk_pixel_clk_wiz_0 rise edge)
+                                                    310.112   310.112 r  
+    N15                                               0.000   310.112 r  clk_100mhz (IN)
+                         net (fo=0)                   0.000   310.112    wizard_hdmi/clk_100mhz
+    N15                  IBUF (Prop_ibuf_I_O)         1.370   311.483 r  wizard_hdmi/clkin1_ibufg/O
+                         net (fo=1, unplaced)         0.439   311.922    wizard_hdmi/clk_in1_clk_wiz_0
+                         MMCME2_ADV (Prop_mmcme2_adv_CLKIN1_CLKOUT1)
+                                                     -5.378   306.544 r  wizard_hdmi/mmcm_adv_inst/CLKOUT1
+                         net (fo=1, unplaced)         0.760   307.304    wizard_hdmi/clk_pixel_clk_wiz_0
+                         BUFG (Prop_bufg_I_O)         0.091   307.395 r  wizard_hdmi/clkout2_buf/O
+                         net (fo=64, unplaced)        0.655   308.049    tmds_red/clk_pixel
+                         FDRE                                         r  tmds_red/tally_reg[4]/C
+                         clock pessimism              0.485   308.534    
+                         clock uncertainty           -0.193   308.341    
+                         FDRE (Setup_fdre_C_D)        0.029   308.370    tmds_red/tally_reg[4]
+  -------------------------------------------------------------------
+                         required time                        308.370    
+                         arrival time                        -316.248    
+  -------------------------------------------------------------------
+                         slack                                 -7.878    
+
+
+
+

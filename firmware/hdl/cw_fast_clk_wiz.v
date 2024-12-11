@@ -1,13 +1,13 @@
 
-// file: clk_wiz_0.v
-//
+// file: cw_fast.v
+// 
 // (c) Copyright 2008 - 2013 Xilinx, Inc. All rights reserved.
-//
+// 
 // This file contains confidential and proprietary information
 // of Xilinx, Inc. and is protected under U.S. and
 // international copyright and other intellectual property
 // laws.
-//
+// 
 // DISCLAIMER
 // This disclaimer is not a license and does not grant any
 // rights to the materials distributed herewith. Except as
@@ -29,7 +29,7 @@
 // by a third party) even if such damage or loss was
 // reasonably foreseeable or Xilinx had been advised of the
 // possibility of the same.
-//
+// 
 // CRITICAL APPLICATIONS
 // Xilinx products are not designed or intended to be fail-
 // safe, or for use in any application requiring fail-safe
@@ -43,10 +43,10 @@
 // liability of any use of Xilinx products in Critical
 // Applications, subject only to applicable laws and
 // regulations governing limitations on product liability.
-//
+// 
 // THIS COPYRIGHT NOTICE AND DISCLAIMER MUST BE RETAINED AS
 // PART OF THIS FILE AT ALL TIMES.
-//
+// 
 //----------------------------------------------------------------------------
 // User entered comments
 //----------------------------------------------------------------------------
@@ -56,8 +56,10 @@
 //  Output     Output      Phase    Duty Cycle   Pk-to-Pk     Phase
 //   Clock     Freq (MHz)  (degrees)    (%)     Jitter (ps)  Error (ps)
 //----------------------------------------------------------------------------
-// clk_pixel__74.25000______0.000______50.0______337.616____322.999
-// clk_tmds__371.25000______0.000______50.0______258.703____322.999
+// _clk_100__100.00000______0.000______50.0______130.958_____98.575
+// _clk_mig__200.00000______0.000______50.0______114.829_____98.575
+// clk_camera__200.00000______0.000______50.0______114.829_____98.575
+// __clk_xc__25.00000______0.000______50.0______175.402_____98.575
 //
 //----------------------------------------------------------------------------
 // Input Clock   Freq (MHz)    Input Jitter (UI)
@@ -66,24 +68,26 @@
 
 `timescale 1ps/1ps
 
-module hdmi_clk_wiz_720p
+module cw_fast_clk_wiz 
 
  (// Clock in ports
   // Clock out ports
-  output        clk_pixel,
-  output        clk_tmds,
+  output        clk_100,
+  output        clk_mig,
+  output        clk_camera,
+  output        clk_xc,
   // Status and control signals
   input         reset,
   output        locked,
-  input         clk_ref
+  input         clk_in1
  );
   // Input buffering
   //------------------------------------
-wire clk_ref_clk_wiz_0;
-wire clk_in2_clk_wiz_0;
+wire clk_in1_cw_fast;
+wire clk_in2_cw_fast;
   IBUF clkin1_ibufg
-   (.O (clk_ref_clk_wiz_0),
-    .I (clk_ref));
+   (.O (clk_in1_cw_fast),
+    .I (clk_in1));
 
 
 
@@ -95,27 +99,21 @@ wire clk_in2_clk_wiz_0;
   //    * Unused inputs are tied off
   //    * Unused outputs are labeled unused
 
-  wire        clk_pixel_clk_wiz_0;
-  wire        clk_tmds_clk_wiz_0;
-  wire        clk_out3_clk_wiz_0;
-  wire        clk_out4_clk_wiz_0;
-  wire        clk_out5_clk_wiz_0;
-  wire        clk_out6_clk_wiz_0;
-  wire        clk_out7_clk_wiz_0;
+  wire        clk_100_cw_fast;
+  wire        clk_mig_cw_fast;
+  wire        clk_camera_cw_fast;
+  wire        clk_xc_cw_fast;
+  wire        clk_out5_cw_fast;
+  wire        clk_out6_cw_fast;
+  wire        clk_out7_cw_fast;
 
   wire [15:0] do_unused;
   wire        drdy_unused;
   wire        psdone_unused;
   wire        locked_int;
-  wire        clkfbout_clk_wiz_0;
-  wire        clkfbout_buf_clk_wiz_0;
+  wire        clkfbout_cw_fast;
+  wire        clkfbout_buf_cw_fast;
   wire        clkfboutb_unused;
-    wire clkout0b_unused;
-   wire clkout1b_unused;
-   wire clkout2_unused;
-   wire clkout2b_unused;
-   wire clkout3_unused;
-   wire clkout3b_unused;
    wire clkout4_unused;
   wire        clkout5_unused;
   wire        clkout6_unused;
@@ -123,43 +121,39 @@ wire clk_in2_clk_wiz_0;
   wire        clkinstopped_unused;
   wire        reset_high;
 
-  MMCME2_ADV
+  PLLE2_ADV
   #(.BANDWIDTH            ("OPTIMIZED"),
-    .CLKOUT4_CASCADE      ("FALSE"),
     .COMPENSATION         ("ZHOLD"),
     .STARTUP_WAIT         ("FALSE"),
-    .DIVCLK_DIVIDE        (5),
-    .CLKFBOUT_MULT_F      (37.125),
+    .DIVCLK_DIVIDE        (1),
+    .CLKFBOUT_MULT        (10),
     .CLKFBOUT_PHASE       (0.000),
-    .CLKFBOUT_USE_FINE_PS ("FALSE"),
-    .CLKOUT0_DIVIDE_F     (10.000),
+    .CLKOUT0_DIVIDE       (10),
     .CLKOUT0_PHASE        (0.000),
     .CLKOUT0_DUTY_CYCLE   (0.500),
-    .CLKOUT0_USE_FINE_PS  ("FALSE"),
-    .CLKOUT1_DIVIDE       (2),
+    .CLKOUT1_DIVIDE       (5),
     .CLKOUT1_PHASE        (0.000),
     .CLKOUT1_DUTY_CYCLE   (0.500),
-    .CLKOUT1_USE_FINE_PS  ("FALSE"),
+    .CLKOUT2_DIVIDE       (5),
+    .CLKOUT2_PHASE        (0.000),
+    .CLKOUT2_DUTY_CYCLE   (0.500),
+    .CLKOUT3_DIVIDE       (40),
+    .CLKOUT3_PHASE        (0.000),
+    .CLKOUT3_DUTY_CYCLE   (0.500),
     .CLKIN1_PERIOD        (10.000))
-  mmcm_adv_inst
+  plle2_adv_inst
     // Output clocks
    (
-    .CLKFBOUT            (clkfbout_clk_wiz_0),
-    .CLKFBOUTB           (clkfboutb_unused),
-    .CLKOUT0             (clk_pixel_clk_wiz_0),
-    .CLKOUT0B            (clkout0b_unused),
-    .CLKOUT1             (clk_tmds_clk_wiz_0),
-    .CLKOUT1B            (clkout1b_unused),
-    .CLKOUT2             (clkout2_unused),
-    .CLKOUT2B            (clkout2b_unused),
-    .CLKOUT3             (clkout3_unused),
-    .CLKOUT3B            (clkout3b_unused),
+    .CLKFBOUT            (clkfbout_cw_fast),
+    .CLKOUT0             (clk_100_cw_fast),
+    .CLKOUT1             (clk_mig_cw_fast),
+    .CLKOUT2             (clk_camera_cw_fast),
+    .CLKOUT3             (clk_xc_cw_fast),
     .CLKOUT4             (clkout4_unused),
     .CLKOUT5             (clkout5_unused),
-    .CLKOUT6             (clkout6_unused),
      // Input clock control
-    .CLKFBIN             (clkfbout_buf_clk_wiz_0),
-    .CLKIN1              (clk_ref_clk_wiz_0),
+    .CLKFBIN             (clkfbout_buf_cw_fast),
+    .CLKIN1              (clk_in1_cw_fast),
     .CLKIN2              (1'b0),
      // Tied to always select the primary input clock
     .CLKINSEL            (1'b1),
@@ -171,18 +165,11 @@ wire clk_in2_clk_wiz_0;
     .DO                  (do_unused),
     .DRDY                (drdy_unused),
     .DWE                 (1'b0),
-    // Ports for dynamic phase shift
-    .PSCLK               (1'b0),
-    .PSEN                (1'b0),
-    .PSINCDEC            (1'b0),
-    .PSDONE              (psdone_unused),
     // Other control and status signals
     .LOCKED              (locked_int),
-    .CLKINSTOPPED        (clkinstopped_unused),
-    .CLKFBSTOPPED        (clkfbstopped_unused),
     .PWRDWN              (1'b0),
     .RST                 (reset_high));
-  assign reset_high = reset;
+  assign reset_high = reset; 
 
   assign locked = locked_int;
 // Clock Monitor clock assigning
@@ -191,15 +178,31 @@ wire clk_in2_clk_wiz_0;
   //-----------------------------------
 
   BUFG clkf_buf
-   (.O (clkfbout_buf_clk_wiz_0),
-    .I (clkfbout_clk_wiz_0));
+   (.O (clkfbout_buf_cw_fast),
+    .I (clkfbout_cw_fast));
+
+
+
+
+
 
   BUFG clkout1_buf
-   (.O   (clk_pixel),
-    .I   (clk_pixel_clk_wiz_0));
+   (.O   (clk_100),
+    .I   (clk_100_cw_fast));
+
 
   BUFG clkout2_buf
-   (.O   (clk_tmds),
-    .I   (clk_tmds_clk_wiz_0));
+   (.O   (clk_mig),
+    .I   (clk_mig_cw_fast));
+
+  BUFG clkout3_buf
+   (.O   (clk_camera),
+    .I   (clk_camera_cw_fast));
+
+  BUFG clkout4_buf
+   (.O   (clk_xc),
+    .I   (clk_xc_cw_fast));
+
+
 
 endmodule

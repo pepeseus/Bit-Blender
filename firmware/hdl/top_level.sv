@@ -37,7 +37,7 @@ module top_level
    output logic [7:0] analyzer
    );
 
-  localparam SAMPLE_WIDTH = 8;
+  localparam SAMPLE_WIDTH = 16;
   localparam NUM_OSCILLATORS = 4;
   localparam BRAM_DEPTH = 30214;               // temp memory depth     ~ $clog2(262141) = 18
   localparam WW_WIDTH = $clog2(BRAM_DEPTH);     // width of the wave width lol = 18 bits
@@ -66,7 +66,7 @@ module top_level
 
   ui_handler #(.WW_WIDTH(WW_WIDTH), .WS_WIDTH(WS_WIDTH))
   ui_handle (
-    .clk_in(clk_100mhz),
+    .clk_in(clk_100_passthrough),
     .rst_in(sys_rst),
     .sw_in(sw),
     .pot_in(0),                         // TODO: potentiometer
@@ -82,7 +82,7 @@ module top_level
 
   // MIDI UART RX signal buffering
   logic midi_rx_buf0, midi_rx_buf1;
-  always_ff @(posedge clk_100mhz) begin
+  always_ff @(posedge clk_100_passthrough) begin
     midi_rx_buf0 <= midi_rx;
     midi_rx_buf1 <= midi_rx_buf0;
   end
@@ -93,7 +93,7 @@ module top_level
   logic valid_out_reader;
 
   midi_reader reader_main(
-    .clk_in(clk_100mhz),
+    .clk_in(clk_100_passthrough),
     .rst_in(sys_rst),
     .rx_wire_in(midi_rx_buf1),
     .status(status),
@@ -109,7 +109,7 @@ module top_level
   logic valid_out_processor;
 
   midi_processor processor_main(
-    .clk_in(clk_100mhz),
+    .clk_in(clk_100_passthrough),
     .rst_in(sys_rst),
     .status(status),
     .data_byte1(data_byte1),
@@ -137,7 +137,7 @@ module top_level
     .SAMPLE_WIDTH(SAMPLE_WIDTH),
     .PRE_DIVISION_AUDIO_SIZE(PRE_DIVISION_AUDIO_SIZE)
   ) coordinator_main (
-    .clk_in(clk_100mhz),
+    .clk_in(clk_100_passthrough),
     .rst_in(sys_rst),
     .isNoteOn(is_note_on),
     .cycles_between_samples(playback_rate),
@@ -159,7 +159,7 @@ module top_level
     .SAMPLE_WIDTH(SAMPLE_WIDTH),
     .PRE_DIVISION_AUDIO_SIZE(PRE_DIVISION_AUDIO_SIZE)
   ) divider_main (
-    .clk_in(clk_100mhz),
+    .clk_in(clk_100_passthrough),
     .rst_in(sys_rst),
     .stream_in(pre_division_stream),
     .is_on(is_on),
@@ -189,13 +189,13 @@ module top_level
     .MMEM_MAX_DEPTH(MMEM_MAX_DEPTH)       // depth of the main memory
   )
   memio (
-    .clk_in(clk_100mhz),
+    .clk_in(clk_100_passthrough),
     .rst_in(sys_rst),
     .wave_width_in(wave_width),
     .ui_update_trig_in(ui_update_trig),
     .osc_index_in(osc_indices),
     .osc_data_out(osc_samples),
-    .viz_index_in(viz_index),
+    .viz_index_in(viz_index), // TODO this guy doesn't do anything; does it matter??
     .viz_data_out(viz_sample),
     .debug_index_in(debug_index),
     .debug_data_out(debug_sample),
@@ -220,7 +220,7 @@ module top_level
       oscillator
       #(.WW_WIDTH(WW_WIDTH)) 
       osc_inst (
-        .clk_in(clk_100mhz),
+        .clk_in(clk_100_passthrough),
         .rst_in(sys_rst),
         .wave_width_in(wave_width),
         .is_on_in(is_on[i]),
@@ -235,7 +235,7 @@ module top_level
   // I2S TX
   i2s_clk_wiz_44100 i2s_clk_wiz (     // I2S clock generator
     .rst(sys_rst),
-    .clk_ref(clk_100mhz),
+    .clk_ref(clk_100_passthrough),
     .clk_bit(i2s_bclk),
     .clk_ws(i2s_ws)
   );
@@ -243,7 +243,7 @@ module top_level
   i2s_tx #(                           // I2S transmitter        
     .WIDTH(SAMPLE_WIDTH)
   ) i2s_tx_inst (
-    .clk(clk_100mhz),
+    .clk(clk_100_passthrough),
     .rst(sys_rst),
     .input_l_tdata(stream),
     .input_r_tdata(stream),
@@ -258,16 +258,16 @@ module top_level
     Visual View
   */
 
-  logic clk_pixel, clk_5x; //clock lines
-  logic locked; //locked signal (we'll leave unused but still hook it up)
+  logic          clk_pixel;
+  logic          clk_5x;
+  logic          clk_100_passthrough;
 
-  //clock manager...creates 74.25 Hz and 5 times 74.25 MHz for pixel and TMDS
-  hdmi_clk_wiz_720p mhdmicw (
-      .reset(0),
-      .locked(locked),
-      .clk_ref(clk_100mhz),
-      .clk_pixel(clk_pixel),
-      .clk_tmds(clk_5x));
+  clk_wiz_0_clk_wiz wizard_hdmi
+    (.clk_in1(clk_100mhz),
+     .clk_tmds(clk_5x),
+     .clk_pixel(clk_pixel),
+     .clk_100_pass(clk_100_passthrough),
+     .reset(0));
 
   logic [10:0] hcount; //hcount of system!
   logic [9:0] vcount; //vcount of system!
@@ -290,9 +290,12 @@ module top_level
       .fc_out(frame_count));
 
   logic [7:0] red, green, blue; //red green and blue pixel values for output
-  assign red = 8'h00;
-  assign green = 8'hFF;
-  assign blue = 8'h1F;
+  assign red = viz_sample[7:0];
+  assign green = viz_sample[7:0];
+  assign blue = viz_sample[7:0];
+    // assign red = 8'h00;
+    // assign green = 8'hFF;
+    // assign blue = 8'h1F;
 
   logic [9:0] tmds_10b [0:2]; //output of each TMDS encoder!
   logic tmds_signal [2:0]; //output of each TMDS serializer!
@@ -369,7 +372,7 @@ module top_level
   logic clk_25mhz;
   debug_clk_wiz_25mhz debug_clk_wiz (
     .rst(sys_rst),
-    .clk_ref(clk_100mhz),
+    .clk_ref(clk_100_passthrough),
     .clk_25mhz(clk_25mhz)
   );
 
