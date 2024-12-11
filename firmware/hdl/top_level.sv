@@ -376,7 +376,7 @@ module top_level
   );
 
   bytes_screen bytes_screen (
-    .clk_in(clk_100mhz),
+    .clk_in(clk_100_passthrough),
     .rst_in(sys_rst | ui_update_trig),
     .wave_width_in(wave_width),
     .osc_indices(osc_indices),

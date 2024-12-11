@@ -1,0 +1,92 @@
+Copyright 1986-2022 Xilinx, Inc. All Rights Reserved. Copyright 2022-2024 Advanced Micro Devices, Inc. All Rights Reserved.
+---------------------------------------------------------------------------------------------------------------------------------------------
+| Tool Version : Vivado v.2024.1 (lin64) Build 5076996 Wed May 22 18:36:09 MDT 2024
+| Date         : Wed Dec 11 01:08:31 2024
+| Host         : eecs-digital-37 running 64-bit Ubuntu 24.04.1 LTS
+| Command      : report_timing -file obj/post_place_timing.rpt
+| Design       : top_level
+| Device       : 7s50-csga324
+| Speed File   : -1  PRODUCTION 1.23 2018-06-13
+| Design State : Fully Placed
+---------------------------------------------------------------------------------------------------------------------------------------------
+
+Timing Report
+
+Slack (MET) :             2.529ns  (required time - arrival time)
+  Source:                 processor_main/cycles_between_samples_reg/CLKARDCLK
+                            (rising edge-triggered cell RAMB18E1 clocked by clk_100_pass_clk_wiz_0  {rise@0.000ns fall@5.000ns period=10.000ns})
+  Destination:            coordinator_main/is_on_reg[1]/D
+                            (rising edge-triggered cell FDRE clocked by clk_100_pass_clk_wiz_0  {rise@0.000ns fall@5.000ns period=10.000ns})
+  Path Group:             clk_100_pass_clk_wiz_0
+  Path Type:              Setup (Max at Slow Process Corner)
+  Requirement:            10.000ns  (clk_100_pass_clk_wiz_0 rise@10.000ns - clk_100_pass_clk_wiz_0 rise@0.000ns)
+  Data Path Delay:        7.349ns  (logic 3.618ns (49.231%)  route 3.731ns (50.769%))
+  Logic Levels:           6  (CARRY4=2 LUT2=1 LUT4=1 LUT6=2)
+  Clock Path Skew:        -0.143ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    -1.609ns = ( 8.391 - 10.000 ) 
+    Source Clock Delay      (SCD):    -0.992ns
+    Clock Pessimism Removal (CPR):    0.474ns
+  Clock Uncertainty:      0.070ns  ((TSJ^2 + DJ^2)^1/2) / 2 + PE
+    Total System Jitter     (TSJ):    0.071ns
+    Discrete Jitter          (DJ):    0.121ns
+    Phase Error              (PE):    0.000ns
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                         (clock clk_100_pass_clk_wiz_0 rise edge)
+                                                      0.000     0.000 r  
+    N15                                               0.000     0.000 r  clk_100mhz (IN)
+                         net (fo=0)                   0.000     0.000    wizard_hdmi/clk_100mhz
+    N15                  IBUF (Prop_ibuf_I_O)         1.440     1.440 r  wizard_hdmi/clkin1_ibufg/O
+                         net (fo=1, estimated)        1.233     2.673    wizard_hdmi/clk_in1_clk_wiz_0
+    MMCME2_ADV_X0Y0      MMCME2_ADV (Prop_mmcme2_adv_CLKIN1_CLKOUT0)
+                                                     -7.025    -4.352 r  wizard_hdmi/mmcm_adv_inst/CLKOUT0
+                         net (fo=1, estimated)        1.666    -2.686    wizard_hdmi/clk_100_pass_clk_wiz_0
+    BUFGCTRL_X0Y2        BUFG (Prop_bufg_I_O)         0.096    -2.590 r  wizard_hdmi/clkout1_buf/O
+                         net (fo=754, estimated)      1.597    -0.992    processor_main/clk_100_pass
+    RAMB18_X0Y20         RAMB18E1                                     r  processor_main/cycles_between_samples_reg/CLKARDCLK
+  -------------------------------------------------------------------    -------------------
+    RAMB18_X0Y20         RAMB18E1 (Prop_ramb18e1_CLKARDCLK_DOADO[1])
+                                                      2.454     1.462 r  processor_main/cycles_between_samples_reg/DOADO[1]
+                         net (fo=2, estimated)        1.175     2.637    processor_main/cycles_between_samples_reg_n_14
+    SLICE_X7Y47          LUT2 (Prop_lut2_I0_O)        0.124     2.761 r  processor_main/playback_rate[3][23]_i_36/O
+                         net (fo=4, estimated)        0.975     3.736    coordinator_main/is_on_reg[2]_i_3_0
+    SLICE_X9Y49          LUT6 (Prop_lut6_I1_O)        0.124     3.860 r  coordinator_main/playback_rate[1][23]_i_11/O
+                         net (fo=1, routed)           0.000     3.860    coordinator_main/playback_rate[1][23]_i_11_n_0
+    SLICE_X9Y49          CARRY4 (Prop_carry4_S[0]_CO[3])
+                                                      0.532     4.392 r  coordinator_main/playback_rate_reg[1][23]_i_3/CO[3]
+                         net (fo=1, estimated)        0.000     4.392    coordinator_main/playback_rate_reg[1][23]_i_3_n_0
+    SLICE_X9Y50          CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.114     4.506 r  coordinator_main/playback_rate_reg[1][23]_i_2/CO[3]
+                         net (fo=1, estimated)        0.301     4.807    coordinator_main/is_on10_out
+    SLICE_X9Y51          LUT6 (Prop_lut6_I2_O)        0.124     4.931 r  coordinator_main/playback_rate[1][23]_i_1/O
+                         net (fo=25, estimated)       1.280     6.211    coordinator_main/playback_rate[1][23]_i_1_n_0
+    SLICE_X12Y49         LUT4 (Prop_lut4_I1_O)        0.146     6.357 r  coordinator_main/is_on[1]_i_1/O
+                         net (fo=1, routed)           0.000     6.357    coordinator_main/is_on[1]_i_1_n_0
+    SLICE_X12Y49         FDRE                                         r  coordinator_main/is_on_reg[1]/D
+  -------------------------------------------------------------------    -------------------
+
+                         (clock clk_100_pass_clk_wiz_0 rise edge)
+                                                     10.000    10.000 r  
+    N15                                               0.000    10.000 r  clk_100mhz (IN)
+                         net (fo=0)                   0.000    10.000    wizard_hdmi/clk_100mhz
+    N15                  IBUF (Prop_ibuf_I_O)         1.370    11.370 r  wizard_hdmi/clkin1_ibufg/O
+                         net (fo=1, estimated)        1.171    12.542    wizard_hdmi/clk_in1_clk_wiz_0
+    MMCME2_ADV_X0Y0      MMCME2_ADV (Prop_mmcme2_adv_CLKIN1_CLKOUT0)
+                                                     -7.279     5.263 r  wizard_hdmi/mmcm_adv_inst/CLKOUT0
+                         net (fo=1, estimated)        1.583     6.846    wizard_hdmi/clk_100_pass_clk_wiz_0
+    BUFGCTRL_X0Y2        BUFG (Prop_bufg_I_O)         0.091     6.937 r  wizard_hdmi/clkout1_buf/O
+                         net (fo=754, estimated)      1.454     8.391    coordinator_main/clk_100_pass
+    SLICE_X12Y49         FDRE                                         r  coordinator_main/is_on_reg[1]/C
+                         clock pessimism              0.474     8.864    
+                         clock uncertainty           -0.070     8.794    
+    SLICE_X12Y49         FDRE (Setup_fdre_C_D)        0.092     8.886    coordinator_main/is_on_reg[1]
+  -------------------------------------------------------------------
+                         required time                          8.886    
+                         arrival time                          -6.357    
+  -------------------------------------------------------------------
+                         slack                                  2.529    
+
+
+
+

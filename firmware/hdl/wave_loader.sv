@@ -31,43 +31,23 @@ module wave_loader #(
 	output logic  [SAMPLE_WIDTH-1:0]    viz_data_out,               // output hdmi pixel data
 
   // Debug
-<<<<<<< HEAD
-  input wire    [WW_WIDTH-1:0]        debug_index_in,     // debug sample index     
-  output logic  [SAMPLE_WIDTH-1:0]    debug_data_out,      // debug sample data
-
-  output logic pmod4,
-  output logic pmod5,
-  output logic pmod6,
-  output logic pmod7,
-
-  output logic [7:0] analyzer
-
-=======
   input wire    [WW_WIDTH-1:0]        bytes_screen_index_in,      // debug sample index     
   output logic  [SAMPLE_WIDTH-1:0]    bytes_screen_data_out       // debug sample data
->>>>>>> bytes_screen
 );
 
 
 logic [WW_WIDTH-1:0] sample_index;            // index of the sample in the main memory // TODO replace with SD size
 logic [SAMPLE_WIDTH-1:0] sample_data;         // output sample data from the main memory
 logic writing;                                // enable writing to the BRAMs from the main memory
-logic prev_writing;                           // to reset the output after writing!
 logic zero;                                   // for some fantastic reason, vivado freezes the build 
                                               // if zero isn't passed into main mem write port
 logic [SAMPLE_WIDTH-1:0] curr_data_out;
 logic [WW_WIDTH-1:0]     curr_oscillator_index;
 
-logic incrementing;
 
 int prev_ind;
 
 assign prev_ind = (index == 0) ? (NUM_OSCILLATORS - 1) : index - 1;
-assign pmod4 = osc_data_out[0][0];
-assign pmod5 = osc_data_out[1][0];
-assign pmod6 = index[0];
-assign pmod7 = curr_oscillator_index[0];
-
 
 always_ff @(posedge clk_in) begin
   if (rst_in) begin
@@ -83,11 +63,9 @@ always_ff @(posedge clk_in) begin
     // reset main memory data
     sample_index <= 18'b0;
     writing <= 1'b0;
-    prev_writing <= 1'b0;
     zero <= 1'b0;
     // curr_oscillator_index <= osc_index_in[0]; // TODO necessary??
 
-    incrementing <= 1'b0;
   end else begin
 
     curr_oscillator_index <= osc_index_in[index];
