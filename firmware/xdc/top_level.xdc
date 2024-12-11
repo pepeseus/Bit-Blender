@@ -88,8 +88,18 @@ set_property -dict {PACKAGE_PIN A8  IOSTANDARD LVCMOS33} [ get_ports "sw[15]" ]
 ##set_property -dict {PACKAGE_PIN J4  IOSTANDARD LVCMOS33} [ get_ports "ss1_c[7]"]
 
 
-# PMOD A Signals
+# SD socket signals
+set_property -dict {PACKAGE_PIN M16 IOSTANDARD LVCMOS33} [get_ports "sd_dat[0]"]
+set_property -dict {PACKAGE_PIN M17 IOSTANDARD LVCMOS33} [get_ports "sd_dat[1]"]
+set_property -dict {PACKAGE_PIN M18 IOSTANDARD LVCMOS33} [get_ports "sd_dat[2]"]
+set_property -dict {PACKAGE_PIN N18 IOSTANDARD LVCMOS33} [get_ports "sd_dat[3]"]
+set_property -dict {PACKAGE_PIN P17 IOSTANDARD LVCMOS33} [get_ports "sd_cmd"]
+set_property -dict {PACKAGE_PIN P18 IOSTANDARD LVCMOS33} [get_ports "sd_sck"]
+set_property -dict {PACKAGE_PIN R18 IOSTANDARD LVCMOS33} [get_ports "sd_cd"]
 
+
+
+# PMOD A Signals
 
 # pmoda[0]
 set_property -dict {PACKAGE_PIN F14 IOSTANDARD LVCMOS33}  [ get_ports "midi_rx" ]

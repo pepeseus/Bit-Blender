@@ -1,7 +1,7 @@
 Copyright 1986-2022 Xilinx, Inc. All Rights Reserved. Copyright 2022-2024 Advanced Micro Devices, Inc. All Rights Reserved.
 ---------------------------------------------------------------------------------------------------------------------------------------------
 | Tool Version : Vivado v.2024.1 (lin64) Build 5076996 Wed May 22 18:36:09 MDT 2024
-| Date         : Wed Dec 11 01:08:47 2024
+| Date         : Wed Dec 11 17:40:47 2024
 | Host         : eecs-digital-37 running 64-bit Ubuntu 24.04.1 LTS
 | Command      : report_timing -file obj/post_route_timing.rpt
 | Design       : top_level
@@ -12,20 +12,20 @@ Copyright 1986-2022 Xilinx, Inc. All Rights Reserved. Copyright 2022-2024 Advanc
 
 Timing Report
 
-Slack (MET) :             2.245ns  (required time - arrival time)
+Slack (MET) :             2.141ns  (required time - arrival time)
   Source:                 processor_main/cycles_between_samples_reg/CLKARDCLK
                             (rising edge-triggered cell RAMB18E1 clocked by clk_100_pass_clk_wiz_0  {rise@0.000ns fall@5.000ns period=10.000ns})
-  Destination:            coordinator_main/playback_rate_reg[0][0]/CE
+  Destination:            coordinator_main/playback_rate_reg[3][11]/CE
                             (rising edge-triggered cell FDRE clocked by clk_100_pass_clk_wiz_0  {rise@0.000ns fall@5.000ns period=10.000ns})
   Path Group:             clk_100_pass_clk_wiz_0
   Path Type:              Setup (Max at Slow Process Corner)
   Requirement:            10.000ns  (clk_100_pass_clk_wiz_0 rise@10.000ns - clk_100_pass_clk_wiz_0 rise@0.000ns)
-  Data Path Delay:        7.331ns  (logic 3.456ns (47.144%)  route 3.875ns (52.856%))
-  Logic Levels:           5  (CARRY4=2 LUT2=1 LUT5=1 LUT6=1)
-  Clock Path Skew:        -0.149ns (DCD - SCD + CPR)
-    Destination Clock Delay (DCD):    -1.561ns = ( 8.439 - 10.000 ) 
-    Source Clock Delay      (SCD):    -0.929ns
-    Clock Pessimism Removal (CPR):    0.482ns
+  Data Path Delay:        7.361ns  (logic 3.469ns (47.126%)  route 3.892ns (52.874%))
+  Logic Levels:           5  (CARRY4=2 LUT4=2 LUT5=1)
+  Clock Path Skew:        -0.015ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    -1.494ns = ( 8.506 - 10.000 ) 
+    Source Clock Delay      (SCD):    -0.916ns
+    Clock Pessimism Removal (CPR):    0.562ns
   Clock Uncertainty:      0.070ns  ((TSJ^2 + DJ^2)^1/2) / 2 + PE
     Total System Jitter     (TSJ):    0.071ns
     Discrete Jitter          (DJ):    0.121ns
@@ -43,25 +43,25 @@ Slack (MET) :             2.245ns  (required time - arrival time)
                                                      -6.965    -4.291 r  wizard_hdmi/mmcm_adv_inst/CLKOUT0
                          net (fo=1, routed)           1.666    -2.625    wizard_hdmi/clk_100_pass_clk_wiz_0
     BUFGCTRL_X0Y2        BUFG (Prop_bufg_I_O)         0.096    -2.529 r  wizard_hdmi/clkout1_buf/O
-                         net (fo=754, routed)         1.599    -0.929    processor_main/clk_100_pass
-    RAMB18_X0Y20         RAMB18E1                                     r  processor_main/cycles_between_samples_reg/CLKARDCLK
+                         net (fo=636, routed)         1.613    -0.916    processor_main/clk_100_pass
+    RAMB18_X0Y18         RAMB18E1                                     r  processor_main/cycles_between_samples_reg/CLKARDCLK
   -------------------------------------------------------------------    -------------------
-    RAMB18_X0Y20         RAMB18E1 (Prop_ramb18e1_CLKARDCLK_DOADO[1])
-                                                      2.454     1.525 r  processor_main/cycles_between_samples_reg/DOADO[1]
-                         net (fo=2, routed)           1.259     2.784    processor_main/cycles_between_samples_reg_n_14
-    SLICE_X7Y47          LUT2 (Prop_lut2_I0_O)        0.124     2.908 r  processor_main/playback_rate[3][23]_i_36/O
-                         net (fo=4, routed)           0.882     3.790    coordinator_main/is_on_reg[2]_i_3_0
-    SLICE_X8Y49          LUT6 (Prop_lut6_I1_O)        0.124     3.914 r  coordinator_main/is_on[0]_i_12/O
-                         net (fo=1, routed)           0.000     3.914    coordinator_main/is_on[0]_i_12_n_0
-    SLICE_X8Y49          CARRY4 (Prop_carry4_S[0]_CO[3])
-                                                      0.513     4.427 r  coordinator_main/is_on_reg[0]_i_4/CO[3]
-                         net (fo=1, routed)           0.001     4.427    coordinator_main/is_on_reg[0]_i_4_n_0
-    SLICE_X8Y50          CARRY4 (Prop_carry4_CI_CO[3])
-                                                      0.117     4.544 r  coordinator_main/is_on_reg[0]_i_2/CO[3]
-                         net (fo=2, routed)           0.898     5.443    coordinator_main/is_on1
-    SLICE_X10Y52         LUT5 (Prop_lut5_I2_O)        0.124     5.567 r  coordinator_main/playback_rate[0][23]_i_1/O
-                         net (fo=24, routed)          0.835     6.401    coordinator_main/playback_rate[0][23]_i_1_n_0
-    SLICE_X9Y46          FDRE                                         r  coordinator_main/playback_rate_reg[0][0]/CE
+    RAMB18_X0Y18         RAMB18E1 (Prop_ramb18e1_CLKARDCLK_DOADO[4])
+                                                      2.454     1.538 r  processor_main/cycles_between_samples_reg/DOADO[4]
+                         net (fo=5, routed)           1.320     2.858    processor_main/cycles_between_samples_reg_n_11
+    SLICE_X9Y44          LUT5 (Prop_lut5_I0_O)        0.124     2.982 r  processor_main/playback_rate[3][23]_i_21/O
+                         net (fo=1, routed)           0.590     3.572    processor_main/playback_rate[3][23]_i_21_n_0
+    SLICE_X8Y45          LUT4 (Prop_lut4_I2_O)        0.124     3.696 r  processor_main/playback_rate[3][23]_i_13/O
+                         net (fo=1, routed)           0.000     3.696    processor_main/playback_rate[3][23]_i_13_n_0
+    SLICE_X8Y45          CARRY4 (Prop_carry4_S[1]_CO[3])
+                                                      0.533     4.229 r  processor_main/playback_rate_reg[3][23]_i_5/CO[3]
+                         net (fo=1, routed)           0.000     4.229    processor_main/playback_rate_reg[3][23]_i_5_n_0
+    SLICE_X8Y46          CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.117     4.346 r  processor_main/playback_rate_reg[3][23]_i_3/CO[3]
+                         net (fo=2, routed)           1.053     5.398    processor_main/coordinator_main/is_on12_out
+    SLICE_X8Y49          LUT4 (Prop_lut4_I1_O)        0.117     5.515 r  processor_main/playback_rate[3][23]_i_1/O
+                         net (fo=25, routed)          0.930     6.445    coordinator_main/E[0]
+    SLICE_X7Y45          FDRE                                         r  coordinator_main/playback_rate_reg[3][11]/CE
   -------------------------------------------------------------------    -------------------
 
                          (clock clk_100_pass_clk_wiz_0 rise edge)
@@ -74,16 +74,16 @@ Slack (MET) :             2.245ns  (required time - arrival time)
                                                      -7.221     5.311 r  wizard_hdmi/mmcm_adv_inst/CLKOUT0
                          net (fo=1, routed)           1.587     6.898    wizard_hdmi/clk_100_pass_clk_wiz_0
     BUFGCTRL_X0Y2        BUFG (Prop_bufg_I_O)         0.091     6.989 r  wizard_hdmi/clkout1_buf/O
-                         net (fo=754, routed)         1.450     8.439    coordinator_main/clk_100_pass
-    SLICE_X9Y46          FDRE                                         r  coordinator_main/playback_rate_reg[0][0]/C
-                         clock pessimism              0.482     8.921    
-                         clock uncertainty           -0.070     8.851    
-    SLICE_X9Y46          FDRE (Setup_fdre_C_CE)      -0.205     8.646    coordinator_main/playback_rate_reg[0][0]
+                         net (fo=636, routed)         1.517     8.506    coordinator_main/clk_100_pass
+    SLICE_X7Y45          FDRE                                         r  coordinator_main/playback_rate_reg[3][11]/C
+                         clock pessimism              0.562     9.068    
+                         clock uncertainty           -0.070     8.998    
+    SLICE_X7Y45          FDRE (Setup_fdre_C_CE)      -0.412     8.586    coordinator_main/playback_rate_reg[3][11]
   -------------------------------------------------------------------
-                         required time                          8.646    
-                         arrival time                          -6.401    
+                         required time                          8.586    
+                         arrival time                          -6.445    
   -------------------------------------------------------------------
-                         slack                                  2.245    
+                         slack                                  2.141    
 
 
 

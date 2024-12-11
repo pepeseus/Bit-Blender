@@ -3,46 +3,53 @@
 
 module top_level
   (
-   input wire          clk_100mhz,
+  input wire          clk_100mhz,
   //  output logic [15:0] led,
-   // UART
-   input wire          midi_rx,    // UART MIDI-FPGA
-   output logic        uart_txd,   // UART FPGA-computer
-   // I2S
-   output wire          i2s_bclk,    // clock
-   output wire          i2s_sd,    // data
-   output wire          i2s_ws,    // channel select
-   input wire [15:0]   sw,
-   input wire [3:0]    btn,
-   // RGB LEDs
-   output logic [2:0]  rgb0,
-   output logic [2:0]  rgb1,
-   // PMODS
-   output logic pmoda4,
-   output logic pmoda5,
-   output logic pmoda6,
-   output logic pmoda7,
-   // Seven-segment display
-  //  output logic [3:0]  ss0_an,     // Anode control for upper digits
-  //  output logic [3:0]  ss1_an,     // Anode control for lower digits
-  //  output logic [6:0]  ss0_c,      // Cathode controls for upper digits
-  //  output logic [6:0]  ss1_c      // Cathode controls for lower digits
-   // HDMI
-   output logic [2:0]  hdmi_tx_p,  // HDMI output signals (positive)
-   output logic [2:0]  hdmi_tx_n,  // HDMI output signals (negative)
-   output logic        hdmi_clk_p, 
-   output logic        hdmi_clk_n,  // Differential HDMI clock
+  // UART
+  input wire          midi_rx,    // UART MIDI-FPGA
+  output logic        uart_txd,   // UART FPGA-computer
+  // I2S
+  output wire          i2s_bclk,    // clock
+  output wire          i2s_sd,    // data
+  output wire          i2s_ws,    // channel select
+  input wire [15:0]   sw,
+  input wire [3:0]    btn,
+  // RGB LEDs
+  output logic [2:0]  rgb0,
+  output logic [2:0]  rgb1,
+  // PMODS
+  output logic pmoda4,
+  output logic pmoda5,
+  output logic pmoda6,
+  output logic pmoda7,
+  // Seven-segment display
+  // output logic [3:0]  ss0_an,     // Anode control for upper digits
+  // output logic [3:0]  ss1_an,     // Anode control for lower digits
+  // output logic [6:0]  ss0_c,      // Cathode controls for upper digits
+  // output logic [6:0]  ss1_c      // Cathode controls for lower digits
+  // HDMI
+  output logic [2:0]  hdmi_tx_p,  // HDMI output signals (positive)
+  output logic [2:0]  hdmi_tx_n,  // HDMI output signals (negative)
+  output logic        hdmi_clk_p, 
+  output logic        hdmi_clk_n,  // Differential HDMI clock
 
-   // Debugging
-   output logic [7:0] analyzer
-   );
+  // SD Card
+  inout wire [3:0] sd_dat,
+  input wire sd_cd,
+  output logic sd_sck, 
+  output logic sd_cmd,
+
+  // Debugging
+  output logic [7:0] analyzer
+  );
 
   localparam SAMPLE_WIDTH = 16;
   localparam NUM_OSCILLATORS = 4;
-  localparam BRAM_DEPTH = 30214;               // temp memory depth     ~ $clog2(262141) = 18
-  localparam WW_WIDTH = $clog2(BRAM_DEPTH);     // width of the wave width lol = 18 bits
-  localparam MMEM_MAX_DEPTH = 1_000_000_000;    // main memory max depth ~ $clog2(1_000_000_000) = 30
-  localparam WS_WIDTH = $clog2(MMEM_MAX_DEPTH); // width of the wave start address = 30 bits
+  localparam BRAM_DEPTH = 30214;                    // temp memory depth     ~ $clog2(262141) = 18
+  localparam SAMPLES_PER_BRAM = BRAM_DEPTH * 512 / SAMPLE_WIDTH;
+  localparam WW_WIDTH = $clog2(SAMPLES_PER_BRAM);   // width of the wave width lol = 18 bits
+  localparam MMEM_MAX_DEPTH = 1_000_000_000;        // main memory max depth ~ $clog2(1_000_000_000) = 30
+  localparam WS_WIDTH = $clog2(MMEM_MAX_DEPTH);     // width of the wave start address = 30 bits
   localparam PRE_DIVISION_AUDIO_SIZE = 32;
 
 
@@ -53,8 +60,6 @@ module top_level
   // Turn off RGB LEDs
   assign rgb0 = 0;
   assign rgb1 = 0;
-
-
 
 
   /**
@@ -70,6 +75,7 @@ module top_level
     .rst_in(sys_rst),
     .sw_in(sw),
     .pot_in(0),                         // TODO: potentiometer
+    .sd_cd(sd_cd),
     .wave_start_out(wave_start_addr),
     .wave_width_out(wave_width),
     .update_trig_out(ui_update_trig)
@@ -186,6 +192,7 @@ module top_level
     .NUM_OSCILLATORS(NUM_OSCILLATORS),    // number of oscillators
     .SAMPLE_WIDTH(SAMPLE_WIDTH),          // width of the sample data
     .BRAM_DEPTH(BRAM_DEPTH),              // depth of the DRAM
+    .SAMPLES_PER_BRAM(SAMPLES_PER_BRAM),  // number of samples per BRAM
     .WW_WIDTH(WW_WIDTH),                  // width of the wave width
     .MMEM_MAX_DEPTH(MMEM_MAX_DEPTH)       // depth of the main memory
   )
@@ -194,13 +201,19 @@ module top_level
     .rst_in(sys_rst),
     .wave_width_in(wave_width),
     .ui_update_trig_in(ui_update_trig),
+
     .osc_index_in(osc_indices),
     .osc_data_out(osc_samples),
     .viz_index_in(viz_index), // TODO this guy doesn't do anything; does it matter??
     .viz_data_out(viz_sample),
     .bytes_screen_index_in(bytes_screen_index),
-    .bytes_screen_data_out(bytes_screen_sample)
-    .bytes_screen_data_ready(bytes_screen_sample_ready)
+    .bytes_screen_data_out(bytes_screen_sample),
+    .bytes_screen_data_ready(bytes_screen_sample_ready),
+
+    .sd_dat(sd_dat),
+    .sd_cd(sd_cd),
+    .sd_sck(sd_sck),
+    .sd_cmd(sd_cmd)
   );
 
 
@@ -370,19 +383,12 @@ module top_level
   /**
     Debugger
   */
-  logic clk_25mhz;
-  clk_wiz_25mhz clk_wiz_25mhz (
-    .rst(sys_rst),
-    .clk_ref(clk_100_passthrough),
-    .clk_25mhz(clk_25mhz)
-  );
-
   bytes_screen bytes_screen (
     .clk_in(clk_100_passthrough),
     .rst_in(sys_rst | ui_update_trig),
     .wave_width_in(wave_width),
     .osc_indices(osc_indices),
-    .bytes_screen_data_ready(bytes_screen_sample_ready)
+    .bytes_screen_data_ready(bytes_screen_sample_ready),
     .bytes_screen_data_in(bytes_screen_sample),
     .bytes_screen_index_out(bytes_screen_index),
     .uart_txd(uart_txd),

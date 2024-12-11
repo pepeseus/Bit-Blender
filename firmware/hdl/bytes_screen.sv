@@ -22,12 +22,6 @@ module bytes_screen #(
   localparam WW_WIDTH = 18;             // FIXED TO 18 FOR THIS PROTOCOL
   localparam SAMPLE_WIDTH = 16;         // FIXED TO 16 FOR THIS PROTOCOL
 
-  /**
-  * THIS MODULE HAS UNFIXED BUGS THAT WE MUSKED FOR THE LACK OF TIME FOR THE DEMO
-  * 
-  * For some reason, the wave samples are not being transmitted properly. The FPGA starts to send the first selected 
-  * sample 4 (or 8?) bytes after the "WAVDAT" command. It also doesn't send the last few samples properly.
-  */
 
 // TODO add potentiometer start index
 
@@ -43,7 +37,7 @@ module bytes_screen #(
   5. "WAVDAT" - 6 bytes
   6. bytes_screen_data_in - up to 16 bits ~ 2 bytes
 */
-typedef enum { TEST, IDLE, WAVWID, WAVWID_SEND, OSCIDX, OSCIDX_SEND, WAVDAT, WAVDAT_SEND, LAST_WAVDAT_SEND, BUFFER } state_t;
+typedef enum { IDLE, WAVWID, WAVWID_SEND, OSCIDX, OSCIDX_SEND, WAVDAT, WAVDAT_BUF, WAVDAT_SEND, LAST_WAVDAT_SEND } state_t;
 state_t       state;
 
 logic [47:0]  send_bytes;    // in 3 bytes packets
@@ -64,7 +58,8 @@ always_ff @(posedge clk_in) begin
     uart_tx_trigger <= 1'b0;
 
     // only if UART is not busy
-    if (~uart_tx_busy & bytes_screen_data_ready) begin
+    if (~uart_tx_busy) begin
+    // if (~uart_tx_busy & bytes_screen_data_ready) begin
       if (state != IDLE) begin
         uart_tx_trigger <= 1'b1;
       end
@@ -142,19 +137,29 @@ always_ff @(posedge clk_in) begin
           send_index <= send_index + 1;
           send_bytes <= send_bytes >> 8;  // next byte
 
-          if (send_index == 5) begin      // 6 bytes sent
-            state <= WAVDAT_SEND;
-            send_bytes <= { bytes_screen_data_in[7:0], bytes_screen_data_in[15:8] };  // bytes_screen_data_in big endian
-            bytes_screen_index_out <= 1'b1; // request next sample
-            send_index <= 0;
+          if (send_index == 3) begin
+            bytes_screen_index_out <= 1'b0;
           end
+
+          if (send_index == 4) begin      // 6 bytes sent
+            state <= WAVDAT_BUF;
+            bytes_screen_index_out <= 1'b1; // request next sample
+          end
+        end
+
+        // pipelining data from the BRAM, no trigger uart
+        WAVDAT_BUF: begin
+          state <= WAVDAT_SEND;
+          send_index <= 0;
+          send_bytes <= { bytes_screen_data_in[7:0], bytes_screen_data_in[15:8] };  // bytes_screen_data_in big endian
+          bytes_screen_index_out <= 2; // request next sample
         end
 
         WAVDAT_SEND: begin
           send_index <= send_index + 1;
           send_bytes <= send_bytes >> 8;  // next byte
 
-          if (send_index == 1) begin      // 3 bytes sent
+          if (send_index == 1) begin      // 2 bytes sent
             send_bytes <= { bytes_screen_data_in[7:0], bytes_screen_data_in[15:8] };
             send_index <= 0;
 

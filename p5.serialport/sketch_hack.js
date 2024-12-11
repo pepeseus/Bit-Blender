@@ -175,27 +175,29 @@ function gotData() {
       }
       break;
 
-    case "PREWAVDAT":
-      // HACK! skip the first 2 samples
-        if (!newSample) {
-          newSample = true;
-        } else {
-          newSample = false;
-          waveSampleIdx++;
-        }
+    // case "PREWAVDAT":
+    //   // HACK! skip the first 2 samples
+    //     if (!newSample) {
+    //       newSample = true;
+    //     } else {
+    //       newSample = false;
+    //       waveSampleIdx++;
+    //     }
 
-        if (waveSampleIdx >= 4) {
-          state = "WAVDAT";
-          waveSampleIdx = 0;
-          newSample = false;
-        }
+    //     if (waveSampleIdx >= 4) {
+    //       state = "WAVDAT";
+    //       waveSampleIdx = 0;
+    //       newSample = false;
+    //     }
 
     case "WAVDAT":
       if (!newSample) {
-        waveData[waveSampleIdx] = inByte.toString(16);
+        let repr = (inByte & 0x80) === 0 ? String.fromCharCode(inByte & 0x7F) : inByte.toString(16);
+        waveData[waveSampleIdx] = repr;
         newSample = true;
       } else {
-        waveData[waveSampleIdx] = waveData[waveSampleIdx] + inByte.toString(16);
+        let repr = (inByte & 0x80) === 0 ? String.fromCharCode(inByte & 0x7F) : inByte.toString(16);
+        waveData[waveSampleIdx] = waveData[waveSampleIdx] + repr;
         waveSampleIdx++;
         newSample = false;
       }
@@ -236,7 +238,7 @@ function gotData() {
     lastSixBytes[3] == 0x44 &&
     lastSixBytes[4] == 0x41 &&
     lastSixBytes[5] == 0x54) {
-    state = "PREWAVDAT";
+    state = "WAVDAT";
     stateByteIdx = 0;
     waveSampleIdx = 0;
     newSample = false;
@@ -249,9 +251,9 @@ function gotData() {
  * P5.JS DRAW
  */
 
-let hu = 60
-let vu = 25
-let fontSize = 20
+let hu = 90
+let vu = 45
+let fontSize = 25
 
 // p5.js draw() runs after setup(), on a loop
 function draw() {
