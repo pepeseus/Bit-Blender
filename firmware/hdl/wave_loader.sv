@@ -34,8 +34,13 @@ module wave_loader #(
   input wire    [WW_WIDTH-1:0]        debug_index_in,     // debug sample index     
   output logic  [SAMPLE_WIDTH-1:0]    debug_data_out,      // debug sample data
 
+  output logic pmod4,
+  output logic pmod5,
+  output logic pmod6,
+  output logic pmod7,
 
   output logic [7:0] analyzer
+
 );
 
 // assign analyzer[0] = ui_update_trig_in;    // 
@@ -54,8 +59,18 @@ logic [SAMPLE_WIDTH-1:0] sample_data;         // output sample data from the mai
 logic writing;                                // enable writing to the BRAMs from the main memory
 logic zero;                                   // for some fantastic reason, vivado freezes the build 
                                               // if zero isn't passed into main mem write port
+logic [SAMPLE_WIDTH-1:0] curr_data_out;
+logic [WW_WIDTH-1:0]     curr_oscillator_index;
 
 logic incrementing;
+
+int prev_ind;
+
+assign prev_ind = (index == 0) ? (NUM_OSCILLATORS - 1) : index - 1;
+assign pmod4 = osc_data_out[0][0];
+assign pmod5 = osc_data_out[1][0];
+assign pmod6 = index[0];
+assign pmod7 = curr_oscillator_index[0];
 
 
 always_ff @(posedge clk_in) begin
@@ -73,9 +88,13 @@ always_ff @(posedge clk_in) begin
     sample_index <= 18'b0;
     writing <= 1'b0;
     zero <= 1'b0;
+    // curr_oscillator_index <= osc_index_in[0]; // TODO necessary??
 
     incrementing <= 1'b0;
   end else begin
+
+    curr_oscillator_index <= osc_index_in[index];
+    osc_data_out[prev_ind] <= curr_data_out;
 
     // start writing from the main memory
     if (ui_update_trig_in) begin
@@ -132,41 +151,47 @@ main_ram (
 
 
 /**
- * Oscillator BRAMs
+ * Oscillator BRAM
  */
 
-generate
-  genvar i;
-  for (i = 0; i < NUM_OSCILLATORS; i++) begin : osc_gen
-    xilinx_true_dual_port_read_first_1_clock_ram #(
-      .RAM_WIDTH(SAMPLE_WIDTH),
-      .RAM_DEPTH(BRAM_DEPTH),
-      .RAM_PERFORMANCE("HIGH_PERFORMANCE")
-      ) 
-    oscillator_ram (
-      .clka(clk_in),     // Clock
+xilinx_true_dual_port_read_first_1_clock_ram #(
+  .RAM_WIDTH(SAMPLE_WIDTH),
+  .RAM_DEPTH(BRAM_DEPTH),
+  .RAM_PERFORMANCE("HIGH_PERFORMANCE")
+  ) 
+oscillator_ram (
+  .clka(clk_in),     // Clock
 
-      //writing port:
-      .addra(sample_index),     // Port A address bus,
-      .dina(sample_data),       // Port A RAM input data
-      .douta(),                 // Port A RAM output data, width determined from RAM_WIDTH
-      .wea(writing),            // Port A write enable
-      .ena(writing),            // Port A RAM Enable
-      .rsta(1'b0),              // Port A output reset
-      .regcea(1'b1),            // Port A output register enable
+  //writing port:
+  .addra(sample_index),     // Port A address bus,
+  .dina(sample_data),       // Port A RAM input data
+  .douta(),                 // Port A RAM output data, width determined from RAM_WIDTH
+  .wea(writing),            // Port A write enable
+  .ena(writing),            // Port A RAM Enable
+  .rsta(1'b0),              // Port A output reset
+  .regcea(1'b1),            // Port A output register enable
 
-      //reading port:
-      .addrb(osc_index_in[i]),  // Port B address bus,
-      .doutb(osc_data_out[i]),  // Port B RAM output data,
-      .dinb(16'b0),             // Port B RAM input data, width determined from RAM_WIDTH
-      .web(1'b0),               // Port B write enable
-      // .enb(osc_is_on_in[i]),    // Port B RAM Enable,        // TODO is this returning 0 when not on??
-      .enb(1'b1),    // Port B RAM Enable,        // TODO is this returning 0 when not on??
-      .rstb(1'b0),              // Port B output reset       // TODO is this returning 0 when not on??
-      .regceb(1'b1)             // Port B output register enable
-    );
-  end
-endgenerate
+  //reading port:
+  .addrb(curr_oscillator_index),  // Port B address bus,
+  .doutb(curr_data_out),  // Port B RAM output data,
+  .dinb(16'b0),             // Port B RAM input data, width determined from RAM_WIDTH
+  .web(1'b0),               // Port B write enable
+  // .enb(osc_is_on_in[i]),    // Port B RAM Enable,        // TODO is this returning 0 when not on??
+  .enb(1'b1),    // Port B RAM Enable,        // TODO is this returning 0 when not on??
+  .rstb(1'b0),              // Port B output reset       // TODO is this returning 0 when not on??
+  .regceb(1'b1)             // Port B output register enable
+);
+
+logic [$clog2(NUM_OSCILLATORS - 1)-1:0]  index;
+
+clk_counter #(
+  .MAX_COUNT(NUM_OSCILLATORS - 1)
+  ) oscillator_counter
+  ( 
+    .clk_in(clk_in),
+    .rst_in(rst_in),
+    .count_out(index)
+  );
 
 
 /**

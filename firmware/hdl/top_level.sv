@@ -28,18 +28,18 @@ module top_level
   //  output logic [6:0]  ss0_c,      // Cathode controls for upper digits
   //  output logic [6:0]  ss1_c      // Cathode controls for lower digits
    // HDMI
-  //  output logic [2:0]  hdmi_tx_p,  // HDMI output signals (positive)
-  //  output logic [2:0]  hdmi_tx_n,  // HDMI output signals (negative)
-  //  output logic        hdmi_clk_p, 
-  //  output logic        hdmi_clk_n  // Differential HDMI clock
+   output logic [2:0]  hdmi_tx_p,  // HDMI output signals (positive)
+   output logic [2:0]  hdmi_tx_n,  // HDMI output signals (negative)
+   output logic        hdmi_clk_p, 
+   output logic        hdmi_clk_n,  // Differential HDMI clock
 
    // Debugging
    output logic [7:0] analyzer
    );
 
-  localparam SAMPLE_WIDTH = 16;
+  localparam SAMPLE_WIDTH = 8;
   localparam NUM_OSCILLATORS = 4;
-  localparam BRAM_DEPTH = 16214;               // temp memory depth     ~ $clog2(262141) = 18
+  localparam BRAM_DEPTH = 30214;               // temp memory depth     ~ $clog2(262141) = 18
   localparam WW_WIDTH = $clog2(BRAM_DEPTH);     // width of the wave width lol = 18 bits
   localparam MMEM_MAX_DEPTH = 1_000_000_000;    // main memory max depth ~ $clog2(1_000_000_000) = 30
   localparam WS_WIDTH = $clog2(MMEM_MAX_DEPTH); // width of the wave start address = 30 bits
@@ -254,17 +254,112 @@ module top_level
     .sd(i2s_sd)             // TODO OFF
   );
 
-
-
-
-
-
-
-
   /**
     Visual View
   */
 
+  logic clk_pixel, clk_5x; //clock lines
+  logic locked; //locked signal (we'll leave unused but still hook it up)
+
+  //clock manager...creates 74.25 Hz and 5 times 74.25 MHz for pixel and TMDS
+  hdmi_clk_wiz_720p mhdmicw (
+      .reset(0),
+      .locked(locked),
+      .clk_ref(clk_100mhz),
+      .clk_pixel(clk_pixel),
+      .clk_tmds(clk_5x));
+
+  logic [10:0] hcount; //hcount of system!
+  logic [9:0] vcount; //vcount of system!
+  logic hor_sync; //horizontal sync signal
+  logic vert_sync; //vertical sync signal
+  logic active_draw; //ative draw! 1 when in drawing region.0 in blanking/sync
+  logic new_frame; //one cycle active indicator of new frame of info!
+  logic [5:0] frame_count; //0 to 59 then rollover frame counter
+
+  //default instantiation so making signals for 720p
+  video_sig_gen mvg(
+      .pixel_clk_in(clk_pixel),
+      .rst_in(sys_rst),
+      .hcount_out(hcount),
+      .vcount_out(vcount),
+      .vs_out(vert_sync),
+      .hs_out(hor_sync),
+      .ad_out(active_draw),
+      .nf_out(new_frame),
+      .fc_out(frame_count));
+
+  logic [7:0] red, green, blue; //red green and blue pixel values for output
+  assign red = 8'h00;
+  assign green = 8'hFF;
+  assign blue = 8'h1F;
+
+  logic [9:0] tmds_10b [0:2]; //output of each TMDS encoder!
+  logic tmds_signal [2:0]; //output of each TMDS serializer!
+ 
+  //three tmds_encoders (blue, green, red)
+  //note green should have no control signal like red
+  //the blue channel DOES carry the two sync signals:
+  //  * control_in[0] = horizontal sync signal
+  //  * control_in[1] = vertical sync signal
+ 
+  tmds_encoder tmds_red(
+      .clk_in(clk_pixel),
+      .rst_in(sys_rst),
+      .data_in(red),
+      .control_in(2'b0),
+      .ve_in(active_draw),
+      .tmds_out(tmds_10b[2]));
+
+  tmds_encoder tmds_green(
+      .clk_in(clk_pixel),
+      .rst_in(sys_rst),
+      .data_in(green),
+      .control_in(2'b0),
+      .ve_in(active_draw),
+      .tmds_out(tmds_10b[1]));
+
+  tmds_encoder tmds_blue(
+      .clk_in(clk_pixel),
+      .rst_in(sys_rst),
+      .data_in(blue),
+      .control_in({vert_sync, hor_sync}),
+      .ve_in(active_draw),
+      .tmds_out(tmds_10b[0]));
+ 
+  //three tmds_serializers (blue, green, red):
+
+  tmds_serializer red_ser(
+      .clk_pixel_in(clk_pixel),
+      .clk_5x_in(clk_5x),
+      .rst_in(sys_rst),
+      .tmds_in(tmds_10b[2]),
+      .tmds_out(tmds_signal[2]));
+
+  tmds_serializer green_ser(
+      .clk_pixel_in(clk_pixel),
+      .clk_5x_in(clk_5x),
+      .rst_in(sys_rst),
+      .tmds_in(tmds_10b[1]),
+      .tmds_out(tmds_signal[1]));
+
+  tmds_serializer blue_ser(
+      .clk_pixel_in(clk_pixel),
+      .clk_5x_in(clk_5x),
+      .rst_in(sys_rst),
+      .tmds_in(tmds_10b[0]),
+      .tmds_out(tmds_signal[0]));
+ 
+  //output buffers generating differential signals:
+  //three for the r,g,b signals and one that is at the pixel clock rate
+  //the HDMI receivers use recover logic coupled with the control signals asserted
+  //during blanking and sync periods to synchronize their faster bit clocks off
+  //of the slower pixel clock (so they can recover a clock of about 742.5 MHz from
+  //the slower 74.25 MHz clock)
+  OBUFDS OBUFDS_blue (.I(tmds_signal[0]), .O(hdmi_tx_p[0]), .OB(hdmi_tx_n[0]));
+  OBUFDS OBUFDS_green(.I(tmds_signal[1]), .O(hdmi_tx_p[1]), .OB(hdmi_tx_n[1]));
+  OBUFDS OBUFDS_red  (.I(tmds_signal[2]), .O(hdmi_tx_p[2]), .OB(hdmi_tx_n[2]));
+  OBUFDS OBUFDS_clock(.I(clk_pixel), .O(hdmi_clk_p), .OB(hdmi_clk_n));
 
 
 
