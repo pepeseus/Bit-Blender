@@ -51,6 +51,13 @@ module top_level(
         .wr(1'b0),                                      // write enable
         .din(),                                         // write data to sd card
         .ready_for_next_byte(ready_for_next_byte)); 
+
+
+    // always_ff @(posedge clk_100mhz) begin
+    //     if (byte_available) begin
+    //         led <= dout;
+    //     end
+    // end
     
     // audio pwm
     logic spk_out;

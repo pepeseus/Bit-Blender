@@ -1,8 +1,8 @@
 Copyright 1986-2022 Xilinx, Inc. All Rights Reserved. Copyright 2022-2024 Advanced Micro Devices, Inc. All Rights Reserved.
 ---------------------------------------------------------------------------------------------------------------------------------------------
 | Tool Version : Vivado v.2024.1 (lin64) Build 5076996 Wed May 22 18:36:09 MDT 2024
-| Date         : Sun Dec  8 17:07:55 2024
-| Host         : eecs-digital-45 running 64-bit Ubuntu 24.04.1 LTS
+| Date         : Tue Dec 10 20:33:31 2024
+| Host         : eecs-digital-47 running 64-bit Ubuntu 24.04.1 LTS
 | Command      : report_utilization -file obj/post_synth_util.rpt -hierarchical -hierarchical_depth 4
 | Design       : top_level
 | Device       : xc7s50csga324-1
@@ -19,27 +19,27 @@ Table of Contents
 1. Utilization by Hierarchy
 ---------------------------
 
-+-------------------------------+--------------------------------------------------------------+------------+------------+---------+------+-----+--------+--------+------------+
-|            Instance           |                            Module                            | Total LUTs | Logic LUTs | LUTRAMs | SRLs | FFs | RAMB36 | RAMB18 | DSP Blocks |
-+-------------------------------+--------------------------------------------------------------+------------+------------+---------+------+-----+--------+--------+------------+
-| top_level                     |                                                        (top) |        298 |        298 |       0 |    0 | 348 |     48 |      0 |          0 |
-|   (top_level)                 |                                                        (top) |          0 |          0 |       0 |    0 |   2 |      0 |      0 |          0 |
-|   bytes_screen                |                                                 bytes_screen |        125 |        125 |       0 |    0 |  99 |      0 |      0 |          0 |
-|     (bytes_screen)            |                                                 bytes_screen |         95 |         95 |       0 |    0 |  65 |      0 |      0 |          0 |
-|     uart_tx                   |                                                uart_transmit |         30 |         30 |       0 |    0 |  34 |      0 |      0 |          0 |
-|   genblk1[0].osc_inst         |                                                   oscillator |         26 |         26 |       0 |    0 |  42 |      0 |      0 |          0 |
-|   i2s_clk_wiz                 |                                            i2s_clk_wiz_44100 |         11 |         11 |       0 |    0 |  12 |      0 |      0 |          0 |
-|   i2s_tx_inst                 |                                                       i2s_tx |         21 |         21 |       0 |    0 |  42 |      0 |      0 |          0 |
-|   memio                       |                                                  wave_loader |         20 |         20 |       0 |    0 |  41 |     48 |      0 |          0 |
-|     (memio)                   |                                                  wave_loader |         20 |         20 |       0 |    0 |  41 |      0 |      0 |          0 |
-|     bytes_screen_ram          |                 xilinx_true_dual_port_read_first_1_clock_ram |          0 |          0 |       0 |    0 |   0 |     16 |      0 |          0 |
-|     main_ram                  | xilinx_true_dual_port_read_first_1_clock_ram__parameterized0 |          0 |          0 |       0 |    0 |   0 |     16 |      0 |          0 |
-|     osc_gen[0].oscillator_ram |               xilinx_true_dual_port_read_first_1_clock_ram_0 |          0 |          0 |       0 |    0 |   0 |     16 |      0 |          0 |
-|   processor_main              |                                               midi_processor |         51 |         51 |       0 |    0 |  16 |      0 |      0 |          0 |
-|   reader_main                 |                                                  midi_reader |         40 |         40 |       0 |    0 |  60 |      0 |      0 |          0 |
-|     (reader_main)             |                                                  midi_reader |          1 |          1 |       0 |    0 |  23 |      0 |      0 |          0 |
-|     uart_rec                  |                                                 uart_receive |         39 |         39 |       0 |    0 |  37 |      0 |      0 |          0 |
-|   ui_handle                   |                                                   ui_handler |         51 |         51 |       0 |    0 |  34 |      0 |      0 |          0 |
-+-------------------------------+--------------------------------------------------------------+------------+------------+---------+------+-----+--------+--------+------------+
++-------------------------------+--------------------------------------------------------------+------------+------------+---------+------+------+--------+--------+------------+
+|            Instance           |                            Module                            | Total LUTs | Logic LUTs | LUTRAMs | SRLs |  FFs | RAMB36 | RAMB18 | DSP Blocks |
++-------------------------------+--------------------------------------------------------------+------------+------------+---------+------+------+--------+--------+------------+
+| top_level                     |                                                        (top) |        560 |        560 |       0 |    0 | 1346 |    192 |      0 |          0 |
+|   (top_level)                 |                                                        (top) |          0 |          0 |       0 |    0 |    2 |      0 |      0 |          0 |
+|   bytes_screen                |                                                 bytes_screen |        191 |        191 |       0 |    0 |  163 |      0 |      0 |          0 |
+|     (bytes_screen)            |                                                 bytes_screen |        162 |        162 |       0 |    0 |  129 |      0 |      0 |          0 |
+|     uart_tx                   |                                                uart_transmit |         29 |         29 |       0 |    0 |   34 |      0 |      0 |          0 |
+|   genblk1[0].osc_inst         |                                                   oscillator |         29 |         29 |       0 |    0 |   77 |      0 |      0 |          0 |
+|   i2s_clk_wiz                 |                                            i2s_clk_wiz_44100 |         11 |         11 |       0 |    0 |   12 |      0 |      0 |          0 |
+|   i2s_tx_inst                 |                                                       i2s_tx |         21 |         21 |       0 |    0 |   42 |      0 |      0 |          0 |
+|   memio                       |                                                  wave_loader |        214 |        214 |       0 |    0 |  940 |    192 |      0 |          0 |
+|     (memio)                   |                                                  wave_loader |         20 |         20 |       0 |    0 |  889 |      0 |      0 |          0 |
+|     bytes_screen_ram          |                 xilinx_true_dual_port_read_first_1_clock_ram |         71 |         71 |       0 |    0 |   17 |     64 |      0 |          0 |
+|     main_ram                  | xilinx_true_dual_port_read_first_1_clock_ram__parameterized0 |         50 |         50 |       0 |    0 |   17 |     64 |      0 |          0 |
+|     osc_gen[0].oscillator_ram |               xilinx_true_dual_port_read_first_1_clock_ram_0 |         73 |         73 |       0 |    0 |   17 |     64 |      0 |          0 |
+|   processor_main              |                                               midi_processor |         51 |         51 |       0 |    0 |   16 |      0 |      0 |          0 |
+|   reader_main                 |                                                  midi_reader |         40 |         40 |       0 |    0 |   60 |      0 |      0 |          0 |
+|     (reader_main)             |                                                  midi_reader |          1 |          1 |       0 |    0 |   23 |      0 |      0 |          0 |
+|     uart_rec                  |                                                 uart_receive |         39 |         39 |       0 |    0 |   37 |      0 |      0 |          0 |
+|   ui_handle                   |                                                   ui_handler |         50 |         50 |       0 |    0 |   34 |      0 |      0 |          0 |
++-------------------------------+--------------------------------------------------------------+------------+------------+---------+------+------+--------+--------+------------+
 
 

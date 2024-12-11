@@ -105,7 +105,6 @@ set_property -dict {PACKAGE_PIN H14 IOSTANDARD LVCMOS33}  [ get_ports "i2s_ws" ]
 #set_property -dict {PACKAGE_PIN E15 IOSTANDARD LVCMOS33}  [ get_ports "pmoda[7]" ]
 
 # PMOD B Signals
-##fixed K14 and J15 which were a copy-paste and wrong.
 set_property -dict {PACKAGE_PIN H18 IOSTANDARD LVCMOS33}  [ get_ports "analyzer[1]" ]
 set_property -dict {PACKAGE_PIN G18 IOSTANDARD LVCMOS33}  [ get_ports "analyzer[3]" ]
 set_property -dict {PACKAGE_PIN K14 IOSTANDARD LVCMOS33}  [ get_ports "analyzer[5]" ]
