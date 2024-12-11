@@ -32,7 +32,8 @@ module wave_loader #(
 
   // Debug
   input wire    [WW_WIDTH-1:0]        bytes_screen_index_in,      // debug sample index     
-  output logic  [SAMPLE_WIDTH-1:0]    bytes_screen_data_out       // debug sample data
+  output logic  [SAMPLE_WIDTH-1:0]    bytes_screen_data_out,      // debug sample data
+  output logic                        bytes_screen_data_ready     // debug sample data ready
 );
 
 

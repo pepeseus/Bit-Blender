@@ -11,6 +11,7 @@ module bytes_screen #(
   input wire                                      rst_in,                 // system reset
 	input wire [WW_WIDTH-1:0]                       wave_width_in,          // UI switches
   input wire [NUM_OSCILLATORS-1:0][WW_WIDTH-1:0]  osc_indices,            // playback sample index for each oscillator
+	input wire                                      bytes_screen_data_ready,// debug sample data
 	input wire [SAMPLE_WIDTH-1:0]                   bytes_screen_data_in,   // debug sample data
   output logic [WW_WIDTH-1:0]                     bytes_screen_index_out, // debug sample index requested
   output logic                                    uart_txd,                // UART TX wire
@@ -63,7 +64,7 @@ always_ff @(posedge clk_in) begin
     uart_tx_trigger <= 1'b0;
 
     // only if UART is not busy
-    if (~uart_tx_busy) begin
+    if (~uart_tx_busy & bytes_screen_data_ready) begin
       if (state != IDLE) begin
         uart_tx_trigger <= 1'b1;
       end

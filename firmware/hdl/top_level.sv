@@ -180,6 +180,7 @@ module top_level
 
   logic [WW_WIDTH-1:0]      bytes_screen_index;                  // debug sample index
   logic [SAMPLE_WIDTH-1:0]  bytes_screen_sample;                 // debug sample data
+  logic                     bytes_screen_sample_ready;           // debug sample data ready
 
   wave_loader #(
     .NUM_OSCILLATORS(NUM_OSCILLATORS),    // number of oscillators
@@ -199,6 +200,7 @@ module top_level
     .viz_data_out(viz_sample),
     .bytes_screen_index_in(bytes_screen_index),
     .bytes_screen_data_out(bytes_screen_sample)
+    .bytes_screen_data_ready(bytes_screen_sample_ready)
   );
 
 
@@ -380,6 +382,7 @@ module top_level
     .rst_in(sys_rst | ui_update_trig),
     .wave_width_in(wave_width),
     .osc_indices(osc_indices),
+    .bytes_screen_data_ready(bytes_screen_sample_ready)
     .bytes_screen_data_in(bytes_screen_sample),
     .bytes_screen_index_out(bytes_screen_index),
     .uart_txd(uart_txd),
