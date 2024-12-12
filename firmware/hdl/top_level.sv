@@ -45,11 +45,18 @@ module top_level
 
   localparam SAMPLE_WIDTH = 16;
   localparam NUM_OSCILLATORS = 4;
+<<<<<<< HEAD
   localparam BRAM_DEPTH = 30214;                    // temp memory depth     ~ $clog2(262141) = 18
   localparam SAMPLES_PER_BRAM = BRAM_DEPTH * 512 / SAMPLE_WIDTH;
   localparam WW_WIDTH = $clog2(SAMPLES_PER_BRAM);   // width of the wave width lol = 18 bits
   localparam MMEM_MAX_DEPTH = 1_000_000_000;        // main memory max depth ~ $clog2(1_000_000_000) = 30
   localparam WS_WIDTH = $clog2(MMEM_MAX_DEPTH);     // width of the wave start address = 30 bits
+=======
+  localparam BRAM_DEPTH = 10214;               // temp memory depth     ~ $clog2(262141) = 18
+  localparam WW_WIDTH = $clog2(BRAM_DEPTH);     // width of the wave width lol = 18 bits
+  localparam MMEM_MAX_DEPTH = 1_000_000_000;    // main memory max depth ~ $clog2(1_000_000_000) = 30
+  localparam WS_WIDTH = $clog2(MMEM_MAX_DEPTH); // width of the wave start address = 30 bits
+>>>>>>> 2fa23e7 (works)
   localparam PRE_DIVISION_AUDIO_SIZE = 32;
 
 
@@ -184,6 +191,10 @@ module top_level
   logic [WW_WIDTH-1:0]      viz_index;                           // hdmi pixel index
   logic [SAMPLE_WIDTH-1:0]  viz_sample;                          // output hdmi pixel data
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> 2fa23e7 (works)
   logic [WW_WIDTH-1:0]      bytes_screen_index;                  // debug sample index
   logic [SAMPLE_WIDTH-1:0]  bytes_screen_sample;                 // debug sample data
   logic                     bytes_screen_sample_ready;           // debug sample data ready
@@ -204,8 +215,9 @@ module top_level
 
     .osc_index_in(osc_indices),
     .osc_data_out(osc_samples),
-    .viz_index_in(viz_index), // TODO this guy doesn't do anything; does it matter??
+    .viz_index_in(viz_index),
     .viz_data_out(viz_sample),
+<<<<<<< HEAD
     .bytes_screen_index_in(bytes_screen_index),
     .bytes_screen_data_out(bytes_screen_sample),
     .bytes_screen_data_ready(bytes_screen_sample_ready),
@@ -214,6 +226,21 @@ module top_level
     .sd_cd(sd_cd),
     .sd_sck(sd_sck),
     .sd_cmd(sd_cmd)
+=======
+
+    // .debug_index_in(debug_index),
+    // .debug_data_out(debug_sample),
+    .analyzer(analyzer),
+
+    .bytes_screen_index_in(bytes_screen_index),
+    .bytes_screen_data_out(bytes_screen_sample),
+    .bytes_screen_data_ready(bytes_screen_sample_ready)
+
+    // .sd_dat(sd_dat),
+    // .sd_cd(sd_cd),
+    // .sd_sck(sd_sck),
+    // .sd_cmd(sd_cmd)
+>>>>>>> 2fa23e7 (works)
   );
 
 
@@ -268,6 +295,13 @@ module top_level
     .sd(i2s_sd)            
   );
 
+
+
+
+
+
+
+
   /**
     Visual View
   */
@@ -275,6 +309,8 @@ module top_level
   logic          clk_pixel;
   logic          clk_5x;
   logic          clk_100_passthrough;
+  logic [7:0] red, green, blue; //red green and blue pixel values for output
+
 
   clk_wiz_0_clk_wiz wizard_hdmi
     (.clk_in1(clk_100mhz),
@@ -303,10 +339,9 @@ module top_level
       .nf_out(new_frame),
       .fc_out(frame_count));
 
-  logic [7:0] red, green, blue; //red green and blue pixel values for output
-  assign red = viz_sample[7:0];
-  assign green = viz_sample[7:0];
-  assign blue = viz_sample[7:0];
+  assign red = osc_samples[0];
+  assign green = osc_samples[1];
+  assign blue = osc_samples[2];
     // assign red = 8'h00;
     // assign green = 8'hFF;
     // assign blue = 8'h1F;
@@ -377,7 +412,6 @@ module top_level
   OBUFDS OBUFDS_green(.I(tmds_signal[1]), .O(hdmi_tx_p[1]), .OB(hdmi_tx_n[1]));
   OBUFDS OBUFDS_red  (.I(tmds_signal[2]), .O(hdmi_tx_p[2]), .OB(hdmi_tx_n[2]));
   OBUFDS OBUFDS_clock(.I(clk_pixel), .O(hdmi_clk_p), .OB(hdmi_clk_n));
-
 
 
   /**

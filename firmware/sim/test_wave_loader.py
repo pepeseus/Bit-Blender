@@ -14,16 +14,13 @@ from PIL import Image
 
 HDL_TOPLEVEL = "wave_loader"            # simulation module name
 TEST_MODULE = "test_wave_loader"        # python file name
-SOURCES = [
-    "xilinx_true_dual_port_read_first_1_clock_ram.v",
-    "counters.sv"
-]
+SOURCES = ["xilinx_true_dual_port_read_first_1_clock_ram.v"]      # list of source files "filename.sv"
 
 
 WAVE_WIDTH = 1000
 
 PARAMS = {
-  "NUM_OSCILLATORS": 4,
+  "NUM_OSCILLATORS": 2,
   "SAMPLE_WIDTH": 16,
   "BRAM_DEPTH": WAVE_WIDTH,
   "WW_WIDTH": 18,

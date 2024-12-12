@@ -1,8 +1,13 @@
 Copyright 1986-2022 Xilinx, Inc. All Rights Reserved. Copyright 2022-2024 Advanced Micro Devices, Inc. All Rights Reserved.
 ---------------------------------------------------------------------------------------------------------------------------------------------
 | Tool Version : Vivado v.2024.1 (lin64) Build 5076996 Wed May 22 18:36:09 MDT 2024
+<<<<<<< HEAD
 | Date         : Wed Dec 11 17:40:21 2024
 | Host         : eecs-digital-37 running 64-bit Ubuntu 24.04.1 LTS
+=======
+| Date         : Wed Dec 11 19:16:49 2024
+| Host         : eecs-digital-05 running 64-bit Ubuntu 24.04.1 LTS
+>>>>>>> 2fa23e7 (works)
 | Command      : report_utilization -file obj/post_synth_util.rpt -hierarchical -hierarchical_depth 4
 | Design       : top_level
 | Device       : xc7s50csga324-1
@@ -19,6 +24,7 @@ Table of Contents
 1. Utilization by Hierarchy
 ---------------------------
 
+<<<<<<< HEAD
 +-----------------------+----------------------------------------------+------------+------------+---------+------+-----+--------+--------+------------+
 |        Instance       |                    Module                    | Total LUTs | Logic LUTs | LUTRAMs | SRLs | FFs | RAMB36 | RAMB18 | DSP Blocks |
 +-----------------------+----------------------------------------------+------------+------------+---------+------+-----+--------+--------+------------+
@@ -53,5 +59,47 @@ Table of Contents
 |   ui_handle           |                                   ui_handler |         24 |         24 |       0 |    0 |  35 |      0 |      0 |          0 |
 |   wizard_hdmi         |                            clk_wiz_0_clk_wiz |          0 |          0 |       0 |    0 |   0 |      0 |      0 |          0 |
 +-----------------------+----------------------------------------------+------------+------------+---------+------+-----+--------+--------+------------+
+=======
++-------------------------------+--------------------------------------------------------------+------------+------------+---------+------+------+--------+--------+------------+
+|            Instance           |                            Module                            | Total LUTs | Logic LUTs | LUTRAMs | SRLs |  FFs | RAMB36 | RAMB18 | DSP Blocks |
++-------------------------------+--------------------------------------------------------------+------------+------------+---------+------+------+--------+--------+------------+
+| top_level                     |                                                        (top) |        939 |        939 |       0 |    0 | 1012 |     48 |      1 |          0 |
+|   (top_level)                 |                                                        (top) |          0 |          0 |       0 |    0 |    3 |      0 |      0 |          0 |
+|   blue_ser                    |                                              tmds_serializer |          0 |          0 |       0 |    0 |    0 |      0 |      0 |          0 |
+|   bytes_screen                |                                                 bytes_screen |        169 |        169 |       0 |    0 |   94 |      0 |      0 |          0 |
+|     (bytes_screen)            |                                                 bytes_screen |        135 |        135 |       0 |    0 |   65 |      0 |      0 |          0 |
+|     uart_tx                   |                                                uart_transmit |         34 |         34 |       0 |    0 |   29 |      0 |      0 |          0 |
+|   coordinator_main            |                                             midi_coordinator |         58 |         58 |       0 |    0 |  100 |      0 |      0 |          0 |
+|   divider_main                |                                               output_divider |         64 |         64 |       0 |    0 |   86 |      0 |      0 |          0 |
+|     (divider_main)            |                                               output_divider |          0 |          0 |       0 |    0 |   16 |      0 |      0 |          0 |
+|     wave_divider              |                                                      divider |         64 |         64 |       0 |    0 |   70 |      0 |      0 |          0 |
+|   genblk1[0].osc_inst         |                                                   oscillator |         23 |         23 |       0 |    0 |   38 |      0 |      0 |          0 |
+|   genblk1[1].osc_inst         |                                                 oscillator_0 |         23 |         23 |       0 |    0 |   38 |      0 |      0 |          0 |
+|   genblk1[2].osc_inst         |                                                 oscillator_1 |         23 |         23 |       0 |    0 |   38 |      0 |      0 |          0 |
+|   genblk1[3].osc_inst         |                                                 oscillator_2 |         23 |         23 |       0 |    0 |   38 |      0 |      0 |          0 |
+|   green_ser                   |                                            tmds_serializer_3 |          0 |          0 |       0 |    0 |    0 |      0 |      0 |          0 |
+|   i2s_clk_wiz                 |                                            i2s_clk_wiz_44100 |         12 |         12 |       0 |    0 |   12 |      0 |      0 |          0 |
+|   i2s_tx_inst                 |                                                       i2s_tx |         27 |         27 |       0 |    0 |   42 |      0 |      0 |          0 |
+|   memio                       |                                                  wave_loader |        373 |        373 |       0 |    0 |  361 |     48 |      0 |          0 |
+|     (memio)                   |                                                  wave_loader |         52 |         52 |       0 |    0 |  361 |      0 |      0 |          0 |
+|     debug_ram                 | xilinx_true_dual_port_read_first_1_clock_ram__parameterized1 |          0 |          0 |       0 |    0 |    0 |      8 |      0 |          0 |
+|     main_ram                  | xilinx_true_dual_port_read_first_1_clock_ram__parameterized0 |          0 |          0 |       0 |    0 |    0 |      8 |      0 |          0 |
+|     osc_gen[0].oscillator_ram |                 xilinx_true_dual_port_read_first_1_clock_ram |         81 |         81 |       0 |    0 |    0 |      8 |      0 |          0 |
+|     osc_gen[1].oscillator_ram |               xilinx_true_dual_port_read_first_1_clock_ram_7 |        125 |        125 |       0 |    0 |    0 |      8 |      0 |          0 |
+|     osc_gen[2].oscillator_ram |               xilinx_true_dual_port_read_first_1_clock_ram_8 |         96 |         96 |       0 |    0 |    0 |      8 |      0 |          0 |
+|     osc_gen[3].oscillator_ram |               xilinx_true_dual_port_read_first_1_clock_ram_9 |         19 |         19 |       0 |    0 |    0 |      8 |      0 |          0 |
+|   mvg                         |                                                video_sig_gen |         44 |         44 |       0 |    0 |   25 |      0 |      0 |          0 |
+|   processor_main              |                                               midi_processor |         27 |         27 |       0 |    0 |    2 |      0 |      1 |          0 |
+|   reader_main                 |                                                  midi_reader |         44 |         44 |       0 |    0 |   60 |      0 |      0 |          0 |
+|     (reader_main)             |                                                  midi_reader |          2 |          2 |       0 |    0 |   23 |      0 |      0 |          0 |
+|     uart_rec                  |                                                 uart_receive |         42 |         42 |       0 |    0 |   37 |      0 |      0 |          0 |
+|   red_ser                     |                                            tmds_serializer_4 |          1 |          1 |       0 |    0 |    1 |      0 |      0 |          0 |
+|   tmds_blue                   |                                                 tmds_encoder |          5 |          5 |       0 |    0 |   15 |      0 |      0 |          0 |
+|   tmds_green                  |                                               tmds_encoder_5 |          5 |          5 |       0 |    0 |   15 |      0 |      0 |          0 |
+|   tmds_red                    |                                               tmds_encoder_6 |          9 |          9 |       0 |    0 |   14 |      0 |      0 |          0 |
+|   ui_handle                   |                                                   ui_handler |         31 |         31 |       0 |    0 |   30 |      0 |      0 |          0 |
+|   wizard_hdmi                 |                                            clk_wiz_0_clk_wiz |          0 |          0 |       0 |    0 |    0 |      0 |      0 |          0 |
++-------------------------------+--------------------------------------------------------------+------------+------------+---------+------+------+--------+--------+------------+
+>>>>>>> 2fa23e7 (works)
 
 

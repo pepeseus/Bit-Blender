@@ -1,8 +1,13 @@
 Copyright 1986-2022 Xilinx, Inc. All Rights Reserved. Copyright 2022-2024 Advanced Micro Devices, Inc. All Rights Reserved.
 -------------------------------------------------------------------------------------------------------------------------------------------------
 | Tool Version     : Vivado v.2024.1 (lin64) Build 5076996 Wed May 22 18:36:09 MDT 2024
+<<<<<<< HEAD
 | Date             : Wed Dec 11 17:40:47 2024
 | Host             : eecs-digital-37 running 64-bit Ubuntu 24.04.1 LTS
+=======
+| Date             : Wed Dec 11 19:17:42 2024
+| Host             : eecs-digital-05 running 64-bit Ubuntu 24.04.1 LTS
+>>>>>>> 2fa23e7 (works)
 | Command          : report_power -file obj/post_route_power.rpt
 | Design           : top_level
 | Device           : xc7s50csga324-1
@@ -30,6 +35,7 @@ Table of Contents
 ----------
 
 +--------------------------+--------------+
+<<<<<<< HEAD
 | Total On-Chip Power (W)  | 0.355        |
 | Design Power Budget (W)  | Unspecified* |
 | Power Budget Margin (W)  | NA           |
@@ -38,6 +44,16 @@ Table of Contents
 | Effective TJA (C/W)      | 4.9          |
 | Max Ambient (C)          | 83.2         |
 | Junction Temperature (C) | 26.8         |
+=======
+| Total On-Chip Power (W)  | 0.567        |
+| Design Power Budget (W)  | Unspecified* |
+| Power Budget Margin (W)  | NA           |
+| Dynamic (W)              | 0.492        |
+| Device Static (W)        | 0.075        |
+| Effective TJA (C/W)      | 4.9          |
+| Max Ambient (C)          | 82.2         |
+| Junction Temperature (C) | 27.8         |
+>>>>>>> 2fa23e7 (works)
 | Confidence Level         | Low          |
 | Setting File             | ---          |
 | Simulation Activity File | ---          |
@@ -52,6 +68,7 @@ Table of Contents
 +----------------+-----------+----------+-----------+-----------------+
 | On-Chip        | Power (W) | Used     | Available | Utilization (%) |
 +----------------+-----------+----------+-----------+-----------------+
+<<<<<<< HEAD
 | Clocks         |     0.006 |        7 |       --- |             --- |
 | Slice Logic    |     0.002 |     1706 |       --- |             --- |
 |   LUT as Logic |     0.001 |      625 |     32600 |            1.92 |
@@ -64,6 +81,20 @@ Table of Contents
 | I/O            |     0.142 |       52 |       210 |           24.76 |
 | Static Power   |     0.072 |          |           |                 |
 | Total          |     0.355 |          |           |                 |
+=======
+| Clocks         |     0.011 |        7 |       --- |             --- |
+| Slice Logic    |     0.010 |     2426 |       --- |             --- |
+|   LUT as Logic |     0.010 |      949 |     32600 |            2.91 |
+|   CARRY4       |    <0.001 |      134 |      8150 |            1.64 |
+|   Register     |    <0.001 |     1046 |     65200 |            1.60 |
+|   Others       |     0.000 |       70 |       --- |             --- |
+| Signals        |     0.014 |     2022 |       --- |             --- |
+| Block RAM      |     0.182 |     48.5 |        75 |           64.67 |
+| MMCM           |     0.132 |        1 |         5 |           20.00 |
+| I/O            |     0.144 |       49 |       210 |           23.33 |
+| Static Power   |     0.075 |          |           |                 |
+| Total          |     0.567 |          |           |                 |
+>>>>>>> 2fa23e7 (works)
 +----------------+-----------+----------+-----------+-----------------+
 
 
@@ -73,16 +104,26 @@ Table of Contents
 +-----------+-------------+-----------+-------------+------------+-------------+-------------+------------+
 | Source    | Voltage (V) | Total (A) | Dynamic (A) | Static (A) | Powerup (A) | Budget (A)  | Margin (A) |
 +-----------+-------------+-----------+-------------+------------+-------------+-------------+------------+
+<<<<<<< HEAD
 | Vccint    |       1.000 |     0.022 |       0.012 |      0.010 |       NA    | Unspecified | NA         |
 | Vccaux    |       1.800 |     0.086 |       0.073 |      0.013 |       NA    | Unspecified | NA         |
 | Vcco33    |       3.300 |     0.043 |       0.042 |      0.001 |       NA    | Unspecified | NA         |
+=======
+| Vccint    |       1.000 |     0.217 |       0.205 |      0.012 |       NA    | Unspecified | NA         |
+| Vccaux    |       1.800 |     0.086 |       0.073 |      0.013 |       NA    | Unspecified | NA         |
+| Vcco33    |       3.300 |     0.044 |       0.043 |      0.001 |       NA    | Unspecified | NA         |
+>>>>>>> 2fa23e7 (works)
 | Vcco25    |       2.500 |     0.000 |       0.000 |      0.000 |       NA    | Unspecified | NA         |
 | Vcco18    |       1.800 |     0.000 |       0.000 |      0.000 |       NA    | Unspecified | NA         |
 | Vcco15    |       1.500 |     0.000 |       0.000 |      0.000 |       NA    | Unspecified | NA         |
 | Vcco135   |       1.350 |     0.000 |       0.000 |      0.000 |       NA    | Unspecified | NA         |
 | Vcco12    |       1.200 |     0.000 |       0.000 |      0.000 |       NA    | Unspecified | NA         |
 | Vccaux_io |       1.800 |     0.000 |       0.000 |      0.000 |       NA    | Unspecified | NA         |
+<<<<<<< HEAD
 | Vccbram   |       1.000 |     0.000 |       0.000 |      0.000 |       NA    | Unspecified | NA         |
+=======
+| Vccbram   |       1.000 |     0.015 |       0.014 |      0.001 |       NA    | Unspecified | NA         |
+>>>>>>> 2fa23e7 (works)
 | Vccadc    |       1.800 |     0.020 |       0.000 |      0.020 |       NA    | Unspecified | NA         |
 +-----------+-------------+-----------+-------------+------------+-------------+-------------+------------+
 
@@ -141,11 +182,29 @@ Table of Contents
 3.1 By Hierarchy
 ----------------
 
+<<<<<<< HEAD
 +---------------+-----------+
 | Name          | Power (W) |
 +---------------+-----------+
 | top_level     |     0.282 |
 |   wizard_hdmi |     0.132 |
 +---------------+-----------+
+=======
++-------------------------------+-----------+
+| Name                          | Power (W) |
++-------------------------------+-----------+
+| top_level                     |     0.492 |
+|   coordinator_main            |     0.001 |
+|   divider_main                |     0.001 |
+|   memio                       |     0.204 |
+|     debug_ram                 |     0.033 |
+|     main_ram                  |     0.016 |
+|     osc_gen[0].oscillator_ram |     0.039 |
+|     osc_gen[1].oscillator_ram |     0.041 |
+|     osc_gen[2].oscillator_ram |     0.038 |
+|     osc_gen[3].oscillator_ram |     0.034 |
+|   wizard_hdmi                 |     0.132 |
++-------------------------------+-----------+
+>>>>>>> 2fa23e7 (works)
 
 

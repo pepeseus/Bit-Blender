@@ -56,7 +56,7 @@ module output_divider #(
         .clk_in(clk_in),
         .rst_in(rst_in),
         .dividend_in(stream_in),
-        .divisor_in(is_on),
+        .divisor_in(num_on),
         .data_valid_in(~busy_divider),
         .quotient_out(quotient),
         .remainder_out(remainder),

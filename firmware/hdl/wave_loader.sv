@@ -36,6 +36,7 @@ module wave_loader #(
   output logic  [SAMPLE_WIDTH-1:0]    bytes_screen_data_out,      // debug sample data
   output logic                        bytes_screen_data_ready,    // debug sample data ready
 
+<<<<<<< HEAD
   // SD
   inout wire    [3:0]                 sd_dat,                     // data from the SD card
   input wire                          sd_cd,                      // card detect
@@ -57,6 +58,74 @@ always_ff @(posedge clk_in) begin
   end else begin
     curr_oscillator_index <= osc_index_in[index];
     osc_data_out[prev_ind] <= curr_data_out;
+=======
+  // // SD
+  // inout wire    [3:0]                 sd_dat,                     // data from the SD card
+  // input wire                          sd_cd,                      // card detect
+  // output logic                        sd_sck,                     // clock to the SD card
+  // output logic                        sd_cmd
+  output logic [7:0] analyzer
+);
+
+// assign analyzer[0] = ui_update_trig_in;    // 
+// assign analyzer[1] = writing;              // 
+// assign analyzer[2] = incrementing;      //
+// assign analyzer[7:3] = sample_index[4:0];      // 
+assign analyzer[0] = writing;    // 
+assign analyzer[7:1] = bytes_screen_data_out[6:0];      //
+// assign analyzer[3] = sample_data[0];       // 
+// assign analyzer[4] = osc_data_out[0][0];   // 
+// assign analyzer[5] = osc_index_in[0][0];   // 
+
+
+logic [WW_WIDTH-1:0] sample_index;            // index of the sample in the main memory // TODO replace with SD size
+logic [SAMPLE_WIDTH-1:0] sample_data;         // output sample data from the main memory
+logic writing;                                // enable writing to the BRAMs from the main memory
+logic zero;                                   // for some fantastic reason, vivado freezes the build 
+                                              // if zero isn't passed into main mem write port
+
+logic incrementing;
+logic byte_screen_in_pipe;
+
+
+always_ff @(posedge clk_in) begin
+  if (rst_in) begin
+    // reset all oscillators data
+    // for (int i = 0; i < NUM_OSCILLATORS; i++) begin
+    //   osc_data_out[i] <= 16'b0;
+    // end
+    // reset visual data
+    // viz_data_out <= 16'b0;
+    // reset debug data
+    // debug_data_out <= 16'b0;
+
+    // reset main memory data
+    sample_index <= 18'b0;
+    writing <= 1'b0;
+    zero <= 1'b0;
+    bytes_screen_data_ready <= 0;
+
+    incrementing <= 1'b0;
+  end else begin
+    bytes_screen_data_ready <= 1;
+    // start writing from the main memory
+    if (ui_update_trig_in) begin
+      sample_index <= 18'b0;
+      writing <= 1'b1;
+      incrementing <= 1'b0;
+    end
+
+    // continue writing until the wave width is reached
+    else if (writing & (sample_index+1 < wave_width_in)) begin
+      sample_index <= sample_index + 1;
+      incrementing <= 1'b1;
+    end else begin
+      sample_index <= 18'b0;
+      writing <= 1'b0;
+      incrementing <= 1'b0;
+    end
+    
+>>>>>>> 2fa23e7 (works)
   end
 end
 
@@ -175,9 +244,20 @@ end
 // logic clk_25mhz;
 // clk_wiz_25mhz (.rst(rst_in), .clk_100mhz(clk_in), .clk_25mhz(clk_25mhz));
 
+<<<<<<< HEAD
 // // sd_controller inputs
 // logic sd_rd;                  // read enable
 // logic [31:0] sd_addr;         // starting address for read/write operation
+=======
+xilinx_true_dual_port_read_first_1_clock_ram #(
+  .RAM_WIDTH(512),
+  .RAM_DEPTH(BRAM_DEPTH),
+  .RAM_PERFORMANCE("HIGH_PERFORMANCE"),
+  .INIT_FILE(`FPATH(sine.mem))
+  ) 
+main_ram (
+  .clka(clk_in),     // Clock
+>>>>>>> 2fa23e7 (works)
 
 // assign sd_addr = 0;
 
@@ -232,9 +312,48 @@ end
 
 
 /**
- * Oscillator BRAM
+ * Oscillator BRAMs
  */
 
+generate
+  genvar i;
+  for (i = 0; i < NUM_OSCILLATORS; i++) begin : osc_gen
+    xilinx_true_dual_port_read_first_1_clock_ram #(
+      .RAM_WIDTH(SAMPLE_WIDTH),
+      .RAM_DEPTH(BRAM_DEPTH),
+      .RAM_PERFORMANCE("HIGH_PERFORMANCE")
+      ) 
+    oscillator_ram (
+      .clka(clk_in),     // Clock
+
+      //writing port:
+      .addra(sample_index),     // Port A address bus,
+      .dina(sample_data),       // Port A RAM input data
+      .douta(),                 // Port A RAM output data, width determined from RAM_WIDTH
+      .wea(writing),            // Port A write enable
+      .ena(writing),            // Port A RAM Enable
+      .rsta(1'b0),              // Port A output reset
+      .regcea(1'b1),            // Port A output register enable
+
+      //reading port:
+      .addrb(osc_index_in[i]),  // Port B address bus,
+      .doutb(osc_data_out[i]),  // Port B RAM output data,
+      .dinb(16'b0),             // Port B RAM input data, width determined from RAM_WIDTH
+      .web(1'b0),               // Port B write enable
+      // .enb(osc_is_on_in[i]),    // Port B RAM Enable,        // TODO is this returning 0 when not on??
+      .enb(1'b1),    // Port B RAM Enable,        // TODO is this returning 0 when not on??
+      .rstb(1'b0),              // Port B output reset       // TODO is this returning 0 when not on??
+      .regceb(1'b1)             // Port B output register enable
+    );
+  end
+endgenerate
+
+
+/**
+ * Visual Select BRAM
+ */
+
+<<<<<<< HEAD
 // xilinx_true_dual_port_read_first_1_clock_ram #(
 //   .RAM_WIDTH(SAMPLE_WIDTH),
 //   .RAM_DEPTH(BRAM_DEPTH),
@@ -242,6 +361,15 @@ end
 //   ) 
 // oscillator_ram (
 //   .clka(clk_in),     // Clock
+=======
+xilinx_true_dual_port_read_first_1_clock_ram #(
+  .RAM_WIDTH(512),
+  .RAM_DEPTH(BRAM_DEPTH),
+  .RAM_PERFORMANCE("HIGH_PERFORMANCE")
+  )
+visual_select_ram (
+  .clka(clk_in),     // Clock
+>>>>>>> 2fa23e7 (works)
 
 //   //writing port:
 //   .addra(sample_index),     // Port A address bus,
@@ -252,6 +380,7 @@ end
 //   .rsta(1'b0),              // Port A output reset
 //   .regcea(1'b1),            // Port A output register enable
 
+<<<<<<< HEAD
 //   //reading port:
 //   .addrb(curr_oscillator_index),  // Port B address bus,
 //   .doutb(curr_data_out),  // Port B RAM output data,
@@ -262,49 +391,17 @@ end
 //   .rstb(1'b0),              // Port B output reset       // TODO is this returning 0 when not on??
 //   .regceb(1'b1)             // Port B output register enable
 // );
-
-logic [$clog2(NUM_OSCILLATORS - 1)-1:0]  index;
-
-clk_counter #(
-  .MAX_COUNT(NUM_OSCILLATORS - 1)
-  ) oscillator_counter
-  ( 
-    .clk_in(clk_in),
-    .rst_in(rst_in),
-    .count_out(index)
-  );
-
-
-/**
- * Visual Select BRAM
- */
-
-// xilinx_true_dual_port_read_first_1_clock_ram #(
-//   .RAM_WIDTH(SAMPLE_WIDTH),
-//   .RAM_DEPTH(BRAM_DEPTH),
-//   .RAM_PERFORMANCE("HIGH_PERFORMANCE")
-//   )
-// visual_select_ram (
-//   .clka(clk_in),     // Clock
-
-//   //writing port:
-//   .addra(sample_index),     // Port A address bus,
-//   .dina(sample_data),       // Port A RAM input data
-//   .douta(),                 // Port A RAM output data, width determined from RAM_WIDTH
-//   .wea(writing),            // Port A write enable
-//   .ena(writing),            // Port A RAM Enable
-//   .rsta(1'b0),              // Port A output reset
-//   .regcea(1'b1),            // Port A output register enable
-
-//   //reading port:
-//   .addrb(curr_oscillator_index),     // Port B address bus, // TODO viz_index_in
-//   .doutb(viz_data_out),     // Port B RAM output data,
-//   .dinb(16'b0),             // Port B RAM input data, width determined from RAM_WIDTH
-//   .web(1'b0),               // Port B write enable
-//   .enb(1'b1),               // Port B RAM Enable,         // TODO same, should I reset to 0 when not on?
-//   .rstb(1'b0),              // Port B output reset
-//   .regceb(1'b1)             // Port B output register enable
-// );
+=======
+  //reading port:
+  .addrb(viz_index_in),     // Port B address bus,
+  .doutb(viz_data_out),     // Port B RAM output data,
+  .dinb(16'b0),             // Port B RAM input data, width determined from RAM_WIDTH
+  .web(1'b0),               // Port B write enable
+  .enb(1'b1),               // Port B RAM Enable,         // TODO same, should I reset to 0 when not on?
+  .rstb(1'b0),              // Port B output reset
+  .regceb(1'b1)             // Port B output register enable
+);
+>>>>>>> 2fa23e7 (works)
 
 
 
@@ -360,6 +457,7 @@ bytes_screen_ram (
   .regcea(1'b1),          // Port A output register enable
 
   //reading port:
+<<<<<<< HEAD
   .addrb(bram_line_ind),            // Port B address bus,    // HACK to reset the output after writing
   .doutb(bram_line),                // Port B RAM output data,
   .dinb(16'b0),                     // Port B RAM input data, width determined from RAM_WIDTH
@@ -367,6 +465,15 @@ bytes_screen_ram (
   .enb(1'b1),                       // Port B RAM Enable,
   .rstb(1'b0),                      // Port B output reset
   .regceb(1'b1)                     // Port B output register enable
+=======
+  .addrb(bytes_screen_index_in),   // Port B address bus,
+  .doutb(bytes_screen_data_out),   // Port B RAM output data,
+  .dinb(16'b0),             // Port B RAM input data, width determined from RAM_WIDTH
+  .web(1'b0),               // Port B write enable
+  .enb(1'b1),               // Port B RAM Enable,
+  .rstb(1'b0),              // Port B output reset
+  .regceb(1'b1)             // Port B output register enable
+>>>>>>> 2fa23e7 (works)
 );
 
 
